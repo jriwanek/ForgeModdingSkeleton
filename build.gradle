@@ -118,14 +118,13 @@ def short_version = getVersion('VERSION', getModFile())
 version = mc_version + '-' + short_version
 def display_version = short_version
 
-// TODO: move the . to getBuildNumber()
-if ((System.getenv().BUILD_NUMBER) || (System.getenv().TRAVIS_BUILD_NUMBER) || (System.getenv('CIRCLE_BUILD_NUM'))) {
-  version += '.' + getBuildNumber()
-  display_version += '.' + getBuildNumber()
+if ((System.getenv('BUILD_NUMBER')) || (System.getenv('TRAVIS_BUILD_NUMBER')) || (System.getenv('CIRCLE_BUILD_NUM'))) {
+  version += getBuildNumber()
+  display_version += getBuildNumber()
 }
 
 String getBuildNumber() {
-  return System.getenv('BUILD_NUMBER') ? System.getenv('BUILD_NUMBER') : System.getenv('TRAVIS_BUILD_NUMBER') ? System.getenv('TRAVIS_BUILD_NUMBER') : System.getenv('CIRCLE_BUILD_NUM') ? System.getenv('CIRCLE_BUILD_NUM') : '0';
+  return '.' + System.getenv('BUILD_NUMBER') ? System.getenv('BUILD_NUMBER') : System.getenv('TRAVIS_BUILD_NUMBER') ? System.getenv('TRAVIS_BUILD_NUMBER') : System.getenv('CIRCLE_BUILD_NUM') ? System.getenv('CIRCLE_BUILD_NUM') : '0';
 }
 
 sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
@@ -146,7 +145,7 @@ class Secrets {
 import groovy.json.JsonSlurper
 
 def secretFile
-if (System.getenv().SECRET_FILE) {
+if (System.getenv('SECRET_FILE')) {
   secretFile = file System.getenv().SECRET_FILE
 } else {
   secretFile = file 'secret.json'
@@ -166,7 +165,6 @@ minecraft {
 
   replace '@MOD_VERSION@', short_version
 
-// TODO: Why is this different from darks?
   if ((project.hasProperty('signSHA1')) && (project.hasProperty('doSignJar'))) {
     replace '@FINGERPRINT@', project.findProperty('signSHA1')
   } else {
@@ -204,7 +202,7 @@ minecraft {
     serverJvmArgs += '-Dfml.queryResult=confirm'
   }
 
-  //skip jansi warnings in the log
+  // skip jansi warnings in the log
   if (project.hasProperty('skipJansi')) {
     serverJvmArgs += '-Dlog4j.skipJansi=true'
     clientJvmArgs += '-Dlog4j.skipJansi=true'
