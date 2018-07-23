@@ -51,7 +51,7 @@ public final class ExampleMod {
 				serverSide = "com.mcmoddev.examplemod.proxy.ServerProxy")
 	public static CommonProxy proxy;
 
-	public static final Logger logger = LogManager.getFormatterLogger(ExampleMod.MODID);
+	public static final Logger logger = LogManager.getLogger(ExampleMod.MODID);
 
 	@Mod.EventHandler
 	public static void onFingerprintViolation(final FMLFingerprintViolationEvent event) {
