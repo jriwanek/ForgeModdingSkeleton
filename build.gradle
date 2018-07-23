@@ -209,6 +209,10 @@ minecraft {
   if (project.hasProperty('server_args')) {
     serverJvmArgs += project.server_args
   }
+
+  if (!project.hasProperty('doSourceJar')) {
+    makeObfSourceJar = false
+  }
 }
 
 repositories {
