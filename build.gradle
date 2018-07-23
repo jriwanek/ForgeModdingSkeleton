@@ -112,11 +112,11 @@ test {
 */
 }
 
-//def short_version = '1.0.0'
-//def short_version = getVersion('VERSION', <path to file containing version string)
-def short_version = getVersion('VERSION', getModFile())
+//ext.short_version = '1.0.0'
+//ext.short_version = getVersion('VERSION', <path to file containing version string)
+ext.short_version = getVersion('VERSION', getModFile())
 version = mc_version + '-' + short_version
-def display_version = short_version
+ext.display_version = short_version
 
 if ((System.getenv('BUILD_NUMBER')) || (System.getenv('TRAVIS_BUILD_NUMBER')) || (System.getenv('CIRCLE_BUILD_NUM'))) {
   version += '.' +getBuildNumber()
@@ -163,7 +163,7 @@ minecraft {
   runDir = 'run'
   mappings = project.mcp_mappings
 
-  replace '@MOD_VERSION@', short_version
+  replace '@MOD_VERSION@', project.short_version
 
   if ((project.hasProperty('signSHA1')) && (project.hasProperty('doSignJar'))) {
     replace '@FINGERPRINT@', project.findProperty('signSHA1')
@@ -234,12 +234,12 @@ dependencies {
 }
 
 processResources {
-  inputs.property 'version', short_version
+  inputs.property 'version', project.short_version
   inputs.property 'mcversion', project.minecraft.version
 
   from (sourceSets.main.resources.srcDirs) {
     include 'mcmod.info'
-    expand 'version': short_version, 'mcversion': project.minecraft.version
+    expand 'version': project.short_version, 'mcversion': project.minecraft.version
   }
 
   from (sourceSets.main.resources.srcDirs) {
@@ -371,7 +371,7 @@ curseforge {
         addGameVersion "${it}"
       }
       mainArtifact(jar) {
-        displayName = "$project.description $display_version"
+        displayName = "$project.description $project.display_version"
         if (project.hasProperty('curse_requirements') || project.hasProperty('curse_optionals') || project.hasProperty('curse_embeddeds') || project.hasProperty('curse_tools') || project.hasProperty('curse_incompatibles') || project.hasProperty('curse_includes')) {
           relations {
             if (project.hasProperty('curse_requirements')) {
@@ -415,22 +415,22 @@ curseforge {
       }
       if (project.hasProperty('doAPIJar')) {
         addArtifact(apiJar) {
-          displayName = "$project.description $display_version API"
+          displayName = "$project.description $project.display_version API"
         }
       }
       if (project.hasProperty('doSourceJar')) {
         addArtifact(sourceJar) {
-          displayName = "$project.description $display_version Sources"
+          displayName = "$project.description $project.display_version Sources"
         }
       }
       if (project.hasProperty('doDeobfJar')) {
         addArtifact(deobfJar) {
-          displayName = "$project.description $display_version Development"
+          displayName = "$project.description $project.display_version Development"
         }
       }
       if (project.hasProperty('doJavadocJar')) {
         addArtifact(javadocJar) {
-          displayName = "$project.description $display_version Javadoc"
+          displayName = "$project.description $project.display_version Javadoc"
         }
       }
     }
