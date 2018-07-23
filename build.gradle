@@ -152,10 +152,10 @@ if (System.getenv().SECRET_FILE) {
   secretFile = file 'secret.json'
 }
 
-project.ext.secret = new Secrets()
+ext.secret = new Secrets()
 if (secretFile.exists()) {
   secretFile.withReader {
-    project.ext.secret.data = new JsonSlurper().parse it
+    project.secret.data = new JsonSlurper().parse it
   }
 }
 
