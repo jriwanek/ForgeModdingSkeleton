@@ -164,6 +164,8 @@ minecraft {
   runDir = 'run'
   mappings = project.mcp_mappings
 
+  replace '@MOD_VERSION@', short_version
+
 // TODO: Why is this different from darks?
   if ((project.hasProperty('signSHA1')) && (project.hasProperty('doSignJar'))) {
     replace '@FINGERPRINT@', project.findProperty('signSHA1')
