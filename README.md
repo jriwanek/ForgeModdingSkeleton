@@ -7,8 +7,8 @@ Skeletons for building Forge mods
 		useDepAts
 3) Support Curse ChangeLog from String
 4) Support Curse ChangeLog from Git Commits
-5) Full Support for Travis (Getting build number should be done)
-6) Full Support for CircleCI
+5) Sonarqube & Jar Signing Support for Travis
+6) Sonarqube & Jar Signing Support for CircleCI
 7) Only supports the maven-publish plugin, not the kind DarkHax used.
 
 ## Known Bugs:
