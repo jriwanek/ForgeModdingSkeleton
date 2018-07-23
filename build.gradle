@@ -128,7 +128,7 @@ String getBuildNumber() {
   return System.getenv('BUILD_NUMBER') ? System.getenv('BUILD_NUMBER') : System.getenv('TRAVIS_BUILD_NUMBER') ? System.getenv('TRAVIS_BUILD_NUMBER') : System.getenv('CIRCLE_BUILD_NUM') ? System.getenv('CIRCLE_BUILD_NUM') : '0';
 }
 
-sourceCompatibility = targetCompatibility = '1.8'
+sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
 
 eclipse.project {
   buildCommand 'org.eclipse.buildship.core.gradleprojectbuilder'
