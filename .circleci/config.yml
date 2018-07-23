@@ -21,22 +21,22 @@ jobs:
       - run:
           name: Show the Gradle version in use with other details.
           command: |
-          ./gradlew --version
+           ./gradlew --version
 
       - run:
           name: Set up the workspace for ci build
           command: |
-          ./gradlew setupCiWorkspace
+           ./gradlew setupCiWorkspace
 
       - run:
           name: Clean the workspace ready for a fresh build.
           command: |
-          ./gradlew clean
+           ./gradlew clean
 
       - run:
           name: Attempt to build the mod.
           command: |
-          ./gradlew build
+           ./gradlew build
 
       - store_artifacts:
         path: ./build/libs
