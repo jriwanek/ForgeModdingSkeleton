@@ -55,6 +55,7 @@ public final class ExampleMod {
 
 	@Mod.EventHandler
 	public static void onFingerprintViolation(final FMLFingerprintViolationEvent event) {
+		// This complains if jar not signed, even if certificateFingerprint is blank
 		logger.warn("Invalid Fingerprint");
 	}
 

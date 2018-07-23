@@ -170,7 +170,6 @@ minecraft {
   if ((project.hasProperty('signSHA1')) && (project.hasProperty('doSignJar'))) {
     replace '@FINGERPRINT@', project.findProperty('signSHA1')
   } else {
-// TODO: // Maybe Strip if not found
     replace '@FINGERPRINT@', ''
   }
 
