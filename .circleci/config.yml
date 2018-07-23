@@ -14,28 +14,28 @@ jobs:
     steps:
       - checkout
       - run:
-        name: Grant access to ./gradlew.
-        command: |
-          chmod +x gradlew
-      
+          name: Grant access to ./gradlew.
+          command: |
+           chmod +x gradlew
+
       - run:
-        name: Show the Gradle version in use with other details.
-        command: |
+          name: Show the Gradle version in use with other details.
+          command: |
           ./gradlew --version
 
       - run:
-        name: Set up the workspace for ci build
-        command: |
+          name: Set up the workspace for ci build
+          command: |
           ./gradlew setupCiWorkspace
 
       - run:
-        name: Clean the workspace ready for a fresh build.
-        command: |
+          name: Clean the workspace ready for a fresh build.
+          command: |
           ./gradlew clean
 
       - run:
-        name: Attempt to build the mod.
-        command: |
+          name: Attempt to build the mod.
+          command: |
           ./gradlew build
 
       - store_artifacts:
