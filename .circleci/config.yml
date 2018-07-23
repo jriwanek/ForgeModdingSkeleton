@@ -39,4 +39,4 @@ jobs:
            ./gradlew build
 
       - store_artifacts:
-        path: ./build/libs
+          path: ./build/libs
