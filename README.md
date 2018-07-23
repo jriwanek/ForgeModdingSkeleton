@@ -2,20 +2,15 @@
 Skeletons for building Forge mods
 
 ## Missing Features:
-1) Ability to Push version to Mod
-2) AT file specification and configuration
-		useDepAts
-3) Support Curse ChangeLog from String
-4) Support Curse ChangeLog from Git Commits
-5) Sonarqube & Jar Signing Support for Travis
-6) Sonarqube & Jar Signing Support for CircleCI
-7) Only supports the maven-publish plugin, not the kind DarkHax used.
+1) Support Curse ChangeLog from String
+2) Support Curse ChangeLog from Git Commits
+3) Sonarqube & Jar Signing Support for Travis
+4) Sonarqube & Jar Signing Support for CircleCI
+5) Only supports the maven-publish plugin, not the kind DarkHax used.
+6) Secret parser should support Gradle properties and environment variables too
 
 ## Known Bugs:
-1) Source jar always generated
-	makeObfSourceJar
-2) Many versions hard-coded
-3) If Jar isn't signed, forge will warn.
+1) Many versions hard-coded
 
 ## Example TODO:
 1) Model Registration
