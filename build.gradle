@@ -16,7 +16,7 @@ buildscript {
   }
   dependencies {
     classpath "net.minecraftforge.gradle:${project.fg_version}"
-    classpath 'org.junit.platform:junit-platform-gradle-plugin:1.2.+'
+//  classpath 'org.junit.platform:junit-platform-gradle-plugin:1.2.+'
 //  classpath 'com.jaredsburrows:gradle-checker-framework-plugin:0.2.1'
   }
 }
@@ -31,7 +31,7 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'com.matthewprenger.cursegradle'
 apply plugin: 'maven-publish'
 apply plugin: 'org.sonarqube'
-apply plugin: 'org.junit.platform.gradle.plugin'
+//apply plugin: 'org.junit.platform.gradle.plugin'
 apply plugin: 'jacoco'
 //apply plugin: 'com.github.spotbugs'
 //apply plugin: 'com.jaredsburrows.checkerframework'
@@ -43,19 +43,21 @@ repositories {
 
 dependencies {
   testCompile('org.junit.jupiter:junit-jupiter-api:5.2.+')
-  testCompile('org.junit.platform:junit-platform-launcher:1.2.+')
+// Only used for JUnit Platform Launcher 1.2.0 and earlier
+//testCompile('org.junit.platform:junit-platform-launcher:1.2.+')
   testRuntime('org.junit.jupiter:junit-jupiter-engine:5.2.+')
   testCompile('org.mockito:mockito-core:2.+')
 }
 
+// TODO: Fix this for JUnit Platform Launcher 1.3
 project.afterEvaluate {
-  def junitPlatformTestTask = project.tasks.getByName('junitPlatformTest')
+//  def junitPlatformTestTask = project.tasks.getByName('junitPlatformTest')
 
   // configure jacoco to analyze the junitPlatformTest task
   jacoco {
     // this tool version is compatible with
     toolVersion = '0.8.1'
-    applyTo junitPlatformTestTask
+//    applyTo junitPlatformTestTask
   }
 
   // create junit platform jacoco task
@@ -63,10 +65,12 @@ project.afterEvaluate {
   {
     sourceDirectories = files("./src/main")
     classDirectories = files("$buildDir/classes/main")
-    executionData junitPlatformTestTask
+//    executionData junitPlatformTestTask
   })
 }
 
+// Only used for JUnit Platform Launcher 1.2.0 and earlier
+/*
 junitPlatform {
   // platformVersion '1.2.0'
   // logManager 'org.apache.logging.log4j.jul.LogManager'
@@ -75,10 +79,11 @@ junitPlatform {
   // selectors (optional)
   // filters (optional)
 }
+*/
 
 /*
 spotbugs {
-  toolVersion = '3.1.5'
+  toolVersion = '3.1.6'
 }
 */
 
@@ -96,25 +101,31 @@ javadoc {
 }
 
 test {
-//  useJUnitPlatform()
+  useJUnitPlatform()
 /*
-    useJUnitPlatform {
+  useJUnitPlatform {
     includeTags 'fast', 'smoke & feature-a'
-    // excludeTags 'slow', 'ci'
+//  excludeTags 'slow', 'ci'
     includeEngines 'junit-jupiter'
-    // excludeEngines 'junit-vintage'
+//  excludeEngines 'junit-vintage'
   }
 */
 }
 
-def mod_file = getModFile()
-def short_version = getVersion('VERSION', mod_file)
+//def short_version = '1.0.0'
+//def short_version = getVersion('VERSION', <path to file containing version string)
+def short_version = getVersion('VERSION', getModFile())
 version = mc_version + '-' + short_version
 def display_version = short_version
 
-if (System.getenv().BUILD_NUMBER) {
-  version += '.' + System.getenv().BUILD_NUMBER
-  display_version += '.' + System.getenv().BUILD_NUMBER
+// TODO: move the . to getBuildNumber()
+if ((System.getenv().BUILD_NUMBER) || (System.getenv().TRAVIS_BUILD_NUMBER)) {
+  version += '.' + getBuildNumber()
+  display_version += '.' + getBuildNumber()
+}
+
+String getBuildNumber() {
+  return System.getenv('BUILD_NUMBER') ? System.getenv('BUILD_NUMBER') : System.getenv('TRAVIS_BUILD_NUMBER') ? System.getenv('TRAVIS_BUILD_NUMBER') : '0';
 }
 
 sourceCompatibility = targetCompatibility = '1.8'
@@ -153,9 +164,11 @@ minecraft {
   runDir = 'run'
   mappings = project.mcp_mappings
 
-  if (project.hasProperty('signSHA1')) {
+// TODO: Why is this different from darks?
+  if ((project.hasProperty('signSHA1')) && (project.hasProperty('doSignJar'))) {
     replace '@FINGERPRINT@', project.findProperty('signSHA1')
   } else {
+// TODO: // Maybe Strip if not found
     replace '@FINGERPRINT@', ''
   }
 
@@ -223,18 +236,26 @@ processResources {
 }
 
 jar {
+  //from sourceSets.api.output
+  //from sourceSets.main.output
+
   manifest {
+    attributes 'Maven-Artifact' : "${project.group}:${project.archivesBaseName}:${project.version}"
+    attributes 'Timestamp' : System.currentTimeMillis()
     if (project.hasProperty('coreplugin')) {
       attributes 'FMLCorePluginContainsFMLMod': 'true'
-      attributes 'FMLCorePlugin': project.coreplugin
+      attributes 'FMLCorePlugin': ${coreplugin}
     }
-//  attributes 'FMLAT' : ''
+    if (project.hasProperty('at_file')) {
+      attributes 'FMLAT' : ${at_file}
+    }
   }
 }
 
 task apiJar(type: Jar) {
   classifier = 'apiClasses'
   from apiClasses
+  // from sourceSets.api.output
 }
 
 task deobfJar(type: Jar) {
@@ -242,28 +263,27 @@ task deobfJar(type: Jar) {
   from sourceSets.main.output
 }
 
+task javadocJar(type: Jar, dependsOn: javadoc) {
+  classifier = 'javadoc'
+  from javadoc.getDestinationDir()
+}
+
 task signJar(type: SignJar, dependsOn: reobfJar) {
-  // Skips if the keyStore property is missing.
   onlyIf {
     project.hasProperty('keyStore')
   }
 
-  // findProperty allows us to reference the property without it existing.
-  // Using project.propName would cause the script to fail validation if
-  // the property did not exist.
+  inputFile = jar.archivePath
+  outputFile = jar.archivePath
+
   keyStore = project.findProperty('keyStore')
   alias = project.findProperty('keyStoreAlias')
   storePass = project.findProperty('keyStorePass')
   keyPass = project.findProperty('keyStoreKeyPass')
-  inputFile = jar.archivePath
-  outputFile = jar.archivePath
 }
 
-build.dependsOn signJar
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-  classifier = 'javadoc'
-  from javadoc.getDestinationDir()
+if (project.hasProperty('doSignJar')) {
+  build.dependsOn signJar
 }
 
 artifacts {
@@ -323,19 +343,60 @@ publishing {
 
 curseforge {
   if (project.hasProperty('cf_project_id') && project.hasProperty('cf_release_type') && project.hasProperty('cf_changelog_filename') &&
-      ((project.cf_release_type == 'alpha') || (project.cf_release_type == 'beta') || (project.cf_release_type == 'release'))) {
+      ((${cf_release_type} == 'alpha') || (${cf_release_type} == 'beta') || (${cf_release_type} == 'release'))) {
     apiKey = secret.curseforgeAPIKey
+    def versions = "${cf_versions}".split(', ')
     project {
-      id = project.cf_project_id
+      id = "${cf_project_id}"
+      // A list of changes for the current build. This can be a String or a File. If a file is set, its contents will be used. This is a required field.
       changelog = file(project.cf_changelog_filename)
-      releaseType = project.cf_release_type
-      addGameVersion(project.mc_version)
+      // The type of changelog. This can be: text, html, or markdown. The default is text.
+      changelogType = ${cf_changelog_type}
+      releaseType = ${cf_release_type}
+      versions.each {
+        addGameVersion "${it}"
+      }
       mainArtifact(jar) {
         displayName = "$project.description $display_version"
-        relations {
-          requiredLibrary 'mmd-orespawn'
-          requiredLibrary 'base-metals'
-          optionalLibrary 'additional-loot-tables'
+        if (project.hasProperty('curse_requirements') || project.hasProperty('curse_optionals') || project.hasProperty('curse_embeddeds') || project.hasProperty('curse_tools') || project.hasProperty('curse_incompatibles') || project.hasProperty('curse_includes')) {
+          relations {
+            if (project.hasProperty('curse_requirements')) {
+              def requirements = "${curse_requirements}".split(', ')
+              requirements.each {
+                requiredLibrary "${it}"
+              }
+            }
+            if (project.hasProperty('curse_optionals')) {
+              def optionals = "${curse_optionals}".split(', ')
+              optionals.each {
+                optionalLibrary "${it}"
+              }
+            }
+            if (project.hasProperty('curse_embeddeds')) {
+              def embeddeds = "${curse_embeddeds}".split(', ')
+              embeddeds.each {
+                embeddedLibrary "${it}"
+              }
+            }
+            if (project.hasProperty('curse_tools')) {
+              def tools = "${curse_tools}".split(', ')
+              tools.each {
+                tool "${it}"
+              }
+            }
+            if (project.hasProperty('curse_incompatibles')) {
+              def incompatibles = "${curse_incompatibles}".split(', ')
+              incompatibles.each {
+                incompatible "${it}"
+              }
+            }
+            if (project.hasProperty('curse_includes')) {
+              def includes = "${curse_includes}".split(', ')
+              includeds.each {
+                include "${it}"
+              }
+            }
+          }
         }
       }
       if (project.hasProperty('doAPIJar')) {
