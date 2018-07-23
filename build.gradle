@@ -220,7 +220,7 @@ dependencies {
 }
 
 processResources {
-  inputs.property 'version', project.version
+  inputs.property 'version', short_version
   inputs.property 'mcversion', project.minecraft.version
 
   from (sourceSets.main.resources.srcDirs) {
