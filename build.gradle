@@ -219,7 +219,7 @@ minecraft {
     makeObfSourceJar = false
   }
   if (project.hasProperty('depHasATs')) {
-    useDepAts = ${depHasATs}
+    useDepAts = project.depHasATs
   }
 }
 
@@ -258,10 +258,10 @@ jar {
     attributes 'Timestamp' : System.currentTimeMillis()
     if (project.hasProperty('coreplugin')) {
       attributes 'FMLCorePluginContainsFMLMod': 'true'
-      attributes 'FMLCorePlugin': ${coreplugin}
+      attributes 'FMLCorePlugin': project.coreplugin
     }
     if (project.hasProperty('at_file')) {
-      attributes 'FMLAT' : ${at_file}
+      attributes 'FMLAT' : project.at_file
     }
   }
 }
@@ -357,16 +357,16 @@ publishing {
 
 curseforge {
   if (project.hasProperty('cf_project_id') && project.hasProperty('cf_release_type') && project.hasProperty('cf_changelog_filename') &&
-      ((${cf_release_type} == 'alpha') || (${cf_release_type} == 'beta') || (${cf_release_type} == 'release'))) {
+      ((project.cf_release_type == 'alpha') || (project.cf_release_type == 'beta') || (project.cf_release_type == 'release'))) {
     apiKey = secret.curseforgeAPIKey
     def versions = "${cf_versions}".split(', ')
     project {
-      id = "${cf_project_id}"
+      id = project.cf_project_id
       // A list of changes for the current build. This can be a String or a File. If a file is set, its contents will be used. This is a required field.
       changelog = file(project.cf_changelog_filename)
       // The type of changelog. This can be: text, html, or markdown. The default is text.
-      changelogType = ${cf_changelog_type}
-      releaseType = ${cf_release_type}
+      changelogType = project.cf_changelog_type
+      releaseType = project.cf_release_type
       versions.each {
         addGameVersion "${it}"
       }
