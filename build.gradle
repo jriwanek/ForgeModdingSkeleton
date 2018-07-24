@@ -359,7 +359,6 @@ curseforge {
   if (project.hasProperty('cf_project_id') && project.hasProperty('cf_release_type') && project.hasProperty('cf_changelog_filename') &&
       ((project.cf_release_type == 'alpha') || (project.cf_release_type == 'beta') || (project.cf_release_type == 'release'))) {
     apiKey = secret.curseforgeAPIKey
-    def versions = "${property.cf_versions}".split(', ')
     project {
       id = project.cf_project_id
       // A list of changes for the current build. This can be a String or a File. If a file is set, its contents will be used. This is a required field.
@@ -367,8 +366,11 @@ curseforge {
       // The type of changelog. This can be: text, html, or markdown. The default is text.
       changelogType = project.cf_changelog_type
       releaseType = project.cf_release_type
-      versions.each {
-        addGameVersion "${it}"
+      if (project.hasProperty('cf_versions')) {
+        def versions = "${property.cf_versions}".split(', ')
+        versions.each {
+          addGameVersion "${it}"
+        }
       }
       mainArtifact(jar) {
         displayName = "${project.description} ${project.display_version}"
