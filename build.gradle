@@ -359,7 +359,7 @@ curseforge {
   if (project.hasProperty('cf_project_id') && project.hasProperty('cf_release_type') && project.hasProperty('cf_changelog_filename') &&
       ((project.cf_release_type == 'alpha') || (project.cf_release_type == 'beta') || (project.cf_release_type == 'release'))) {
     apiKey = secret.curseforgeAPIKey
-    def versions = "${cf_versions}".split(', ')
+    def versions = "${property.cf_versions}".split(', ')
     project {
       id = project.cf_project_id
       // A list of changes for the current build. This can be a String or a File. If a file is set, its contents will be used. This is a required field.
@@ -371,41 +371,41 @@ curseforge {
         addGameVersion "${it}"
       }
       mainArtifact(jar) {
-        displayName = "$project.description $project.display_version"
+        displayName = "${project.description} ${project.display_version}"
         if (project.hasProperty('curse_requirements') || project.hasProperty('curse_optionals') || project.hasProperty('curse_embeddeds') || project.hasProperty('curse_tools') || project.hasProperty('curse_incompatibles') || project.hasProperty('curse_includes')) {
           relations {
             if (project.hasProperty('curse_requirements')) {
-              def requirements = "${curse_requirements}".split(', ')
+              def requirements = "${project.curse_requirements}".split(', ')
               requirements.each {
                 requiredLibrary "${it}"
               }
             }
             if (project.hasProperty('curse_optionals')) {
-              def optionals = "${curse_optionals}".split(', ')
+              def optionals = "${project.curse_optionals}".split(', ')
               optionals.each {
                 optionalLibrary "${it}"
               }
             }
             if (project.hasProperty('curse_embeddeds')) {
-              def embeddeds = "${curse_embeddeds}".split(', ')
+              def embeddeds = "${project.curse_embeddeds}".split(', ')
               embeddeds.each {
                 embeddedLibrary "${it}"
               }
             }
             if (project.hasProperty('curse_tools')) {
-              def tools = "${curse_tools}".split(', ')
+              def tools = "${project.curse_tools}".split(', ')
               tools.each {
                 tool "${it}"
               }
             }
             if (project.hasProperty('curse_incompatibles')) {
-              def incompatibles = "${curse_incompatibles}".split(', ')
+              def incompatibles = "${project.curse_incompatibles}".split(', ')
               incompatibles.each {
                 incompatible "${it}"
               }
             }
             if (project.hasProperty('curse_includes')) {
-              def includes = "${curse_includes}".split(', ')
+              def includes = "${project.curse_includes}".split(', ')
               includeds.each {
                 include "${it}"
               }
@@ -415,22 +415,22 @@ curseforge {
       }
       if (project.hasProperty('doAPIJar')) {
         addArtifact(apiJar) {
-          displayName = "$project.description $project.display_version API"
+          displayName = "${project.description} ${project.display_version} API"
         }
       }
       if (project.hasProperty('doSourceJar')) {
         addArtifact(sourceJar) {
-          displayName = "$project.description $project.display_version Sources"
+          displayName = "${project.description} ${project.display_version} Sources"
         }
       }
       if (project.hasProperty('doDeobfJar')) {
         addArtifact(deobfJar) {
-          displayName = "$project.description $project.display_version Development"
+          displayName = "${project.description} ${project.display_version} Development"
         }
       }
       if (project.hasProperty('doJavadocJar')) {
         addArtifact(javadocJar) {
-          displayName = "$project.description $project.display_version Javadoc"
+          displayName = "${project.description} ${project.display_version} Javadoc"
         }
       }
     }
@@ -443,7 +443,7 @@ sonarqube {
     property 'sonar.organization', secret.sonarOrganization
     property 'sonar.login', secret.sonarToken
     // property 'sonar.projectName', project.archivesBaseName
-    // property 'sonar.projectKey', "$project.group:$project.archivesBaseName"
+    // property 'sonar.projectKey', "${project.group}:${project.archivesBaseName}"
     // property 'sonar.branch.name', 'master-1.12'
     // property 'sonar.branch.target', ''
     property 'sonar.junit.reportPaths', "${project.buildDir}/test-results/junit-platform/*.xml"
