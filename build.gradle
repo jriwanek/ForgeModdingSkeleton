@@ -514,7 +514,9 @@ sonarqube {
     if (project.hasProperty(project.sonar_organisation)) {
       property 'sonar.organization', project.sonar_organisation
     } else {
-      property 'sonar.organization', secret.sonarOrganization
+	  if (secret.sonarOrganisation != '') {
+        property 'sonar.organization', secret.sonarOrganization
+	  }
 	}
     // property 'sonar.projectName', project.archivesBaseName
     // property 'sonar.projectKey', "${project.group}:${project.archivesBaseName}"
