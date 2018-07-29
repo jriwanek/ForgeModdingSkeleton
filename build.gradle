@@ -119,7 +119,7 @@ version = mc_version + '-' + short_version
 ext.display_version = short_version
 
 if ((System.getenv('BUILD_NUMBER')) || (System.getenv('TRAVIS_BUILD_NUMBER')) || (System.getenv('CIRCLE_BUILD_NUM'))) {
-  version += '.' +getBuildNumber()
+  version += '.' + getBuildNumber()
   display_version += '.' + getBuildNumber()
 }
 
