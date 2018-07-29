@@ -359,11 +359,16 @@ publishing {
   }
   repositories {
     maven {
+	  // TODO: This needs to be blocked out for local files
       credentials {
         username secret.username
         password secret.password
       }
-      url secret.url
+      if (!secret.url == '') {
+        url secret.url
+      } else {
+	    url "${project.buildDir}/repo"
+	  }
     }
   }
 }
@@ -471,8 +476,12 @@ curseforge {
 sonarqube {
   properties {
     property 'sonar.host.url', secret.sonarHost
-    property 'sonar.organization', secret.sonarOrganization
     property 'sonar.login', secret.sonarToken
+    if (project.hasProperty(project.sonar_organisation)) {
+      property 'sonar.organization', project.sonar_organisation
+    } else {
+      property 'sonar.organization', secret.sonarOrganization
+	}
     // property 'sonar.projectName', project.archivesBaseName
     // property 'sonar.projectKey', "${project.group}:${project.archivesBaseName}"
     // property 'sonar.branch.name', 'master-1.12'
