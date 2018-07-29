@@ -375,7 +375,9 @@ curseforge {
         }
       }
       mainArtifact(jar) {
-        displayName = "${project.description} ${project.display_version}"
+        if (project.hasProperty('cf_use_custom_display_name')) {
+          displayName = "${project.description} ${project.display_version}"
+        }
         if (project.hasProperty('curse_requirements') || project.hasProperty('curse_optionals') || project.hasProperty('curse_embeddeds') || project.hasProperty('curse_tools') || project.hasProperty('curse_incompatibles') || project.hasProperty('curse_includes')) {
           relations {
             if (project.hasProperty('curse_requirements')) {
@@ -419,22 +421,30 @@ curseforge {
       }
       if (project.hasProperty('doAPIJar')) {
         addArtifact(apiJar) {
-          displayName = "${project.description} ${project.display_version} API"
+          if (project.hasProperty('cf_use_custom_display_name')) {
+            displayName = "${project.description} ${project.display_version} API"
+          }
         }
       }
       if (project.hasProperty('doSourceJar')) {
         addArtifact(sourceJar) {
-          displayName = "${project.description} ${project.display_version} Sources"
+          if (project.hasProperty('cf_use_custom_display_name')) {
+            displayName = "${project.description} ${project.display_version} Sources"
+          }
         }
       }
       if (project.hasProperty('doDeobfJar')) {
         addArtifact(deobfJar) {
-          displayName = "${project.description} ${project.display_version} Development"
+          if (project.hasProperty('cf_use_custom_display_name')) {
+            displayName = "${project.description} ${project.display_version} Development"
+          }
         }
       }
       if (project.hasProperty('doJavadocJar')) {
         addArtifact(javadocJar) {
-          displayName = "${project.description} ${project.display_version} Javadoc"
+          if (project.hasProperty('cf_use_custom_display_name')) {
+            displayName = "${project.description} ${project.display_version} Javadoc"
+          }
         }
       }
     }
