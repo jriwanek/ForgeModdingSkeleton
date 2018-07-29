@@ -103,7 +103,7 @@ test {
 //ext.short_version = '1.0.0'
 //ext.short_version = getVersion('VERSION', <path to file containing version string)
 ext.short_version = getVersion('VERSION', getModFile())
-version = mc_version + '-' + short_version
+version = (project.hasProperty('mc_version') ? project.mc_version : project.forge_mc_version) + '-' + short_version
 ext.display_version = short_version
 
 if ((System.getenv('BUILD_NUMBER')) || (System.getenv('TRAVIS_BUILD_NUMBER')) || (System.getenv('CIRCLE_BUILD_NUM'))) {
