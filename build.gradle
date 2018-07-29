@@ -149,6 +149,15 @@ if (secretFile.exists()) {
   secretFile.withReader {
     project.secret.data = new JsonSlurper().parse it
   }
+} else {
+  project.secret.data = new JsonSlurper().parseText(
+    '{ "username" : "' + (System.getenv('userMaven') ? System.getenv('userMaven') : '') + '",'
+    + '"password" : "' + (System.getenv('authMaven') ? System.getenv('authMaven') : '') + '",'
+    + '"url" : "' + (System.getenv('urlMaven') ? System.getenv('urlMaven') : '') + '",'
+    + '"curseforgeAPIKey" : "' + (System.getenv('curse_auth') ? System.getenv('curse_auth') : 0) + '",'
+    + '"sonarHost" : "' + (System.getenv('SONAR_HOST_URL') ? System.getenv('SONAR_HOST_URL') : 'http://localhost:9000') + '",'
+    + '"sonarOrganization" : "",'
+    + '"sonarToken" : "' + (System.getenv('SONAR_AUTH_TOKEN') ? System.getenv('SONAR_AUTH_TOKEN') : 0) + '"}')
 }
 
 minecraft {
