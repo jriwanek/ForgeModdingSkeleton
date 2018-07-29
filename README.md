@@ -7,7 +7,7 @@ Skeletons for building Forge mods
 3) Sonarqube & Jar Signing Support for CircleCI
 4) Only supports the maven-publish plugin, not the old maven plugin which also supports SSH Pubkey authentication
 5) Secret parser should support Gradle properties too
-6) Fix JUnit3, JUnit4 & JUnit Vintage compatibility
+6) Fix JUnit3, JUnit4 & JUnit Vintage compatibility (Should be done)
 7) Support for JUnit on gradle < 4.6 (Will be on different branch)
 
 ## Known Caveats:
