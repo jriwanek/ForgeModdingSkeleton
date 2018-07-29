@@ -165,15 +165,15 @@ minecraft {
 
   replace '@MOD_VERSION@', project.short_version
 
-  if ((project.hasProperty('signSHA1')) && (project.hasProperty('doSignJar'))) {
+  if ((project.hasProperty('signSHA1')) && (project.hasProperty('sign_jar'))) {
     replace '@FINGERPRINT@', project.findProperty('signSHA1')
   } else {
     replace '@FINGERPRINT@', ''
   }
 
   if (project.hasProperty('coreplugin')) {
-    clientJvmArgs += '-Dfml.coreMods.load=' + project.coreplugin
-    serverJvmArgs += '-Dfml.coreMods.load=' + project.coreplugin
+    clientJvmArgs += '-Dfml.coreMods.load=' + project.core_plugin
+    serverJvmArgs += '-Dfml.coreMods.load=' + project.core_plugin
   }
 
   if (project.hasProperty('mc_username')) {
@@ -186,24 +186,20 @@ minecraft {
     clientRunArgs += ['--uuid', project.mc_uuid]
   }
 
-  // disable server gui
-  if (project.hasProperty('server_nogui')) {
+  if (project.hasProperty('mc_server_nogui')) {
     serverRunArgs += 'nogui'
   }
 
-  // skip the screen to confirm that you want to load a world with missing registry entries
-  if (project.hasProperty('doNotBackup')) {
+  if (project.hasProperty('forge_do_not_backup')) {
     serverJvmArgs += '-Dfml.doNotBackup=true'
     clientJvmArgs += '-Dfml.doNotBackup=true'
   }
 
-  // skip having to confirm on server
-  if (project.hasProperty('queryResultConfirm')) {
+  if (project.hasProperty('forge_query_result_confirm')) {
     serverJvmArgs += '-Dfml.queryResult=confirm'
   }
 
-  // skip jansi warnings in the log
-  if (project.hasProperty('skipJansi')) {
+  if (project.hasProperty('log4j_skip_jansi')) {
     serverJvmArgs += '-Dlog4j.skipJansi=true'
     clientJvmArgs += '-Dlog4j.skipJansi=true'
   }
@@ -224,18 +220,18 @@ minecraft {
     serverJvmArgs += project.server_jvm_args
   }
 
-  if (project.hasProperty('client_run_args')) {
-    clientRunArgs += project.client_run_args
+  if (project.hasProperty('client_game_args')) {
+    clientRunArgs += project.client_game_args
   }
-  if (project.hasProperty('server_run_args')) {
-    serverRunArgs += project.server_run_args
+  if (project.hasProperty('server_game_args')) {
+    serverRunArgs += project.server_game_args
   }
 
-  if (!project.hasProperty('doSourceJar')) {
+  if (!project.hasProperty('create_source_jar')) {
     makeObfSourceJar = false
   }
-  if (project.hasProperty('depHasATs')) {
-    useDepAts = project.depHasATs
+  if (project.hasProperty('dep_has_ats')) {
+    useDepAts = project.dep_has_ats
   }
 }
 
@@ -274,7 +270,7 @@ jar {
     attributes 'Timestamp' : System.currentTimeMillis()
     if (project.hasProperty('coreplugin')) {
       attributes 'FMLCorePluginContainsFMLMod': 'true'
-      attributes 'FMLCorePlugin': project.coreplugin
+      attributes 'FMLCorePlugin': project.core_plugin
     }
     if (project.hasProperty('at_file')) {
       attributes 'FMLAT' : project.at_file
@@ -312,21 +308,21 @@ task signJar(type: SignJar, dependsOn: reobfJar) {
   keyPass = project.findProperty('keyStoreKeyPass')
 }
 
-if (project.hasProperty('doSignJar')) {
+if (project.hasProperty('sign_jar')) {
   build.dependsOn signJar
 }
 
 artifacts {
-  if (project.hasProperty('doAPIJar')) {
+  if (project.hasProperty('create_api_jar')) {
     archives apiJar
   }
-  if (project.hasProperty('doDeobfJar')) {
+  if (project.hasProperty('create_deobf_jar')) {
     archives deobfJar
   }
-  if (project.hasProperty('doSourceJar')) {
+  if (project.hasProperty('create_source_jar')) {
     archives sourceJar
   }
-  if (project.hasProperty('doJavadocJar')) {
+  if (project.hasProperty('create_javadoc_jar')) {
     archives javadocJar
   }
 }
@@ -338,22 +334,22 @@ publishing {
       artifactId project.archivesBaseName
       version project.version
       from components.java
-      if (project.hasProperty('doSourceJar')) {
+      if (project.hasProperty('create_source_jar')) {
         artifact sourceJar {
           classifier 'sources'
         }
       }
-      if (project.hasProperty('doAPIJar')) {
+      if (project.hasProperty('create_api_jar')) {
         artifact apiJar {
           classifier 'api'
         }
       }
-      if (project.hasProperty('doDeobfJar')) {
+      if (project.hasProperty('create_deobf_jar')) {
         artifact deobfJar {
           classifier 'deobf'
         }
       }
-      if (project.hasProperty('doJavadocJar')) {
+      if (project.hasProperty('create_javadoc_jar')) {
         artifact javadocJar {
           classifier 'javadoc'
         }
@@ -394,40 +390,40 @@ curseforge {
         if (project.hasProperty('cf_use_custom_display_name')) {
           displayName = "${project.description} ${project.display_version}"
         }
-        if (project.hasProperty('curse_requirements') || project.hasProperty('curse_optionals') || project.hasProperty('curse_embeddeds') || project.hasProperty('curse_tools') || project.hasProperty('curse_incompatibles') || project.hasProperty('curse_includes')) {
+        if (project.hasProperty('cf_requirements') || project.hasProperty('cf_optionals') || project.hasProperty('cf_embeddeds') || project.hasProperty('cf_tools') || project.hasProperty('cf_incompatibles') || project.hasProperty('cf_includes')) {
           relations {
-            if (project.hasProperty('curse_requirements')) {
-              def requirements = "${project.curse_requirements}".split(', ')
+            if (project.hasProperty('cf_requirements')) {
+              def requirements = "${project.cf_requirements}".split(', ')
               requirements.each {
                 requiredLibrary "${it}"
               }
             }
-            if (project.hasProperty('curse_optionals')) {
-              def optionals = "${project.curse_optionals}".split(', ')
+            if (project.hasProperty('cf_optionals')) {
+              def optionals = "${project.cf_optionals}".split(', ')
               optionals.each {
                 optionalLibrary "${it}"
               }
             }
-            if (project.hasProperty('curse_embeddeds')) {
-              def embeddeds = "${project.curse_embeddeds}".split(', ')
+            if (project.hasProperty('cf_embeddeds')) {
+              def embeddeds = "${project.cf_embeddeds}".split(', ')
               embeddeds.each {
                 embeddedLibrary "${it}"
               }
             }
-            if (project.hasProperty('curse_tools')) {
-              def tools = "${project.curse_tools}".split(', ')
+            if (project.hasProperty('cf_tools')) {
+              def tools = "${project.cf_tools}".split(', ')
               tools.each {
                 tool "${it}"
               }
             }
-            if (project.hasProperty('curse_incompatibles')) {
-              def incompatibles = "${project.curse_incompatibles}".split(', ')
+            if (project.hasProperty('cf_incompatibles')) {
+              def incompatibles = "${project.cf_incompatibles}".split(', ')
               incompatibles.each {
                 incompatible "${it}"
               }
             }
-            if (project.hasProperty('curse_includes')) {
-              def includes = "${project.curse_includes}".split(', ')
+            if (project.hasProperty('cf_includes')) {
+              def includes = "${project.cf_includes}".split(', ')
               includeds.each {
                 include "${it}"
               }
@@ -435,28 +431,28 @@ curseforge {
           }
         }
       }
-      if (project.hasProperty('doAPIJar')) {
+      if (project.hasProperty('create_api_jar')) {
         addArtifact(apiJar) {
           if (project.hasProperty('cf_use_custom_display_name')) {
             displayName = "${project.description} ${project.display_version} API"
           }
         }
       }
-      if (project.hasProperty('doSourceJar')) {
+      if (project.hasProperty('create_source_jar')) {
         addArtifact(sourceJar) {
           if (project.hasProperty('cf_use_custom_display_name')) {
             displayName = "${project.description} ${project.display_version} Sources"
           }
         }
       }
-      if (project.hasProperty('doDeobfJar')) {
+      if (project.hasProperty('create_deobf_jar')) {
         addArtifact(deobfJar) {
           if (project.hasProperty('cf_use_custom_display_name')) {
             displayName = "${project.description} ${project.display_version} Development"
           }
         }
       }
-      if (project.hasProperty('doJavadocJar')) {
+      if (project.hasProperty('create_javadoc_jar')) {
         addArtifact(javadocJar) {
           if (project.hasProperty('cf_use_custom_display_name')) {
             displayName = "${project.description} ${project.display_version} Javadoc"
