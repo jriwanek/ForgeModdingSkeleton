@@ -369,8 +369,7 @@ publishing {
 }
 
 curseforge {
-  if (project.hasProperty('cf_project_id') && project.hasProperty('cf_release_type') && project.hasProperty('cf_changelog_filename') &&
-      ((project.cf_release_type == 'alpha') || (project.cf_release_type == 'beta') || (project.cf_release_type == 'release'))) {
+  if (project.hasProperty('cf_project_id') && project.hasProperty('cf_changelog_filename')) {
     apiKey = secret.curseforgeAPIKey
     project {
       id = project.cf_project_id
@@ -380,7 +379,12 @@ curseforge {
       if (project.hasProperty('cf_changelog_type')) {
         changelogType = project.cf_changelog_type
       }
-      releaseType = project.cf_release_type
+      if ((project.hasProperty('cf_release_type')) &&
+      ((project.cf_release_type == 'alpha') || (project.cf_release_type == 'beta') || (project.cf_release_type == 'release'))){
+        releaseType = project.cf_release_type
+      } else {
+        releaseType = 'alpha'
+	  }
       if (project.hasProperty('cf_versions')) {
         def versions = "${property.cf_versions}".split(', ')
         versions.each {
