@@ -10,7 +10,7 @@ Skeletons for building Forge mods
 6) Fix JUnit3, JUnit4 & JUnit Vintage compatibility
 7) Support for JUnit on gradle < 4.6
 
-## Known Bugs:
+## Known Caveats:
 1) Many versions hard-coded
 
 ## Script related TODO
