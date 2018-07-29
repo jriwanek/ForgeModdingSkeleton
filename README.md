@@ -16,9 +16,8 @@ Skeletons for building Forge mods
 
 ## Script related TODO
 1) Document secret.json
-2) Finalize names of all options
-3) Finish off JUnit5 feature set
-4) Make sure Jacoco is integrated correctly with JUnit
+2) Finish off JUnit5 feature set
+3) Make sure Jacoco is integrated correctly with JUnit
 
 ## Example Mod TODO:
 1) Model Registration
