@@ -1,0 +1,25 @@
+{{#issues}}
+ {{#hasIssue}}
+  {{#hasLink}}
+#### {{name}} [{{issue}}]({{link}}) {{title}}
+  {{/hasLink}}
+  {{^hasLink}}
+#### {{name}} {{issue}} {{title}}
+  {{/hasLink}}
+ {{/hasIssue}}
+ {{^hasIssue}}
+### {{name}}
+ {{/hasIssue}}
+
+ {{#commits}}
+#### **Commit: {{{messageTitle}}}**
+{{#messageBodyItems}}
+###### * Description: {{.}}
+{{/messageBodyItems}}
+
+[Commit]{{hash}}) {{authorName}} *{{commitTime}}*
+#
+
+ {{/commits}}
+
+{{/issues}}
