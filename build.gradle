@@ -59,7 +59,7 @@ project.afterEvaluate {
   })
 }
 
-// Only used for JUnit Platform Launcher 1.2.0 and earlier
+// Only works with JUnit Platform Launcher 1.2.0 and earlier
 /*
 junitPlatform {
   // platformVersion '1.2.0'
