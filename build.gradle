@@ -121,6 +121,11 @@ eclipse.project {
   natures 'org.eclipse.buildship.core.gradleprojectnature'
 }
 
+idea.module {
+  downloadJavadoc = true
+//  inheritOutputDirs = true
+}
+
 class Secrets {
   def data = null
 
