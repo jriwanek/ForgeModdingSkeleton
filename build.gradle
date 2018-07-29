@@ -208,11 +208,18 @@ minecraft {
     clientJvmArgs += '-Dlog4j.skipJansi=true'
   }
 
-  if (project.hasProperty('client_args')) {
-    clientJvmArgs += project.client_args
+  if (project.hasProperty('client_jvm_args')) {
+    clientJvmArgs += project.client_jvm_args
   }
-  if (project.hasProperty('server_args')) {
-    serverJvmArgs += project.server_args
+  if (project.hasProperty('server_jvm_args')) {
+    serverJvmArgs += project.server_jvm_args
+  }
+
+  if (project.hasProperty('client_run_args')) {
+    clientRunArgs += project.client_run_args
+  }
+  if (project.hasProperty('server_run_args')) {
+    serverRunArgs += project.server_run_args
   }
 
   if (!project.hasProperty('doSourceJar')) {
