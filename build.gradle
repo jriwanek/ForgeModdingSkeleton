@@ -15,9 +15,9 @@ buildscript {
     }
   }
   dependencies {
-    classpath "net.minecraftforge.gradle:ForgeGradle:${project.fg_version}"
-//  classpath 'org.junit.platform:junit-platform-gradle-plugin:1.2.+'
-//  classpath 'com.jaredsburrows:gradle-checker-framework-plugin:0.2.1'
+    classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: project.fg_version
+//    classpath group: 'org.junit.platform', name: 'junit-platform-gradle-plugin', version: '1.2.+'
+//    classpath group: 'com.jaredsburrows', name: 'gradle-checker-framework-plugin', version: '0.2.1'
   }
 }
 
@@ -35,19 +35,6 @@ apply plugin: 'org.sonarqube'
 apply plugin: 'jacoco'
 //apply plugin: 'com.github.spotbugs'
 //apply plugin: 'com.jaredsburrows.checkerframework'
-
-repositories {
-  mavenLocal()
-  mavenCentral()
-}
-
-dependencies {
-  testCompile('org.junit.jupiter:junit-jupiter-api:5.2.+')
-// Only used for JUnit Platform Launcher 1.2.0 and earlier
-//testCompile('org.junit.platform:junit-platform-launcher:1.2.+')
-  testRuntime('org.junit.jupiter:junit-jupiter-engine:5.2.+')
-  testCompile('org.mockito:mockito-core:2.+')
-}
 
 // TODO: Fix this for JUnit Platform Launcher 1.3
 project.afterEvaluate {
@@ -236,6 +223,9 @@ minecraft {
 }
 
 repositories {
+  mavenLocal()
+  mavenCentral()
+  jcenter()
   maven {
     name 'MMD'
     url 'https://maven.mcmoddev.com/'
@@ -243,6 +233,11 @@ repositories {
 }
 
 dependencies {
+  testCompile('org.junit.jupiter:junit-jupiter-api:5.2.+')
+// Only used for JUnit Platform Launcher 1.2.0 and earlier
+//testCompile('org.junit.platform:junit-platform-launcher:1.2.+')
+  testRuntime('org.junit.jupiter:junit-jupiter-engine:5.2.+')
+  testCompile('org.mockito:mockito-core:2.+')
 }
 
 processResources {
