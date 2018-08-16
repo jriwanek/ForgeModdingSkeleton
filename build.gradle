@@ -280,6 +280,7 @@ dependencies {
   testCompile('org.mockito:mockito-junit-jupiter:2.+') {
     exclude group: 'org.junit.jupiter', module: 'junit-jupiter-engine'
   }
+  annotationProcessor group:'org.apache.logging.log4j', name:'log4j-core', version: '2.11.0'
 }
 
 processResources {
