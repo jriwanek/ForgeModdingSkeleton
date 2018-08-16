@@ -37,17 +37,17 @@ apply plugin: 'jacoco'
 apply plugin: 'com.github.spotbugs'
 //apply plugin: 'com.jaredsburrows.checkerframework'
 apply plugin: 'se.bjurr.gitchangelog.git-changelog-gradle-plugin'
-//apply plugin: 'checkstyle'
+apply plugin: 'checkstyle'
 
-// TODO: Fix this for JUnit Platform Launcher 1.3
 project.afterEvaluate {
-//  def junitPlatformTestTask = project.tasks.getByName('junitPlatformTest')
+  //final def junitPlatformTestTask = project.tasks.getByName('junitPlatformTest')
 
   // configure jacoco to analyze the junitPlatformTest task
   jacoco {
     // this tool version is compatible with
     toolVersion = '0.8.1'
-//    applyTo junitPlatformTestTask
+//  Not needed with new way
+//  applyTo junitPlatformTestTask
   }
 
   // create junit platform jacoco task
@@ -55,7 +55,8 @@ project.afterEvaluate {
   {
     sourceDirectories = files("./src/main")
     classDirectories = files("${project.buildDir}/classes/main")
-//    executionData junitPlatformTestTask
+//  Not needed with new way
+    executionData junitPlatformTestTask
   })
 }
 
@@ -74,14 +75,22 @@ junitPlatform {
 spotbugs {
   ignoreFailures = true
   toolVersion = '3.1.6'
+  effort = 'max'
+  reportLevel = 'low'
+  //includeFilter = file("$rootProject.projectDir/config/spotbugs-filter.xml")
 }
 
-/*
+tasks.withType(com.github.spotbugs.SpotBugsTask) {
+  reports {
+    xml.enabled = false
+    html.enabled = true
+  }
+}
+
 checkstyle {
   ignoreFailures = true
   toolVersion = '8.11'
 }
-*/
 
 tasks.withType(JavaCompile) {
   options.encoding = 'UTF-8'
@@ -90,6 +99,10 @@ tasks.withType(JavaCompile) {
 //  '-Xdiags:verbose',
 //  '-Werror'
   ]
+}
+
+tasks.withType(Test) {
+  compileTestJava.options.compilerArgs += '-proc:none'
 }
 
 javadoc {
@@ -123,7 +136,8 @@ String getBuildNumber() {
   return System.getenv('BUILD_NUMBER') ? System.getenv('BUILD_NUMBER') : System.getenv('TRAVIS_BUILD_NUMBER') ? System.getenv('TRAVIS_BUILD_NUMBER') : System.getenv('CIRCLE_BUILD_NUM') ? System.getenv('CIRCLE_BUILD_NUM') : '0';
 }
 
-sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
 
 eclipse.project {
   buildCommand 'org.eclipse.buildship.core.gradleprojectbuilder'
@@ -240,6 +254,7 @@ minecraft {
   if (!project.hasProperty('create_source_jar')) {
     makeObfSourceJar = false
   }
+
   if (project.hasProperty('dep_has_ats')) {
     useDepAts = project.dep_has_ats
   }
@@ -289,6 +304,8 @@ jar {
 
   manifest {
     attributes 'Maven-Artifact' : "${project.group}:${project.archivesBaseName}:${project.version}"
+    attributes "Implementation-Title": project.archivesBaseName
+    attributes "Implementation-Version": version
     attributes 'Timestamp' : System.currentTimeMillis()
     if (project.hasProperty('coreplugin')) {
       attributes 'FMLCorePluginContainsFMLMod': 'true'
@@ -378,26 +395,33 @@ publishing {
       }
 	  /*
       pom {
-        name = 'My Library'
-        description = 'A concise description of my library'
-        url = 'http://www.example.com/library'
+        name = 'Example'
+        description = 'An Example'
+        url = 'https://github.com/Examples/Example'
+		packaging = 'jar'
+        //inceptionYear = ''
         licenses {
           license {
-            name = 'The Apache License, Version 2.0'
-            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-          }
-        }
-        developers {
-          developer {
-            id = 'johnd'
-            name = 'John Doe'
-            email = 'john.doe@example.com'
+            name = 'GNU Lesser General Public License, Version 2.1'
+            url = 'https://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt'
           }
         }
         scm {
-          connection = 'scm:git:git://example.com/my-library.git'
-          developerConnection = 'scm:git:ssh://example.com/my-library.git'
-          url = 'http://example.com/my-library/'
+          connection = 'scm:git:git://github.com/Examples/Example.git'
+          developerConnection = 'scm:git:git@github.com:Examples/Example.git'
+          url = 'https://github.com/Examples/Example'
+        }
+        issueManagement {
+          system = 'github'
+          url = 'https://github.com/Examples/Example.git/issues'
+        }
+        ciManagement {
+          system = 'jenkins'
+          url = 'https://ci.mcmoddev.com/'
+        }
+        organization {
+          name = 'Minecraft Mod Development'
+          url = 'https://mcmoddev.com/'
         }
       }
 	  */
@@ -424,9 +448,7 @@ curseforge {
     apiKey = secret.curseforgeAPIKey
     project {
       id = project.cf_project_id
-      // A list of changes for the current build. This can be a String or a File. If a file is set, its contents will be used. This is a required field.
       changelog = file(project.cf_changelog_filename)
-      // The type of changelog. This can be: text, html, or markdown. The default is text.
       if (project.hasProperty('cf_changelog_type')) {
         changelogType = project.cf_changelog_type
       }
@@ -437,7 +459,7 @@ curseforge {
         releaseType = 'alpha'
 	  }
       if (project.hasProperty('cf_versions')) {
-        def versions = "${property.cf_versions}".split(', ')
+        def versions = "${project.cf_versions}".split(', ')
         versions.each {
           addGameVersion "${it}"
         }
@@ -548,7 +570,7 @@ String getModFile() {
       element.file.eachLine { String s ->
         s = s.trim()
         if (s.startsWith('@Mod(')) {
-          path = "src/main/java/$element.relativePath"
+          path = "src/main/java/${element.relativePath}"
         }
       }
     }
@@ -570,9 +592,9 @@ String getVersion(String type, String mod_file) {
       interesting = interesting.substring(1, interesting.length() - 2)
       String[] pts = interesting.trim().split("\\.")
 
-      major = pts[0] ?: '0'
-      revision = pts[1] ?: '0'
-      patch = pts[2] ?: '0'
+      major = (pts[0] ?: '0')
+      revision = (pts[1] ?: '0')
+      patch = (pts[2] ?: '0')
     }
   }
   return "$major.$revision.$patch"
