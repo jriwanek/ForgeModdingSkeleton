@@ -5,13 +5,13 @@ Skeletons for building Forge mods
 1) Support Curse ChangeLog from String
 2) Sonarqube & Jar Signing Support for Travis
 3) Sonarqube & Jar Signing Support for CircleCI
-4) Only supports the maven-publish plugin, not the old maven plugin which also supports SSH Pubkey authentication
-5) Secret parser should support Gradle properties too
-6) Fix JUnit3, JUnit4 & JUnit Vintage compatibility (Should be done)
-7) Support for JUnit on gradle < 4.6 (Will be on different branch)
+4) Secret parser should support Gradle properties too
+5) Fix JUnit3, JUnit4 & JUnit Vintage compatibility (Should be done)
+6) Support for JUnit on gradle < 4.6 (Effectively done, Will be on different branch)
 
 ## Known Caveats:
 1) Many versions hard-coded
+2) Only supports the maven-publish plugin, not the old maven plugin which also supports SSH Pubkey authentication
 
 ## Script related TODO
 1) Document secret.json
