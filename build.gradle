@@ -578,7 +578,11 @@ String getModFile() {
   return path
 }
 
-String getVersion(String type, String mod_file) {
+String getVersion(final String type) {
+  return getVersion(type, getModFile())
+}
+
+String getVersion(final String type, final String mod_file) {
   String major = '0'
   String revision = '0'
   String patch = '0'
