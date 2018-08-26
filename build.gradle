@@ -305,10 +305,14 @@ jar {
   //from sourceSets.main.output
 
   manifest {
-    attributes 'Maven-Artifact' : "${project.group}:${project.archivesBaseName}:${project.version}"
-    attributes "Implementation-Title": project.archivesBaseName
-    attributes "Implementation-Version": version
-    attributes 'Timestamp' : System.currentTimeMillis()
+    mainAttributes(
+      'Maven-Artifact': "${project.group}:${project.archivesBaseName}:${project.version}",
+      'Timestamp': System.currentTimeMillis(),
+      "Implementation-Title": project.archivesBaseName,
+      "Implementation-Version": version,
+      'Built-On-Java': "${System.getProperty("java.vm.version")} + (${System.getProperty("java.vm.vendor")})",
+      'Built-On': "${project.mc_version}-${project.forge_version}"
+    )
     if (project.hasProperty('coreplugin')) {
       attributes 'FMLCorePluginContainsFMLMod': 'true'
       attributes 'FMLCorePlugin': project.core_plugin
@@ -327,6 +331,14 @@ task apiJar(type: Jar) {
   classifier = 'api'
   from apiClasses
   // from sourceSets.api.output
+  manifest.mainAttributes(
+    'Maven-Artifact': "${project.group}:${project.archivesBaseName}:${project.version}:api",
+    'Timestamp': System.currentTimeMillis(),
+    'Implementation-Title': project.name + "-api",
+    'Implementation-Version': project.version,
+    'Built-On': "${project.mc_version}-${project.forge_version}",
+    'Built-On-Java': "${System.getProperty("java.vm.version")} + (${System.getProperty("java.vm.vendor")})"
+  )
 }
 
 task deobfJar(type: Jar) {
@@ -336,6 +348,22 @@ task deobfJar(type: Jar) {
 
   classifier = 'deobf'
   from sourceSets.main.output
+  manifest {
+    mainAttributes(
+      'Maven-Artifact': "${project.group}:${project.archivesBaseName}:${project.version}:deobf",
+      'Timestamp': System.currentTimeMillis(),
+      'Implementation-Title': project.name + "-deobf",
+      'Implementation-Version': project.version,
+      'Built-On-Java': "${System.getProperty("java.vm.version")} + (${System.getProperty("java.vm.vendor")})",
+      'Built-On': "${project.mc_version}-${project.forge_version}"
+	)
+    if (project.hasProperty('at_file')) {
+      attributes 'FMLAT' : project.at_file
+    }
+    if(project.hasProperty("core_plugin")) {
+      attributes "FMLCorePlugin": project.core_plugin
+    }
+  }
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
@@ -345,6 +373,14 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 
   classifier = 'javadoc'
   from javadoc.getDestinationDir()
+  manifest.mainAttributes(
+    'Maven-Artifact': "${project.group}:${project.archivesBaseName}:${project.version}:javadoc",
+    'Timestamp': System.currentTimeMillis(),
+    'Implementation-Title': project.name + "-javadoc",
+    'Implementation-Version': project.version,
+    'Built-On-Java': "${System.getProperty("java.vm.version")} + (${System.getProperty("java.vm.vendor")})",
+    'Built-On': "${project.mc_version}-${project.forge_version}"
+  )
 }
 
 task signJar(type: SignJar, dependsOn: reobfJar) {
