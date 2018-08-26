@@ -31,3 +31,4 @@ libs/*
 !/libs/README.txt
 
 .DS_Store
+.okhttpcache/*
