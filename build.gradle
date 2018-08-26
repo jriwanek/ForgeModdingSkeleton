@@ -663,7 +663,7 @@ sonarqube {
   properties {
     property 'sonar.host.url', secret.sonarHost
     property 'sonar.login', secret.sonarToken
-    if (project.hasProperty(project.sonar_organisation)) {
+    if (project.hasProperty('sonar_organisation')) {
       property 'sonar.organization', project.sonar_organisation
     } else {
 	  if (secret.sonarOrganisation != '') {
