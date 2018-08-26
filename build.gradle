@@ -152,7 +152,7 @@ idea.module {
 class Secrets {
   def data = null
 
-  def getProperty(String key) {
+  def getProperty(final String key) {
     return data ? data[key] : ''
   }
 }
@@ -264,6 +264,7 @@ repositories {
   mavenLocal()
   mavenCentral()
   jcenter()
+
   maven {
     name 'MMD'
     url 'https://maven.mcmoddev.com/'
@@ -564,9 +565,9 @@ sonarqube {
 
 String getModFile() {
   String path = ''
-  FileTree tree = fileTree(dir: 'src/main/java')
+  final FileTree tree = fileTree(dir: 'src/main/java')
   tree.include '**/*.java'
-  tree.visit { element ->
+  tree.visit { final element ->
     if (element.file.isFile()) {
       element.file.eachLine { String s ->
         s = s.trim()
@@ -587,15 +588,15 @@ String getVersion(final String type, final String mod_file) {
   String major = '0'
   String revision = '0'
   String patch = '0'
-  File file = file(mod_file)
-  def prefix = ~/^(?:public|protected|private) static final String $type = ".*$/
+  final File file = file(mod_file)
+  final def prefix = ~/^(?:public|protected|private) static final String $type = ".*$/
   file.eachLine { String s ->
     s = s.trim()
     if (s ==~ prefix || prefix.matcher(s).matches()) {
-      String[] bits = s.split("=")
+      final String[] bits = s.split("=")
       String interesting = bits[1].trim()
       interesting = interesting.substring(1, interesting.length() - 2)
-      String[] pts = interesting.trim().split("\\.")
+      final String[] pts = interesting.trim().split("\\.")
 
       major = (pts[0] ?: '0')
       revision = (pts[1] ?: '0')
