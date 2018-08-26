@@ -189,7 +189,7 @@ minecraft {
 
   replace '@MOD_VERSION@', project.short_version
 
-  if ((project.hasProperty('signSHA1')) && (project.hasProperty('sign_jar'))) {
+  if ((project.hasProperty('signSHA1')) && (project.hasProperty('do_sign_jar'))) {
     replace '@FINGERPRINT@', project.findProperty('signSHA1')
   } else {
     replace '@FINGERPRINT@', ''
@@ -348,7 +348,7 @@ task signJar(type: SignJar, dependsOn: reobfJar) {
   keyPass = project.findProperty('keyStoreKeyPass')
 }
 
-if (project.hasProperty('sign_jar')) {
+if (project.hasProperty('do_sign_jar')) {
   build.dependsOn signJar
 }
 
