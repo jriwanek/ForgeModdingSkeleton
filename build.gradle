@@ -177,8 +177,8 @@ if (secretFile.exists()) {
     + '"password" : "' + (System.getenv('authMaven') ? System.getenv('authMaven') : '') + '",'
     + '"url" : "' + (System.getenv('urlMaven') ? System.getenv('urlMaven') : '') + '",'
     + '"curseforgeAPIKey" : "' + (System.getenv('curse_auth') ? System.getenv('curse_auth') : '00000000-0000-0000-0000-000000000000') + '",'
-    + '"sonarOrganization" : "",'
     + '"sonarHost" : "' + (System.getenv('SONAR_HOST_URL') ? System.getenv('SONAR_HOST_URL') : 'https://sonarcloud.io:9000') + '",'
+    + '"sonarOrganization" : "' + (System.getenv('SONAR_ORGANIZATION') ? System.getenv('SONAR_ORGANIZATION') : '') + '",'
     + '"sonarToken" : "' + (System.getenv('SONAR_AUTH_TOKEN') ? System.getenv('SONAR_AUTH_TOKEN') : 0) + '"}')
 }
 
