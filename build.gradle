@@ -547,15 +547,16 @@ publishing {
   }
   repositories {
     maven {
-	  // TODO: This needs to be blocked out for local files
-      credentials {
-        username secret.username
-        password secret.password
+	  if ((secret.username != '') && (secret.password != '')) {
+        credentials {
+          username secret.username
+          password secret.password
+        }
       }
-      if (!secret.url == '') {
+      if (secret.url != '') {
         url secret.url
       } else {
-	    url "${project.buildDir}/repo"
+        url "${project.buildDir}/repo"
 	  }
     }
   }
