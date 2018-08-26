@@ -429,6 +429,22 @@ task signDeobfJar(type: SignJar) {
   }
 }
 
+task signSourceJar(type: SignJar) {
+  onlyIf {
+    project.hasProperty("keyStore")
+  }
+
+  if(project.hasProperty("keyStore")) {
+    keyStore = project.findProperty("keyStore")
+    alias = project.findProperty("keyStoreAlias")
+    storePass = project.findProperty("keyStorePass")
+    keyPass = project.findProperty("keyStoreKeyPass")
+
+    inputFile = sourceJar.archivePath
+    outputFile = sourceJar.archivePath
+  }
+}
+
 task signJavadocJar(type: SignJar) {
   onlyIf {
     project.hasProperty("keyStore")
@@ -449,6 +465,7 @@ if (project.hasProperty('do_sign_jar')) {
   build.dependsOn signJar
   build.dependsOn signApiJar
   build.dependsOn signDeobfJar
+  build.dependsOn signSourceJar
   build.dependsOn signJavadocJar
 }
 
