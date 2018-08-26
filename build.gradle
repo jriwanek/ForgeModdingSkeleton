@@ -662,7 +662,13 @@ curseforge {
 
 sonarqube {
   properties {
-    property 'sonar.host.url', secret.sonarHost
+    if (project.hasProperty('sonar_host_url')) {
+      property 'sonar.host.url', project.sonar_host_url
+    } else {
+      if (secret.sonarHost != '') {
+        property 'sonar.host.url', secret.sonarHost
+      }
+    }
     property 'sonar.login', secret.sonarToken
     if (project.hasProperty('sonar_organisation')) {
       property 'sonar.organization', project.sonar_organisation
