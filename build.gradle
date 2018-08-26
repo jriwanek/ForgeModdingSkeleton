@@ -56,7 +56,7 @@ project.afterEvaluate {
     sourceDirectories = files("./src/main")
     classDirectories = files("${project.buildDir}/classes/main")
 //  Not needed with new way
-    executionData junitPlatformTestTask
+//  executionData junitPlatformTestTask
   })
 }
 
