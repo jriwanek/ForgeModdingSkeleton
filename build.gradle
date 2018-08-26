@@ -320,17 +320,29 @@ jar {
 }
 
 task apiJar(type: Jar) {
-  classifier = 'apiClasses'
+  onlyIf {
+    project.hasProperty('create_api_jar')
+  }
+
+  classifier = 'api'
   from apiClasses
   // from sourceSets.api.output
 }
 
 task deobfJar(type: Jar) {
+  onlyIf {
+    project.hasProperty('create_deobf_jar')
+  }
+
   classifier = 'deobf'
   from sourceSets.main.output
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
+  onlyIf {
+    project.hasProperty('create_javadoc_jar')
+  }
+
   classifier = 'javadoc'
   from javadoc.getDestinationDir()
 }
