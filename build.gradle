@@ -123,7 +123,7 @@ test {
 
 //ext.short_version = '1.0.0'
 //ext.short_version = getVersion('VERSION', <path to file containing version string)
-ext.short_version = getVersion('VERSION', getModFile())
+ext.short_version = getVersion('VERSION')
 version = (project.hasProperty('mc_version') ? project.mc_version : project.forge_mc_version) + '-' + short_version
 ext.display_version = short_version
 
