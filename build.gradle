@@ -397,8 +397,59 @@ task signJar(type: SignJar, dependsOn: reobfJar) {
   keyPass = project.findProperty('keyStoreKeyPass')
 }
 
+task signApiJar(type: SignJar) {
+  onlyIf {
+    project.hasProperty("keyStore")
+  }
+
+  if(project.hasProperty("keyStore")) {
+    keyStore = project.findProperty("keyStore")
+    alias = project.findProperty("keyStoreAlias")
+    storePass = project.findProperty("keyStorePass")
+    keyPass = project.findProperty("keyStoreKeyPass")
+
+    inputFile = apiJar.archivePath
+    outputFile = apiJar.archivePath
+  }
+}
+
+task signDeobfJar(type: SignJar) {
+  onlyIf {
+    project.hasProperty("keyStore")
+  }
+
+  if(project.hasProperty("keyStore")) {
+    keyStore = project.findProperty("keyStore")
+    alias = project.findProperty("keyStoreAlias")
+    storePass = project.findProperty("keyStorePass")
+    keyPass = project.findProperty("keyStoreKeyPass")
+
+    inputFile = deobfJar.archivePath
+    outputFile = deobfJar.archivePath
+  }
+}
+
+task signJavadocJar(type: SignJar) {
+  onlyIf {
+    project.hasProperty("keyStore")
+  }
+
+  if(project.hasProperty("keyStore")) {
+    keyStore = project.findProperty("keyStore")
+    alias = project.findProperty("keyStoreAlias")
+    storePass = project.findProperty("keyStorePass")
+    keyPass = project.findProperty("keyStoreKeyPass")
+
+    inputFile = javadocJar.archivePath
+    outputFile = javadocJar.archivePath
+  }
+}
+
 if (project.hasProperty('do_sign_jar')) {
   build.dependsOn signJar
+  build.dependsOn signApiJar
+  build.dependsOn signDeobfJar
+  build.dependsOn signJavadocJar
 }
 
 artifacts {
