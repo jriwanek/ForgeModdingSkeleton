@@ -132,7 +132,7 @@ if ((System.getenv('BUILD_NUMBER')) || (System.getenv('TRAVIS_BUILD_NUMBER')) ||
   display_version += '.' + getBuildNumber()
 }
 
-String getBuildNumber() {
+static String getBuildNumber() {
   return System.getenv('BUILD_NUMBER') ? System.getenv('BUILD_NUMBER') : System.getenv('TRAVIS_BUILD_NUMBER') ? System.getenv('TRAVIS_BUILD_NUMBER') : System.getenv('CIRCLE_BUILD_NUM') ? System.getenv('CIRCLE_BUILD_NUM') : '0';
 }
 
