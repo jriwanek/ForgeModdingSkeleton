@@ -356,7 +356,7 @@ task deobfJar(type: Jar) {
       'Implementation-Version': project.version,
       'Built-On-Java': "${System.getProperty("java.vm.version")} + (${System.getProperty("java.vm.vendor")})",
       'Built-On': "${project.mc_version}-${project.forge_version}"
-	)
+    )
     if (project.hasProperty('at_file')) {
       attributes 'FMLAT' : project.at_file
     }
@@ -511,12 +511,12 @@ publishing {
           classifier 'javadoc'
         }
       }
-	  /*
+      /*
       pom {
         name = 'Example'
         description = 'An Example'
         url = 'https://github.com/Examples/Example'
-		packaging = 'jar'
+        packaging = 'jar'
         //inceptionYear = ''
         licenses {
           license {
@@ -542,7 +542,7 @@ publishing {
           url = 'https://mcmoddev.com/'
         }
       }
-	  */
+      */
     }
   }
   repositories {
@@ -575,7 +575,7 @@ curseforge {
         releaseType = project.cf_release_type
       } else {
         releaseType = 'alpha'
-	  }
+      }
       if (project.hasProperty('cf_versions')) {
         def versions = "${project.cf_versions}".split(', ')
         versions.each {
@@ -666,10 +666,10 @@ sonarqube {
     if (project.hasProperty('sonar_organisation')) {
       property 'sonar.organization', project.sonar_organisation
     } else {
-	  if (secret.sonarOrganisation != '') {
+      if (secret.sonarOrganisation != '') {
         property 'sonar.organization', secret.sonarOrganization
-	  }
-	}
+      }
+    }
     // property 'sonar.projectName', project.archivesBaseName
     // property 'sonar.projectKey', "${project.group}:${project.archivesBaseName}"
     // property 'sonar.branch.name', 'master-1.12'
