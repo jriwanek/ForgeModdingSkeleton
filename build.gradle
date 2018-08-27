@@ -469,6 +469,9 @@ if (project.hasProperty('do_sign_jar')) {
   build.dependsOn signJavadocJar
 }
 
+tasks.publish.dependsOn build
+tasks.curseforge.dependsOn publish
+
 artifacts {
   if (project.hasProperty('create_api_jar')) {
     archives apiJar
