@@ -53,9 +53,9 @@ project.afterEvaluate {
   }
 
   // create junit platform jacoco task
-  project.task(type: JacocoReport, "junitPlatformJacocoReport",
+  project.task(type: JacocoReport, 'junitPlatformJacocoReport',
   {
-    sourceDirectories = files("./src/main")
+    sourceDirectories = files('./src/main')
     classDirectories = files("${project.buildDir}/classes/main")
 //  Not needed with new way
 //  executionData junitPlatformTestTask
@@ -310,9 +310,9 @@ jar {
     mainAttributes(
       'Maven-Artifact': "${project.group}:${project.archivesBaseName}:${project.version}",
       'Timestamp': System.currentTimeMillis(),
-      "Implementation-Title": project.archivesBaseName,
-      "Implementation-Version": version,
-      'Built-On-Java': "${System.getProperty("java.vm.version")} + (${System.getProperty("java.vm.vendor")})",
+      'Implementation-Title': project.archivesBaseName,
+      'Implementation-Version': version,
+      'Built-On-Java': "${System.getProperty('java.vm.version')} (${System.getProperty('java.vm.vendor')})",
       'Built-On': "${project.mc_version}-${project.forge_version}"
     )
     if (project.hasProperty('coreplugin')) {
@@ -336,10 +336,10 @@ task apiJar(type: Jar) {
   manifest.mainAttributes(
     'Maven-Artifact': "${project.group}:${project.archivesBaseName}:${project.version}:api",
     'Timestamp': System.currentTimeMillis(),
-    'Implementation-Title': project.name + "-api",
+    'Implementation-Title': project.name + '-api',
     'Implementation-Version': project.version,
     'Built-On': "${project.mc_version}-${project.forge_version}",
-    'Built-On-Java': "${System.getProperty("java.vm.version")} + (${System.getProperty("java.vm.vendor")})"
+    'Built-On-Java': "${System.getProperty('java.vm.version')} (${System.getProperty('java.vm.vendor')})"
   )
 }
 
@@ -354,16 +354,16 @@ task deobfJar(type: Jar) {
     mainAttributes(
       'Maven-Artifact': "${project.group}:${project.archivesBaseName}:${project.version}:deobf",
       'Timestamp': System.currentTimeMillis(),
-      'Implementation-Title': project.name + "-deobf",
+      'Implementation-Title': project.name + '-deobf',
       'Implementation-Version': project.version,
-      'Built-On-Java': "${System.getProperty("java.vm.version")} + (${System.getProperty("java.vm.vendor")})",
+      'Built-On-Java': "${System.getProperty('java.vm.version')} (${System.getProperty('java.vm.vendor')})",
       'Built-On': "${project.mc_version}-${project.forge_version}"
     )
     if (project.hasProperty('at_file')) {
       attributes 'FMLAT' : project.at_file
     }
-    if(project.hasProperty("core_plugin")) {
-      attributes "FMLCorePlugin": project.core_plugin
+    if(project.hasProperty('core_plugin')) {
+      attributes 'FMLCorePlugin': project.core_plugin
     }
   }
 }
@@ -378,9 +378,9 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
   manifest.mainAttributes(
     'Maven-Artifact': "${project.group}:${project.archivesBaseName}:${project.version}:javadoc",
     'Timestamp': System.currentTimeMillis(),
-    'Implementation-Title': project.name + "-javadoc",
+    'Implementation-Title': project.name + '-javadoc',
     'Implementation-Version': project.version,
-    'Built-On-Java': "${System.getProperty("java.vm.version")} + (${System.getProperty("java.vm.vendor")})",
+    'Built-On-Java': "${System.getProperty('java.vm.version')} + (${System.getProperty('java.vm.vendor')})",
     'Built-On': "${project.mc_version}-${project.forge_version}"
   )
 }
@@ -401,14 +401,14 @@ task signJar(type: SignJar, dependsOn: reobfJar) {
 
 task signApiJar(type: SignJar) {
   onlyIf {
-    project.hasProperty("keyStore")
+    project.hasProperty('keyStore')
   }
 
-  if(project.hasProperty("keyStore")) {
-    keyStore = project.findProperty("keyStore")
-    alias = project.findProperty("keyStoreAlias")
-    storePass = project.findProperty("keyStorePass")
-    keyPass = project.findProperty("keyStoreKeyPass")
+  if(project.hasProperty('keyStore')) {
+    keyStore = project.findProperty('keyStore')
+    alias = project.findProperty('keyStoreAlias')
+    storePass = project.findProperty('keyStorePass')
+    keyPass = project.findProperty('keyStoreKeyPass')
 
     inputFile = apiJar.archivePath
     outputFile = apiJar.archivePath
@@ -417,14 +417,14 @@ task signApiJar(type: SignJar) {
 
 task signDeobfJar(type: SignJar) {
   onlyIf {
-    project.hasProperty("keyStore")
+    project.hasProperty('keyStore')
   }
 
-  if(project.hasProperty("keyStore")) {
-    keyStore = project.findProperty("keyStore")
-    alias = project.findProperty("keyStoreAlias")
-    storePass = project.findProperty("keyStorePass")
-    keyPass = project.findProperty("keyStoreKeyPass")
+  if(project.hasProperty('keyStore')) {
+    keyStore = project.findProperty('keyStore')
+    alias = project.findProperty('keyStoreAlias')
+    storePass = project.findProperty('keyStorePass')
+    keyPass = project.findProperty('keyStoreKeyPass')
 
     inputFile = deobfJar.archivePath
     outputFile = deobfJar.archivePath
@@ -433,14 +433,14 @@ task signDeobfJar(type: SignJar) {
 
 task signSourceJar(type: SignJar) {
   onlyIf {
-    project.hasProperty("keyStore")
+    project.hasProperty('keyStore')
   }
 
-  if(project.hasProperty("keyStore")) {
-    keyStore = project.findProperty("keyStore")
-    alias = project.findProperty("keyStoreAlias")
-    storePass = project.findProperty("keyStorePass")
-    keyPass = project.findProperty("keyStoreKeyPass")
+  if(project.hasProperty('keyStore')) {
+    keyStore = project.findProperty('keyStore')
+    alias = project.findProperty('keyStoreAlias')
+    storePass = project.findProperty('keyStorePass')
+    keyPass = project.findProperty('keyStoreKeyPass')
 
     inputFile = sourceJar.archivePath
     outputFile = sourceJar.archivePath
@@ -449,14 +449,14 @@ task signSourceJar(type: SignJar) {
 
 task signJavadocJar(type: SignJar) {
   onlyIf {
-    project.hasProperty("keyStore")
+    project.hasProperty('keyStore')
   }
 
-  if(project.hasProperty("keyStore")) {
-    keyStore = project.findProperty("keyStore")
-    alias = project.findProperty("keyStoreAlias")
-    storePass = project.findProperty("keyStorePass")
-    keyPass = project.findProperty("keyStoreKeyPass")
+  if(project.hasProperty('keyStore')) {
+    keyStore = project.findProperty('keyStore')
+    alias = project.findProperty('keyStoreAlias')
+    storePass = project.findProperty('keyStorePass')
+    keyPass = project.findProperty('keyStoreKeyPass')
 
     inputFile = javadocJar.archivePath
     outputFile = javadocJar.archivePath
@@ -552,7 +552,7 @@ publishing {
   }
   repositories {
     maven {
-	  if ((secret.username != '') && (secret.password != '')) {
+      if ((secret.username != '') && (secret.password != '')) {
         credentials {
           username secret.username
           password secret.password
@@ -562,7 +562,7 @@ publishing {
         url secret.url
       } else {
         url "${project.buildDir}/repo"
-	  }
+      }
     }
   }
 }
@@ -721,7 +721,7 @@ String getVersion(final String type, final String mod_file) {
   file.eachLine { String s ->
     s = s.trim()
     if (s ==~ prefix || prefix.matcher(s).matches()) {
-      final String[] bits = s.split("=")
+      final String[] bits = s.split('=')
       String interesting = bits[1].trim()
       interesting = interesting.substring(1, interesting.length() - 2)
       final String[] pts = interesting.trim().split("\\.")
@@ -735,6 +735,6 @@ String getVersion(final String type, final String mod_file) {
 }
 
 task gitChangelog(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
-    file = new File("CHANGELOG.md");
+    file = new File('CHANGELOG.md');
     templateContent = file('changelog.mustache').getText('UTF-8');
 }
