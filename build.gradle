@@ -1,6 +1,8 @@
 buildscript {
   repositories {
+    mavenLocal()
     jcenter()
+    mavenCentral()
     maven {
       name = 'forge'
       url = 'http://files.minecraftforge.net/maven'
@@ -262,8 +264,8 @@ minecraft {
 
 repositories {
   mavenLocal()
-  mavenCentral()
   jcenter()
+  mavenCentral()
 
   maven {
     name 'MMD'
