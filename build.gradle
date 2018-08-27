@@ -197,7 +197,7 @@ minecraft {
     replace '@FINGERPRINT@', ''
   }
 
-  if (project.hasProperty('coreplugin')) {
+  if (project.hasProperty('core_plugin')) {
     clientJvmArgs += '-Dfml.coreMods.load=' + project.core_plugin
     serverJvmArgs += '-Dfml.coreMods.load=' + project.core_plugin
   }
