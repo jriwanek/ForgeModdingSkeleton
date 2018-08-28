@@ -390,6 +390,7 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 
 task signJar(type: SignJar, dependsOn: reobfJar) {
   onlyIf {
+    getBooleanProperty('do_sign_jar')
     project.hasProperty('keyStore')
   }
 
@@ -404,6 +405,7 @@ task signJar(type: SignJar, dependsOn: reobfJar) {
 
 task signApiJar(type: SignJar) {
   onlyIf {
+    getBooleanProperty('do_sign_jar')
     project.hasProperty('keyStore')
     getBooleanProperty('create_api_jar')
   }
@@ -421,6 +423,7 @@ task signApiJar(type: SignJar) {
 
 task signDeobfJar(type: SignJar) {
   onlyIf {
+    getBooleanProperty('do_sign_jar')
     project.hasProperty('keyStore')
     getBooleanProperty('create_deobf_jar')
   }
@@ -438,6 +441,7 @@ task signDeobfJar(type: SignJar) {
 
 task signSourceJar(type: SignJar) {
   onlyIf {
+    getBooleanProperty('do_sign_jar')
     project.hasProperty('keyStore')
     getBooleanProperty('create_source_jar')
   }
@@ -455,6 +459,7 @@ task signSourceJar(type: SignJar) {
 
 task signJavadocJar(type: SignJar) {
   onlyIf {
+    getBooleanProperty('do_sign_jar')
     project.hasProperty('keyStore')
     getBooleanProperty('create_javadoc_jar')
   }
