@@ -186,8 +186,15 @@ if (secretFile.exists()) {
 
 minecraft {
   version = project.forge_mc_version + '-' + project.forge_version
-  runDir = 'run'
   mappings = project.mcp_mappings
+
+  if (project.hasProperty('runDir')) {
+    runDir = project.runDir
+  } else if(file('../run').exists()) {
+    runDir = '../run'
+  } else {
+    runDir = 'run'
+  }
 
   replace '@MOD_VERSION@', project.short_version
 
