@@ -191,7 +191,7 @@ minecraft {
 
   replace '@MOD_VERSION@', project.short_version
 
-  if ((project.hasProperty('signSHA1')) && (project.hasProperty('do_sign_jar'))) {
+  if (project.hasProperty('signSHA1') && getBooleanProperty('do_sign_jar')) {
     replace '@FINGERPRINT@', project.findProperty('signSHA1')
   } else {
     replace '@FINGERPRINT@', ''
@@ -212,20 +212,20 @@ minecraft {
     clientRunArgs += ['--uuid', project.mc_uuid]
   }
 
-  if (project.hasProperty('mc_server_nogui')) {
+  if (getBooleanProperty('mc_server_nogui')) {
     serverRunArgs += 'nogui'
   }
 
-  if (project.hasProperty('forge_do_not_backup')) {
+  if (getBooleanProperty('forge_do_not_backup')) {
     serverJvmArgs += '-Dfml.doNotBackup=true'
     clientJvmArgs += '-Dfml.doNotBackup=true'
   }
 
-  if (project.hasProperty('forge_query_result_confirm')) {
+  if (getBooleanProperty('forge_query_result_confirm')) {
     serverJvmArgs += '-Dfml.queryResult=confirm'
   }
 
-  if (project.hasProperty('log4j_skip_jansi')) {
+  if (getBooleanProperty('log4j_skip_jansi')) {
     serverJvmArgs += '-Dlog4j.skipJansi=true'
     clientJvmArgs += '-Dlog4j.skipJansi=true'
   }
@@ -253,13 +253,9 @@ minecraft {
     serverRunArgs += project.server_game_args
   }
 
-  if (!project.hasProperty('create_source_jar')) {
-    makeObfSourceJar = false
-  }
+  makeObfSourceJar = getBooleanProperty('create_source_jar')
 
-  if (project.hasProperty('dep_has_ats')) {
-    useDepAts = project.dep_has_ats
-  }
+  useDepAts = getBooleanProperty('dep_has_ats')
 }
 
 repositories {
@@ -327,7 +323,7 @@ jar {
 
 task apiJar(type: Jar) {
   onlyIf {
-    project.hasProperty('create_api_jar')
+    getBooleanProperty('create_api_jar')
   }
 
   classifier = 'api'
@@ -345,7 +341,7 @@ task apiJar(type: Jar) {
 
 task deobfJar(type: Jar) {
   onlyIf {
-    project.hasProperty('create_deobf_jar')
+    getBooleanProperty('create_deobf_jar')
   }
 
   classifier = 'deobf'
@@ -370,7 +366,7 @@ task deobfJar(type: Jar) {
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
   onlyIf {
-    project.hasProperty('create_javadoc_jar')
+    getBooleanProperty('create_javadoc_jar')
   }
 
   classifier = 'javadoc'
@@ -402,6 +398,7 @@ task signJar(type: SignJar, dependsOn: reobfJar) {
 task signApiJar(type: SignJar) {
   onlyIf {
     project.hasProperty('keyStore')
+    getBooleanProperty('create_api_jar')
   }
 
   if(project.hasProperty('keyStore')) {
@@ -418,6 +415,7 @@ task signApiJar(type: SignJar) {
 task signDeobfJar(type: SignJar) {
   onlyIf {
     project.hasProperty('keyStore')
+    getBooleanProperty('create_deobf_jar')
   }
 
   if(project.hasProperty('keyStore')) {
@@ -434,6 +432,7 @@ task signDeobfJar(type: SignJar) {
 task signSourceJar(type: SignJar) {
   onlyIf {
     project.hasProperty('keyStore')
+    getBooleanProperty('create_source_jar')
   }
 
   if(project.hasProperty('keyStore')) {
@@ -450,6 +449,7 @@ task signSourceJar(type: SignJar) {
 task signJavadocJar(type: SignJar) {
   onlyIf {
     project.hasProperty('keyStore')
+    getBooleanProperty('create_javadoc_jar')
   }
 
   if(project.hasProperty('keyStore')) {
@@ -463,7 +463,7 @@ task signJavadocJar(type: SignJar) {
   }
 }
 
-if (project.hasProperty('do_sign_jar')) {
+if (getBooleanProperty('do_sign_jar')) {
   build.dependsOn signJar
   build.dependsOn signApiJar
   build.dependsOn signDeobfJar
@@ -475,16 +475,16 @@ tasks.publish.dependsOn build
 tasks.curseforge.dependsOn publish
 
 artifacts {
-  if (project.hasProperty('create_api_jar')) {
+  if (getBooleanProperty('create_api_jar')) {
     archives apiJar
   }
-  if (project.hasProperty('create_deobf_jar')) {
+  if (getBooleanProperty('create_deobf_jar')) {
     archives deobfJar
   }
-  if (project.hasProperty('create_source_jar')) {
+  if (getBooleanProperty('create_source_jar')) {
     archives sourceJar
   }
-  if (project.hasProperty('create_javadoc_jar')) {
+  if (getBooleanProperty('create_javadoc_jar')) {
     archives javadocJar
   }
 }
@@ -496,22 +496,22 @@ publishing {
       artifactId project.archivesBaseName
       version project.version
       from components.java
-      if (project.hasProperty('create_source_jar')) {
+      if (getBooleanProperty('create_source_jar')) {
         artifact sourceJar {
           classifier 'sources'
         }
       }
-      if (project.hasProperty('create_api_jar')) {
+      if (getBooleanProperty('create_api_jar')) {
         artifact apiJar {
           classifier 'api'
         }
       }
-      if (project.hasProperty('create_deobf_jar')) {
+      if (getBooleanProperty('create_deobf_jar')) {
         artifact deobfJar {
           classifier 'deobf'
         }
       }
-      if (project.hasProperty('create_javadoc_jar')) {
+      if (getBooleanProperty('create_javadoc_jar')) {
         artifact javadocJar {
           classifier 'javadoc'
         }
@@ -592,7 +592,7 @@ curseforge {
         }
       }
       mainArtifact(jar) {
-        if (project.hasProperty('cf_use_custom_display_name')) {
+        if (getBooleanProperty('cf_use_custom_display_name')) {
           displayName = "${project.description} ${project.display_version}"
         }
         if (project.hasProperty('cf_requirements') || project.hasProperty('cf_optionals') || project.hasProperty('cf_embeddeds') || project.hasProperty('cf_tools') || project.hasProperty('cf_incompatibles') || project.hasProperty('cf_includes')) {
@@ -636,30 +636,30 @@ curseforge {
           }
         }
       }
-      if (project.hasProperty('create_api_jar')) {
+      if (getBooleanProperty('create_api_jar')) {
         addArtifact(apiJar) {
-          if (project.hasProperty('cf_use_custom_display_name')) {
+          if (getBooleanProperty('cf_use_custom_display_name')) {
             displayName = "${project.description} ${project.display_version} API"
           }
         }
       }
-      if (project.hasProperty('create_source_jar')) {
+      if (getBooleanProperty('create_source_jar')) {
         addArtifact(sourceJar) {
-          if (project.hasProperty('cf_use_custom_display_name')) {
+          if (getBooleanProperty('cf_use_custom_display_name')) {
             displayName = "${project.description} ${project.display_version} Sources"
           }
         }
       }
-      if (project.hasProperty('create_deobf_jar')) {
+      if (getBooleanProperty('create_deobf_jar')) {
         addArtifact(deobfJar) {
-          if (project.hasProperty('cf_use_custom_display_name')) {
+          if (getBooleanProperty('cf_use_custom_display_name')) {
             displayName = "${project.description} ${project.display_version} Development"
           }
         }
       }
-      if (project.hasProperty('create_javadoc_jar')) {
+      if (getBooleanProperty('create_javadoc_jar')) {
         addArtifact(javadocJar) {
-          if (project.hasProperty('cf_use_custom_display_name')) {
+          if (getBooleanProperty('cf_use_custom_display_name')) {
             displayName = "${project.description} ${project.display_version} Javadoc"
           }
         }
@@ -731,6 +731,14 @@ String getVersion(final String type, final String mod_file) {
     }
   }
   return "$major.$revision.$patch"
+}
+
+boolean getBooleanProperty(final String property) {
+  if (project.hasProperty(property)) {
+    return project.findProperty(property).toBoolean()
+  } else {
+    return false
+  }
 }
 
 task gitChangelog(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
