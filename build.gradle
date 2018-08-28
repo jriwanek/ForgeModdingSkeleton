@@ -410,15 +410,13 @@ task signApiJar(type: SignJar) {
     getBooleanProperty('create_api_jar')
   }
 
-  if(project.hasProperty('keyStore')) {
-    keyStore = project.findProperty('keyStore')
-    alias = project.findProperty('keyStoreAlias')
-    storePass = project.findProperty('keyStorePass')
-    keyPass = project.findProperty('keyStoreKeyPass')
+  keyStore = project.findProperty('keyStore')
+  alias = project.findProperty('keyStoreAlias')
+  storePass = project.findProperty('keyStorePass')
+  keyPass = project.findProperty('keyStoreKeyPass')
 
-    inputFile = apiJar.archivePath
-    outputFile = apiJar.archivePath
-  }
+  inputFile = apiJar.archivePath
+  outputFile = apiJar.archivePath
 }
 
 task signDeobfJar(type: SignJar) {
@@ -428,15 +426,13 @@ task signDeobfJar(type: SignJar) {
     getBooleanProperty('create_deobf_jar')
   }
 
-  if(project.hasProperty('keyStore')) {
-    keyStore = project.findProperty('keyStore')
-    alias = project.findProperty('keyStoreAlias')
-    storePass = project.findProperty('keyStorePass')
-    keyPass = project.findProperty('keyStoreKeyPass')
+  keyStore = project.findProperty('keyStore')
+  alias = project.findProperty('keyStoreAlias')
+  storePass = project.findProperty('keyStorePass')
+  keyPass = project.findProperty('keyStoreKeyPass')
 
-    inputFile = deobfJar.archivePath
-    outputFile = deobfJar.archivePath
-  }
+  inputFile = deobfJar.archivePath
+  outputFile = deobfJar.archivePath
 }
 
 task signSourceJar(type: SignJar) {
@@ -446,15 +442,13 @@ task signSourceJar(type: SignJar) {
     getBooleanProperty('create_source_jar')
   }
 
-  if(project.hasProperty('keyStore')) {
-    keyStore = project.findProperty('keyStore')
-    alias = project.findProperty('keyStoreAlias')
-    storePass = project.findProperty('keyStorePass')
-    keyPass = project.findProperty('keyStoreKeyPass')
+  keyStore = project.findProperty('keyStore')
+  alias = project.findProperty('keyStoreAlias')
+  storePass = project.findProperty('keyStorePass')
+  keyPass = project.findProperty('keyStoreKeyPass')
 
-    inputFile = sourceJar.archivePath
-    outputFile = sourceJar.archivePath
-  }
+  inputFile = sourceJar.archivePath
+  outputFile = sourceJar.archivePath
 }
 
 task signJavadocJar(type: SignJar) {
@@ -464,15 +458,13 @@ task signJavadocJar(type: SignJar) {
     getBooleanProperty('create_javadoc_jar')
   }
 
-  if(project.hasProperty('keyStore')) {
-    keyStore = project.findProperty('keyStore')
-    alias = project.findProperty('keyStoreAlias')
-    storePass = project.findProperty('keyStorePass')
-    keyPass = project.findProperty('keyStoreKeyPass')
+  keyStore = project.findProperty('keyStore')
+  alias = project.findProperty('keyStoreAlias')
+  storePass = project.findProperty('keyStorePass')
+  keyPass = project.findProperty('keyStoreKeyPass')
 
-    inputFile = javadocJar.archivePath
-    outputFile = javadocJar.archivePath
-  }
+  inputFile = javadocJar.archivePath
+  outputFile = javadocJar.archivePath
 }
 
 if (getBooleanProperty('do_sign_jar')) {
