@@ -390,7 +390,7 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 
 task signJar(type: SignJar, dependsOn: reobfJar) {
   onlyIf {
-    getBooleanProperty('do_sign_jar')
+    getBooleanProperty('do_sign_jar') &&
     project.hasProperty('keyStore')
   }
 
@@ -405,9 +405,9 @@ task signJar(type: SignJar, dependsOn: reobfJar) {
 
 task signApiJar(type: SignJar) {
   onlyIf {
-    getBooleanProperty('do_sign_jar')
+    getBooleanProperty('create_api_jar') &&
+    getBooleanProperty('do_sign_jar') &&
     project.hasProperty('keyStore')
-    getBooleanProperty('create_api_jar')
   }
 
   keyStore = project.findProperty('keyStore')
@@ -421,9 +421,9 @@ task signApiJar(type: SignJar) {
 
 task signDeobfJar(type: SignJar) {
   onlyIf {
-    getBooleanProperty('do_sign_jar')
+    getBooleanProperty('create_deobf_jar') &&
+    getBooleanProperty('do_sign_jar') &&
     project.hasProperty('keyStore')
-    getBooleanProperty('create_deobf_jar')
   }
 
   keyStore = project.findProperty('keyStore')
@@ -437,9 +437,9 @@ task signDeobfJar(type: SignJar) {
 
 task signSourceJar(type: SignJar) {
   onlyIf {
-    getBooleanProperty('do_sign_jar')
+    getBooleanProperty('create_source_jar') &&
+    getBooleanProperty('do_sign_jar') &&
     project.hasProperty('keyStore')
-    getBooleanProperty('create_source_jar')
   }
 
   keyStore = project.findProperty('keyStore')
@@ -453,9 +453,9 @@ task signSourceJar(type: SignJar) {
 
 task signJavadocJar(type: SignJar) {
   onlyIf {
-    getBooleanProperty('do_sign_jar')
+    getBooleanProperty('create_javadoc_jar') &&
+    getBooleanProperty('do_sign_jar') &&
     project.hasProperty('keyStore')
-    getBooleanProperty('create_javadoc_jar')
   }
 
   keyStore = project.findProperty('keyStore')
