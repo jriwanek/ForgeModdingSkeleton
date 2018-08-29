@@ -9,7 +9,9 @@ Skeletons for building Forge mods
 5) Fix JUnit3, JUnit4 & JUnit Vintage compatibility (Should be done)
 6) Support for JUnit on gradle < 4.6 (Effectively done, Will be on different branch)
 7) Jar-in-Jar
-8) Shade/Shadow
+8) ContainedDeps
+9) Shade
+10) Shadow
 
 ## Known Caveats:
 1) Many versions hard-coded
