@@ -47,7 +47,7 @@ project.afterEvaluate {
   // configure jacoco to analyze the junitPlatformTest task
   jacoco {
     // this tool version is compatible with
-    toolVersion = '0.8.1'
+    toolVersion = '0.8.2'
 //  Not needed with new way
 //  applyTo junitPlatformTestTask
   }
