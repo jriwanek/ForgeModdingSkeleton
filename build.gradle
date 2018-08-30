@@ -745,7 +745,9 @@ boolean getBooleanProperty(final String property) {
   }
 }
 
-task gitChangelog(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
-    file = new File('CHANGELOG.md');
-    templateContent = file('changelog.mustache').getText('UTF-8');
+import se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask
+task gitChangelog(type: GitChangelogTask) {
+  file = new File('CHANGELOG.md')
+  gitHubIssuePattern = "nonada123";
+  templateContent = file('changelog.mustache').getText('UTF-8')
 }
