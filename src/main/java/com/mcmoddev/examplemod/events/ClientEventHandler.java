@@ -1,8 +1,8 @@
 package com.mcmoddev.examplemod.events;
 
 import com.mcmoddev.examplemod.ExampleMod;
-import com.mcmoddev.examplemod.init.Blocks;
-import com.mcmoddev.examplemod.init.Items;
+import com.mcmoddev.examplemod.init.ExampleModBlocks;
+import com.mcmoddev.examplemod.init.ExampleModItems;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.event.ModelRegistryEvent;
@@ -23,8 +23,8 @@ public final class ClientEventHandler {
 	 */
 	@SubscribeEvent
 	public static void registerModels(final ModelRegistryEvent event) {
-		registerModel(Item.getItemFromBlock(Blocks.EXAMPLE_BLOCK));
-		registerModel(Items.EXAMPLE_ITEM);
+		registerModel(Item.getItemFromBlock(ExampleModBlocks.EXAMPLE_BLOCK));
+		registerModel(ExampleModItems.EXAMPLE_ITEM);
 	}
 
 	/**

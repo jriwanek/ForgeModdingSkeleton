@@ -1,7 +1,7 @@
 package com.mcmoddev.examplemod.init;
 
 import com.mcmoddev.examplemod.ExampleMod;
-import net.minecraft.item.Item;
+import net.minecraft.block.Block;
 
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
@@ -9,17 +9,17 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
  *
  */
 @GameRegistry.ObjectHolder(ExampleMod.MODID)
-public final class Items {
+public final class ExampleModBlocks {
 
 	/**
 	 *
  	 */
-	private Items() {
+	private ExampleModBlocks() {
 		//
 	}
 
 	/**
 	 *
  	 */
-	public static final Item EXAMPLE_ITEM = null;
+    public static final Block EXAMPLE_BLOCK = null;
 }

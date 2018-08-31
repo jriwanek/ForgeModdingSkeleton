@@ -2,7 +2,7 @@ package com.mcmoddev.examplemod.events;
 
 import com.mcmoddev.examplemod.ExampleMod;
 import com.mcmoddev.examplemod.block.ExampleBlock;
-import com.mcmoddev.examplemod.init.Blocks;
+import com.mcmoddev.examplemod.init.ExampleModBlocks;
 import com.mcmoddev.examplemod.item.ExampleItem;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -54,7 +54,7 @@ public final class CommonEventHandler {
 	 */
 	@SubscribeEvent
 	public static void registerItems(final RegistryEvent.Register<Item> event) {
-		event.getRegistry().register(setupItemBlock(Blocks.EXAMPLE_BLOCK));
+		event.getRegistry().register(setupItemBlock(ExampleModBlocks.EXAMPLE_BLOCK));
 		event.getRegistry().register(setupItem(new ExampleItem(), "example_item"));
 	}
 
