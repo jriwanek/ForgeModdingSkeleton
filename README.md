@@ -30,3 +30,4 @@ Skeletons for building Forge mods
 5) Networking
 6) Capabilities
 7) Multiblock structures
+8) Worldgen: Ore and Structure generation
