@@ -1,11 +1,25 @@
 package com.mcmoddev.examplemod.init;
 
-import com.mcmoddev.examplemod.item.ExampleItem;
+import com.mcmoddev.examplemod.ExampleMod;
+import net.minecraft.item.Item;
 
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-public class Items {
+/**
+ *
+ */
+@GameRegistry.ObjectHolder(ExampleMod.MODID)
+public final class Items {
 
-	@GameRegistry.ObjectHolder("examplemod:example_item")
-	public static ExampleItem exampleItem;
+	/**
+	 *
+ 	 */
+	private Items() {
+		//
+	}
+
+	/**
+	 *
+ 	 */
+	public static final Item EXAMPLE_ITEM = null;
 }

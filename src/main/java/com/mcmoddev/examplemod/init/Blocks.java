@@ -1,11 +1,25 @@
 package com.mcmoddev.examplemod.init;
 
-import com.mcmoddev.examplemod.block.ExampleBlock;
+import com.mcmoddev.examplemod.ExampleMod;
+import net.minecraft.block.Block;
 
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-public class Blocks {
+/**
+ *
+ */
+@GameRegistry.ObjectHolder(ExampleMod.MODID)
+public final class Blocks {
 
-    @GameRegistry.ObjectHolder("examplemod:example_block")
-    public static ExampleBlock exampleBlock;
+	/**
+	 *
+ 	 */
+	private Blocks() {
+		//
+	}
+
+	/**
+	 *
+ 	 */
+    public static final Block EXAMPLE_BLOCK = null;
 }

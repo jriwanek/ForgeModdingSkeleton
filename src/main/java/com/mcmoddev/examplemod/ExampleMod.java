@@ -13,6 +13,9 @@ import net.minecraftforge.fml.common.event.FMLInterModComms.IMCEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
+/**
+ *
+ */
 @Mod(
 	modid = ExampleMod.MODID,
 	name = ExampleMod.NAME,
@@ -33,8 +36,11 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 	customProperties = {})
 public final class ExampleMod {
 
+	/**
+	 *
+ 	 */
 	@Mod.Instance
-	public static ExampleMod instance;
+	private static ExampleMod instance = null;
 
 	/** ID of this Mod. */
 	public static final String MODID = "examplemod";
@@ -46,19 +52,33 @@ public final class ExampleMod {
 	public static final String VERSION = "1.0.0";
 //	public static final String VERSION = "@MOD_VERSION@"
 
-    @SidedProxy(
+	/**
+	 *
+ 	 */
+	@SidedProxy(
 				clientSide = "com.mcmoddev.examplemod.proxy.ClientProxy",
 				serverSide = "com.mcmoddev.examplemod.proxy.ServerProxy")
-	public static CommonProxy proxy;
+	private static CommonProxy proxy = null;
 
-	public static final Logger logger = LogManager.getLogger(ExampleMod.MODID);
+	/**
+	 *
+ 	 */
+	public static final Logger LOGGER = LogManager.getLogger(ExampleMod.MODID);
 
+	/**
+	 *
+ 	 * @param event The Event.
+	 */
 	@Mod.EventHandler
 	public static void onFingerprintViolation(final FMLFingerprintViolationEvent event) {
 		// This complains if jar not signed, even if certificateFingerprint is blank
-		logger.warn("Invalid Fingerprint");
+		LOGGER.warn("Invalid Fingerprint");
 	}
 
+	/**
+	 *
+ 	 * @param event The Event.
+	 */
 	@Mod.EventHandler
 	public static void preInit(final FMLPreInitializationEvent event) {
 		// Instead of setting the logger above, you can set it like this instead.
@@ -66,16 +86,28 @@ public final class ExampleMod {
 		proxy.preInit(event);
 	}
 
+	/**
+	 *
+ 	 * @param event The Event.
+	 */
 	@Mod.EventHandler
 	public static void init(final FMLInitializationEvent event) {
 		proxy.init(event);
 	}
 
+	/**
+	 *
+ 	 * @param event The Event.
+	 */
 	@Mod.EventHandler
-	public static void recieveIMC(final IMCEvent event) {
-		proxy.recieveIMC(event);
+	public static void receiveIMC(final IMCEvent event) {
+		proxy.receiveIMC(event);
 	}
 
+	/**
+	 *
+ 	 * @param event The Event.
+	 */
 	@Mod.EventHandler
 	public static void postInit(final FMLPostInitializationEvent event) {
 		proxy.postInit(event);
@@ -88,4 +120,7 @@ public final class ExampleMod {
 		proxy.onRemap(event);
 	}
 	*/
+	public static ExampleMod getInstance() {
+		return instance;
+	}
 }
