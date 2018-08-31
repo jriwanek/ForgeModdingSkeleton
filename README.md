@@ -23,9 +23,9 @@ Skeletons for building Forge mods
 3) Make sure JaCoCo is integrated correctly with JUnit
 
 ## Example Mod TODO:
-1) Model Registration
-2) Recipes
-3) Fluid
-4) Fluid Block
-5) Seperation of concerns
+1) Recipes
+2) Fluid
+3) Fluid Block
+4) Creative Tabs
+5) Block with Multiple Textures
 6) Move EventHandlers
