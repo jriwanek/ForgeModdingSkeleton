@@ -18,14 +18,12 @@ import net.minecraftforge.fml.common.event.FMLInterModComms.IMCEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-//import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.Side;
 
 /**
  *
  */
-// TODO: This doesn't work, find out why.
-//@Mod.EventBusSubscriber(value = {Side.CLIENT, Side.SERVER}, modid = ExampleMod.NAME)
-@Mod.EventBusSubscriber
+@Mod.EventBusSubscriber(value = {Side.CLIENT, Side.SERVER}, modid = ExampleMod.MODID)
 public abstract class CommonProxy {
 
 	/**
