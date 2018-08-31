@@ -9,7 +9,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 /**
  *
  */
-public abstract class CommonProxy {
+public abstract class Proxy {
 
 	/**
 	 *

@@ -7,7 +7,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 /**
  *
  */
-public final class ServerProxy extends CommonProxy {
+public final class ServerProxy extends Proxy {
 
 	@Override
 	public void preInit(final FMLPreInitializationEvent event) {

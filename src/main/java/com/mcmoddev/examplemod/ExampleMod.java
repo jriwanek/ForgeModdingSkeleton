@@ -3,7 +3,7 @@ package com.mcmoddev.examplemod;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.mcmoddev.examplemod.proxy.CommonProxy;
+import com.mcmoddev.examplemod.proxy.Proxy;
 
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -70,7 +70,7 @@ public final class ExampleMod {
 	@SidedProxy(
 				clientSide = "com.mcmoddev.examplemod.proxy.ClientProxy",
 				serverSide = "com.mcmoddev.examplemod.proxy.ServerProxy")
-	private static CommonProxy proxy = null;
+	private static Proxy proxy = null;
 
 	/**
 	 *
