@@ -60,7 +60,7 @@ public final class CommonEventHandler {
 	public static void registerBlocks(final RegistryEvent.Register<Block> event) {
 		event.getRegistry().register(setupBlock(new ExampleBlock(), "example_block"));
 		event.getRegistry().register(setupBlock(
-				new BlockFluidClassic(ExampleModFluids.EXAMPLE_FLUID, Material.IRON), "example_fluid"));
+				new BlockFluidClassic(ExampleModFluids.EXAMPLE_FLUID, Material.LAVA), "example_fluid"));
 	}
 
 	/**
