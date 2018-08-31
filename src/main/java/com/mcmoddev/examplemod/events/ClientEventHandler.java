@@ -21,7 +21,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  *
  */
-@Mod.EventBusSubscriber(value = Side.CLIENT, modid = ExampleMod.NAME)
+@Mod.EventBusSubscriber(value = Side.CLIENT, modid = ExampleMod.MODID)
 public final class ClientEventHandler {
 
 	/**
@@ -38,7 +38,6 @@ public final class ClientEventHandler {
 	@SubscribeEvent
 	public static void registerModels(final ModelRegistryEvent event) {
 		registerModel(Item.getItemFromBlock(ExampleModBlocks.EXAMPLE_BLOCK));
-		registerModel(Item.getItemFromBlock(ExampleModBlocks.EXAMPLE_FLUID));
 		registerFluidRender(ExampleModBlocks.EXAMPLE_FLUID, ExampleModFluids.EXAMPLE_FLUID);
 		registerModel(ExampleModItems.EXAMPLE_ITEM);
 	}

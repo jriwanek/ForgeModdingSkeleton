@@ -24,9 +24,8 @@ Skeletons for building Forge mods
 
 ## Example Mod TODO:
 1) Recipes
-2) Fix Fluid Rendering
-3) Creative Tabs
-4) Block with Multiple Textures
-5) Entities
-6) Networking
-7) Capabilities
+2) Creative Tabs
+3) Block with Multiple Textures
+4) Entities
+5) Networking
+6) Capabilities
