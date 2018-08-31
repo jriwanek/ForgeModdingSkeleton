@@ -22,4 +22,9 @@ public final class ExampleModBlocks {
 	 *
 	 */
     public static final Block EXAMPLE_BLOCK = null;
+
+	/**
+	 *
+	 */
+	public static final Block EXAMPLE_FLUID = null;
 }

@@ -1,5 +1,6 @@
 package com.mcmoddev.examplemod.proxy;
 
+import com.mcmoddev.examplemod.init.ExampleModFluids;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLInterModComms.IMCEvent;
 //import net.minecraftforge.fml.common.event.FMLMissingMappingsEvent
@@ -16,7 +17,7 @@ public abstract class Proxy {
 	 * @param event The Event.
 	 */
 	public void preInit(final FMLPreInitializationEvent event) {
-		//
+		ExampleModFluids.init();
 	}
 
 	/**

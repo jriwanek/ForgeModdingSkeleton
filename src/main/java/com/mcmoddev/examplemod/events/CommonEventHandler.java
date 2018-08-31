@@ -3,13 +3,16 @@ package com.mcmoddev.examplemod.events;
 import com.mcmoddev.examplemod.ExampleMod;
 import com.mcmoddev.examplemod.block.ExampleBlock;
 import com.mcmoddev.examplemod.init.ExampleModBlocks;
+import com.mcmoddev.examplemod.init.ExampleModFluids;
 import com.mcmoddev.examplemod.item.ExampleItem;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -56,6 +59,8 @@ public final class CommonEventHandler {
 	@SubscribeEvent
 	public static void registerBlocks(final RegistryEvent.Register<Block> event) {
 		event.getRegistry().register(setupBlock(new ExampleBlock(), "example_block"));
+		event.getRegistry().register(setupBlock(
+				new BlockFluidClassic(ExampleModFluids.EXAMPLE_FLUID, Material.IRON), "example_fluid"));
 	}
 
 	/**
@@ -65,6 +70,7 @@ public final class CommonEventHandler {
 	@SubscribeEvent
 	public static void registerItems(final RegistryEvent.Register<Item> event) {
 		event.getRegistry().register(setupItemBlock(ExampleModBlocks.EXAMPLE_BLOCK));
+		event.getRegistry().register(setupItemBlock(ExampleModBlocks.EXAMPLE_FLUID));
 		event.getRegistry().register(setupItem(new ExampleItem(), "example_item"));
 	}
 
