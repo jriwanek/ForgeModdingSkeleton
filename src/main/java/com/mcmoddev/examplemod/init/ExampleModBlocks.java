@@ -13,13 +13,13 @@ public final class ExampleModBlocks {
 
 	/**
 	 *
- 	 */
+	 */
 	private ExampleModBlocks() {
 		//
 	}
 
 	/**
 	 *
- 	 */
+	 */
     public static final Block EXAMPLE_BLOCK = null;
 }

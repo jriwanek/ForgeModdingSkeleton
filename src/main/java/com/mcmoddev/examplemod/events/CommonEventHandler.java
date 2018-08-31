@@ -14,8 +14,18 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
+/**
+ *
+ */
 @Mod.EventBusSubscriber(value = {Side.CLIENT, Side.SERVER}, modid = ExampleMod.MODID)
 public final class CommonEventHandler {
+
+	/**
+	 *
+	 */
+	private CommonEventHandler() {
+		//
+	}
 
 	/**
 	 *

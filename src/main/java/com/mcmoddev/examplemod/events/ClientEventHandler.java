@@ -19,6 +19,13 @@ public final class ClientEventHandler {
 
 	/**
 	 *
+	 */
+	private ClientEventHandler() {
+		//
+	}
+
+	/**
+	 *
 	 * @param event The Event.
 	 */
 	@SubscribeEvent

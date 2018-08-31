@@ -55,10 +55,21 @@ public final class ExampleMod {
 	 */
 	public static final Logger LOGGER = LogManager.getLogger(ExampleMod.MODID);
 
+	/**
+	 *
+	 */
 	private static final class InstanceHolder {
+
+		/**
+		 * The Instance.
+		 */
 		private static final ExampleMod INSTANCE = new ExampleMod();
 	}
 
+	/**
+	 *
+	 * @return The Mod's Instance.
+	 */
 	@Mod.InstanceFactory
 	public static ExampleMod instance() {
 		return InstanceHolder.INSTANCE;
