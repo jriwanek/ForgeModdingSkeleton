@@ -28,4 +28,3 @@ Skeletons for building Forge mods
 3) Fluid Block
 4) Creative Tabs
 5) Block with Multiple Textures
-6) Move EventHandlers
