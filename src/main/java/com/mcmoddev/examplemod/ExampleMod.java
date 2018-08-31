@@ -36,11 +36,9 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 	customProperties = {})
 public final class ExampleMod {
 
-	/**
-	 *
- 	 */
-	@Mod.Instance
-	private static ExampleMod instance = null;
+	/* The Mod's Instance. */
+	//@Mod.Instance
+	//private static ExampleMod instance = null
 
 	/** ID of this Mod. */
 	public static final String MODID = "examplemod";
@@ -54,16 +52,25 @@ public final class ExampleMod {
 
 	/**
 	 *
+	 */
+	public static final Logger LOGGER = LogManager.getLogger(ExampleMod.MODID);
+
+	private static final class InstanceHolder {
+		private static final ExampleMod INSTANCE = new ExampleMod();
+	}
+
+	@Mod.InstanceFactory
+	public static ExampleMod instance() {
+		return InstanceHolder.INSTANCE;
+	}
+
+	/**
+	 *
  	 */
 	@SidedProxy(
 				clientSide = "com.mcmoddev.examplemod.proxy.ClientProxy",
 				serverSide = "com.mcmoddev.examplemod.proxy.ServerProxy")
 	private static CommonProxy proxy = null;
-
-	/**
-	 *
- 	 */
-	public static final Logger LOGGER = LogManager.getLogger(ExampleMod.MODID);
 
 	/**
 	 *
@@ -120,7 +127,4 @@ public final class ExampleMod {
 		proxy.onRemap(event);
 	}
 	*/
-	public static ExampleMod getInstance() {
-		return instance;
-	}
 }
