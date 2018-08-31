@@ -2,7 +2,7 @@
 Skeletons for building Forge mods
 
 ## Missing Features:
-1) Support Curse ChangeLog from String
+1) Support Curse ChangeLog from String (Partially done)
 2) Sonarqube & Jar Signing Support for Travis
 3) Sonarqube & Jar Signing Support for CircleCI
 4) Secret parser should support Gradle properties too
@@ -18,8 +18,8 @@ Skeletons for building Forge mods
 2) Only supports the maven-publish plugin, not the old maven plugin which also supports SSH Pubkey authentication
 
 ## Script related TODO
-1) Document secret.json
-2) Finish off JUnit5 feature set
+1) Document secret.json (Partially done)
+2) Finish off JUnit5 feature set (I think this is done now)
 3) Make sure JaCoCo is integrated correctly with JUnit
 
 ## Example Mod TODO:
