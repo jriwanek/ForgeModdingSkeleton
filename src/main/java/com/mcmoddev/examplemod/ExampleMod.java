@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.mcmoddev.examplemod.proxy.Proxy;
 
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLFingerprintViolationEvent;
@@ -129,6 +130,10 @@ public final class ExampleMod {
 	@Mod.EventHandler
 	public static void postInit(final FMLPostInitializationEvent event) {
 		proxy.postInit(event);
+	}
+
+	public static World getWorld() {
+		return proxy.getWorld();
 	}
 
 	/*
