@@ -1,6 +1,8 @@
 package com.mcmoddev.examplemod.proxy;
 
 import com.mcmoddev.examplemod.init.ExampleModFluids;
+
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLInterModComms.IMCEvent;
 //import net.minecraftforge.fml.common.event.FMLMissingMappingsEvent
@@ -43,6 +45,8 @@ public abstract class Proxy {
 	public void postInit(final FMLPostInitializationEvent event) {
 		//
 	}
+
+	public World getWorld() { return null; }
 
 	/*
  	// Before 1.12
