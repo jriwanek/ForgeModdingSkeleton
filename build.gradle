@@ -717,28 +717,19 @@ String getModVersion(final String type) {
   return getModVersion(type, getModFile())
 }
 
+import java.util.regex.Matcher
 String getModVersion(final String type, final String modFile) {
-  String major = '0'
-  String revision = '0'
-  String patch = '0'
   if ((modFile != null) && (modFile != '')) {
     final File file = file(modFile)
-    final def prefix = ~/^(?:public|protected|private) static final String $type = ".*$/
-    file.eachLine { final String s ->
-      final String sTrim = s.trim()
-      if (sTrim ==~ prefix || prefix.matcher(sTrim).matches()) {
-        final String[] bits = sTrim.split('=')
-        final String interesting = bits[1].trim()
-        final String interestingSub = interesting.substring(1, interesting.length() - 2)
-        final String[] pts = interestingSub.trim().split("\\.")
-
-        major = (pts[0] ?: '0')
-        revision = (pts[1] ?: '0')
-        patch = (pts[2] ?: '0')
+    final def prefix = ~/^(?:\s*)(?:(?<modifier>public|protected|private) )?(?:(?<static>static) )?(?:(?<final>final) )?String $type = "(?:(?<major>\d*)\.)?(?:(?<minor>\d*)\.)?(?:(?<patch>[^."]*)\.?)(?<build>[^"]*)";$/
+    for(final String s in file.readLines()) {
+      final Matcher matcher = (s.trim() =~ prefix)
+      if (matcher.matches()) {
+        return "${matcher.group('major') ?: '0'}.${matcher.group('minor') ?: '0'}.${matcher.group('patch')}"
       }
     }
   }
-  return "$major.$revision.$patch"
+  return '0.0.0'
 }
 
 boolean getBooleanProperty(final String property) {
