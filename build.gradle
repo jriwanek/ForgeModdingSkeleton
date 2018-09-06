@@ -126,8 +126,8 @@ version = (project.hasProperty('mc_version') ? project.mc_version : project.forg
 project.ext.display_version = short_version
 
 if ((System.getenv('BUILD_NUMBER')) || (System.getenv('TRAVIS_BUILD_NUMBER')) || (System.getenv('CIRCLE_BUILD_NUM'))) {
-  version += '.' + getBuildNumber()
-  display_version += '.' + getBuildNumber()
+  version += '.' + buildNumber
+  display_version += '.' + buildNumber
 }
 
 static String getBuildNumber() {
@@ -148,14 +148,12 @@ idea.module {
 }
 
 class Secrets {
-  def m_data = null
+  Map m_data = null
 
   final String getProperty(final String key) {
     return (m_data && (m_data[key] != null)) ? m_data[key] : ''
   }
 }
-
-import groovy.json.JsonSlurper
 
 final def secretFile
 if (System.getenv('SECRET_FILE')) {
@@ -164,6 +162,7 @@ if (System.getenv('SECRET_FILE')) {
   secretFile = file 'secret.json'
 }
 
+import groovy.json.JsonSlurper
 project.ext.secret = new Secrets()
 if (secretFile.exists()) {
   secretFile.withReader {
@@ -202,8 +201,8 @@ minecraft {
   }
 
   if (project.hasProperty('core_plugin')) {
-    clientJvmArgs += '-Dfml.coreMods.load=' + project.core_plugin
-    serverJvmArgs += '-Dfml.coreMods.load=' + project.core_plugin
+    clientJvmArgs += "-Dfml.coreMods.load=${project.core_plugin}"
+    serverJvmArgs += "-Dfml.coreMods.load=${project.core_plugin}"
   }
 
   if (project.hasProperty('mc_username')) {
@@ -714,7 +713,7 @@ String getModFile() {
 }
 
 String getModVersion(final String type) {
-  return getModVersion(type, getModFile())
+  return getModVersion(type, modFile)
 }
 
 import java.util.regex.Matcher
@@ -743,6 +742,6 @@ boolean getBooleanProperty(final String property) {
 import se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask
 task gitChangelog(type: GitChangelogTask) {
   file = new File('CHANGELOG.md')
-  gitHubIssuePattern = "nonada123";
+  gitHubIssuePattern = "nonada123"
   templateContent = file('changelog.mustache').getText('UTF-8')
 }
