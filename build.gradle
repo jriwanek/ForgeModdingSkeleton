@@ -234,7 +234,12 @@ minecraft {
   }
 
   if (project.hasProperty('mc_resolution')) {
-    final def res = [ '480p': [ 640, 480 ], '576p': [ 640, 576 ], '720p': [ 1280, 720 ], '1080p': [ 1920, 1080 ], 'custom': [ project.mc_custom_resolution_width, project.mc_custom_resolution_height ] ]
+    final def res = [
+					 '480p': [640, 480],
+					 '576p': [640, 576],
+					 '720p': [1280, 720],
+					 '1080p': [1920, 1080],
+					 'custom': [project.findProperty('mc_custom_resolution_width'), project.findProperty('mc_custom_resolution_height')]]
     final def choice = res?.get(project.mc_resolution)
     if (choice != null) {
         clientRunArgs += ['--width', choice[0]]
