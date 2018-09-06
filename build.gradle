@@ -151,7 +151,7 @@ class Secrets {
   def m_data = null
 
   final String getProperty(final String key) {
-    return m_data ? m_data[key] : ''
+    return (m_data && (m_data[key] != null)) ? m_data[key] : ''
   }
 }
 
