@@ -720,19 +720,21 @@ String getModVersion(final String type, final String modFile) {
   String major = '0'
   String revision = '0'
   String patch = '0'
-  final File file = file(modFile)
-  final def prefix = ~/^(?:public|protected|private) static final String $type = ".*$/
-  file.eachLine { final String s ->
-    final String sTrim = s.trim()
-    if (sTrim ==~ prefix || prefix.matcher(sTrim).matches()) {
-      final String[] bits = sTrim.split('=')
-      String interesting = bits[1].trim()
-      interesting = interesting.substring(1, interesting.length() - 2)
-      final String[] pts = interesting.trim().split("\\.")
+  if ((modFile != null) && (modFile != '')) {
+    final File file = file(modFile)
+    final def prefix = ~/^(?:public|protected|private) static final String $type = ".*$/
+    file.eachLine { final String s ->
+      final String sTrim = s.trim()
+      if (sTrim ==~ prefix || prefix.matcher(sTrim).matches()) {
+        final String[] bits = sTrim.split('=')
+        String interesting = bits[1].trim()
+        interesting = interesting.substring(1, interesting.length() - 2)
+        final String[] pts = interesting.trim().split("\\.")
 
-      major = (pts[0] ?: '0')
-      revision = (pts[1] ?: '0')
-      patch = (pts[2] ?: '0')
+        major = (pts[0] ?: '0')
+        revision = (pts[1] ?: '0')
+        patch = (pts[2] ?: '0')
+      }
     }
   }
   return "$major.$revision.$patch"
