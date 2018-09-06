@@ -1,7 +1,7 @@
 # ForgeModdingSkeleton
 Skeletons for building Forge mods
 
-## Missing Features:
+## TODO:
 1) Support Curse ChangeLog from String (Partially done)
 2) Sonarqube & Jar Signing Support for Travis
 3) Sonarqube & Jar Signing Support for CircleCI
@@ -12,6 +12,10 @@ Skeletons for building Forge mods
 8) ContainedDeps
 9) Shade
 10) Shadow
+11) Make all gradle version specific bits gated
+12) Auto-selection selection of FG version based on MC version
+13) Auto-selection of Forge latest LB and RB versions
+14) Auto-selection of Mappings
 
 ## Known Caveats:
 1) Many versions hard-coded
