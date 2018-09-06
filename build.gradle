@@ -728,9 +728,9 @@ String getModVersion(final String type, final String modFile) {
       final String sTrim = s.trim()
       if (sTrim ==~ prefix || prefix.matcher(sTrim).matches()) {
         final String[] bits = sTrim.split('=')
-        String interesting = bits[1].trim()
-        interesting = interesting.substring(1, interesting.length() - 2)
-        final String[] pts = interesting.trim().split("\\.")
+        final String interesting = bits[1].trim()
+        final String interestingSub = interesting.substring(1, interesting.length() - 2)
+        final String[] pts = interestingSub.trim().split("\\.")
 
         major = (pts[0] ?: '0')
         revision = (pts[1] ?: '0')
