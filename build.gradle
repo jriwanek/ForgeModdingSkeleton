@@ -34,7 +34,7 @@ plugins {
 }
 
 apply plugin: 'net.minecraftforge.gradle.forge'
-apply plugin: 'com.jaredsburrows.checkerframework'
+//apply plugin: 'com.jaredsburrows.checkerframework'
 
 project.afterEvaluate {
   //final def junitPlatformTestTask = project.tasks.getByName('junitPlatformTest')
