@@ -148,10 +148,10 @@ idea.module {
 }
 
 class Secrets {
-  def data = null
+  def m_data = null
 
   final String getProperty(final String key) {
-    return data ? data[key] : ''
+    return m_data ? m_data[key] : ''
   }
 }
 
@@ -167,17 +167,18 @@ if (System.getenv('SECRET_FILE')) {
 project.ext.secret = new Secrets()
 if (secretFile.exists()) {
   secretFile.withReader {
-    project.secret.data = new JsonSlurper().parse it
+    project.secret.m_data = new JsonSlurper().parse it
   }
 } else {
-  project.secret.data = new JsonSlurper().parseText(
+  project.secret.m_data = new JsonSlurper().parseText(
     '{ "username" : "' + (System.getenv('userMaven') ?: '') + '",'
     + '"password" : "' + (System.getenv('authMaven') ?: '') + '",'
     + '"url" : "' + (System.getenv('urlMaven') ?: '') + '",'
     + '"curseforgeAPIKey" : "' + (System.getenv('curse_auth') ?: '00000000-0000-0000-0000-000000000000') + '",'
     + '"sonarHost" : "' + (System.getenv('SONAR_HOST_URL') ?: 'https://sonarcloud.io') + '",'
     + '"sonarOrganization" : "' + (System.getenv('SONAR_ORGANIZATION') ?: '') + '",'
-    + '"sonarToken" : "' + (System.getenv('SONAR_AUTH_TOKEN') ?: 0) + '"}')
+    + '"sonarToken" : "' + (System.getenv('SONAR_AUTH_TOKEN') ?: 0) + '"}'
+  )
 }
 
 minecraft {
@@ -242,8 +243,8 @@ minecraft {
 					 'custom': [project.findProperty('mc_custom_resolution_width'), project.findProperty('mc_custom_resolution_height')]]
     final def choice = res?.get(project.mc_resolution)
     if (choice != null) {
-        clientRunArgs += ['--width', choice[0]]
-        clientRunArgs += ['--height', choice[1]]
+      clientRunArgs += ['--width', choice[0]]
+      clientRunArgs += ['--height', choice[1]]
     }
   }
 
@@ -591,7 +592,7 @@ curseforge {
         releaseType = 'alpha'
       }
       if (project.hasProperty('cf_versions')) {
-        def versions = "${project.cf_versions}".split(', ')
+        final def versions = "${project.cf_versions}".split(', ')
         versions.each {
           addGameVersion "${it}"
         }
@@ -603,31 +604,31 @@ curseforge {
         if (project.hasProperty('cf_requirements') || project.hasProperty('cf_optionals') || project.hasProperty('cf_embeddeds') || project.hasProperty('cf_tools') || project.hasProperty('cf_incompatibles') || project.hasProperty('cf_includes')) {
           relations {
             if (project.hasProperty('cf_requirements')) {
-                final def requirements = "${project.cf_requirements}".split(', ')
+              final def requirements = "${project.cf_requirements}".split(', ')
               requirements.each {
                 requiredDependency "${it}"
               }
             }
             if (project.hasProperty('cf_optionals')) {
-                final def optionals = "${project.cf_optionals}".split(', ')
+              final def optionals = "${project.cf_optionals}".split(', ')
               optionals.each {
                 optionalDependency "${it}"
               }
             }
             if (project.hasProperty('cf_embeddeds')) {
-                final def embeddeds = "${project.cf_embeddeds}".split(', ')
+              final def embeddeds = "${project.cf_embeddeds}".split(', ')
               embeddeds.each {
                 embeddedLibrary "${it}"
               }
             }
             if (project.hasProperty('cf_tools')) {
-                final def tools = "${project.cf_tools}".split(', ')
+              final def tools = "${project.cf_tools}".split(', ')
               tools.each {
                 tool "${it}"
               }
             }
             if (project.hasProperty('cf_incompatibles')) {
-                final def incompatibles = "${project.cf_incompatibles}".split(', ')
+              final def incompatibles = "${project.cf_incompatibles}".split(', ')
               incompatibles.each {
                 incompatible "${it}"
               }
