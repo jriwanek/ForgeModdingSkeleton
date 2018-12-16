@@ -13,13 +13,18 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
  *
  */
 public abstract class Proxy {
-
+	// uncomment this if you have ore generation
+	// private static WorldGenerator worldGen = new WorldGenerator();
+	
 	/**
 	 *
 	 * @param event The Event.
 	 */
 	public void preInit(final FMLPreInitializationEvent event) {
 		ExampleModFluids.init();
+		// if you've got any Ore Generation uncomment the following line
+		// and import the "oregen.WorldGenerator" class
+		// GameRegistry.registerWorldGenerator(new WorldGenerator(), 100);
 	}
 
 	/**
@@ -27,7 +32,17 @@ public abstract class Proxy {
 	 * @param event The Event.
 	 */
 	public void init(final FMLInitializationEvent event) {
-		//
+		// if you have any ore generation, you want to do something like the following for all
+		// of your ores:
+		// worldGen.addBlock( block, minHeight, maxHeight, dimension, spawn-size );
+		// 'dimension'should be one of:
+		// WorldGenerator.DIMENSION_OVERWORLD
+		// WorldGenerator.DIMENSION_NETHER
+		// WorldGenerator.DIMENSION_END
+		//   or
+		// WorldGenerator.DIMENSION_ANY_OVERWORLD
+		// -- the first three are specific to the named dimensions - the last will 
+		// spawn in any "Overworld" type dimension.
 	}
 
 	/**
