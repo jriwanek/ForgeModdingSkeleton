@@ -1,7 +1,5 @@
 package com.mcmoddev.examplemod.caps;
 
-import com.mcmoddev.examplemod.caps.ExampleCapabilities.DefaultImpl;
-
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
