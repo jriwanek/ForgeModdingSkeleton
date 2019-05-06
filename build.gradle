@@ -598,7 +598,7 @@ curseforge {
       }
       mainArtifact(jar) {
         if (getBooleanProperty('cf_use_custom_display_name')) {
-          displayName = "${project.description} ${project.display_version}"
+          displayName = "${project.name} ${project.display_version}"
         }
         if (project.hasProperty('cf_requirements') || project.hasProperty('cf_optionals') || project.hasProperty('cf_embeddeds') || project.hasProperty('cf_tools') || project.hasProperty('cf_incompatibles') || project.hasProperty('cf_includes')) {
           relations {
@@ -644,28 +644,28 @@ curseforge {
       if (getBooleanProperty('create_api_jar')) {
         addArtifact(apiJar) {
           if (getBooleanProperty('cf_use_custom_display_name')) {
-            displayName = "${project.description} ${project.display_version} API"
+            displayName = "${project.name} ${project.display_version} API"
           }
         }
       }
       if (getBooleanProperty('create_source_jar')) {
         addArtifact(sourceJar) {
           if (getBooleanProperty('cf_use_custom_display_name')) {
-            displayName = "${project.description} ${project.display_version} Sources"
+            displayName = "${project.name} ${project.display_version} Sources"
           }
         }
       }
       if (getBooleanProperty('create_deobf_jar')) {
         addArtifact(deobfJar) {
           if (getBooleanProperty('cf_use_custom_display_name')) {
-            displayName = "${project.description} ${project.display_version} Development"
+            displayName = "${project.name} ${project.display_version} Development"
           }
         }
       }
       if (getBooleanProperty('create_javadoc_jar')) {
         addArtifact(javadocJar) {
           if (getBooleanProperty('cf_use_custom_display_name')) {
-            displayName = "${project.description} ${project.display_version} Javadoc"
+            displayName = "${project.name} ${project.display_version} Javadoc"
           }
         }
       }
