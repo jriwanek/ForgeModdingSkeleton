@@ -36,6 +36,7 @@ plugins {
 apply plugin: 'net.minecraftforge.gradle'
 //apply plugin: 'com.jaredsburrows.checkerframework'
 apply plugin: 'eclipse'
+apply plugin: 'idea'
 apply plugin: 'maven-publish'
 
 version = '1.0'
@@ -190,20 +191,13 @@ if (secretFile.exists()) {
 
 minecraft {
   mappings channel: 'stable', version: '47-1.13.2'
-  if (project.hasProperty('runDir')) {
-    runDir = project.runDir
-  } else if(file('../run').exists()) {
-    runDir = '../run'
-  } else {
-    runDir = 'run'
-  }
 
-  replace '@MOD_VERSION@', project.short_version
+  //replace '@MOD_VERSION@', project.short_version
 
   if (project.hasProperty('signSHA1') && getBooleanProperty('do_sign_jar')) {
-    replace '@FINGERPRINT@', project.findProperty('signSHA1')
+    //replace '@FINGERPRINT@', project.findProperty('signSHA1')
   } else {
-    replace '@FINGERPRINT@', ''
+    //replace '@FINGERPRINT@', ''
   }
 
   if (project.hasProperty('core_plugin')) {
@@ -267,10 +261,12 @@ minecraft {
     serverRunArgs += project.server_game_args
   }
 
-  makeObfSourceJar = getBooleanProperty('create_source_jar')
+  //makeObfSourceJar = getBooleanProperty('create_source_jar')
 
   //useDepAts = getBooleanProperty('dep_has_ats')
-  // accessTransformer = file('build/resources/main/META-INF/accesstransformer.cfg')
+  if (project.hasProperty('at_file')) {
+    accessTransformer = file(findProperty('at_file'))
+  }
 
   // Default run configurations.
   // These can be tweaked, removed, or duplicated as needed.
@@ -278,7 +274,7 @@ minecraft {
     client {
       workingDirectory project.file('run')
 
-      taskName "${mod_name} Client"
+      taskName "${project.name} Client"
 
       // Recommended logging data for a userdev environment
       property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
@@ -296,7 +292,7 @@ minecraft {
     server {
       workingDirectory project.file('run')
 
-      taskName "${mod_name} Server"
+      taskName "${project.name} Server"
 
       // Recommended logging data for a userdev environment
       property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
@@ -356,13 +352,14 @@ jar {
       'Implementation-Title': project.archivesBaseName,
       'Implementation-Version': project.version,
       'Implementation-Vendor' :'mcmoddev',
-      'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+      'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
       'Built-On-Java': "${System.getProperty('java.vm.version')} (${System.getProperty('java.vm.vendor')})",
       'Built-On': "${project.mc_version}-${project.forge_version}"
     )
   }
 }
 
+/*
 task apiJar(type: Jar) {
   onlyIf {
     getBooleanProperty('create_api_jar')
@@ -381,12 +378,13 @@ task apiJar(type: Jar) {
       'Implementation-Title': project.name + '-api',
       'Implementation-Version': project.version,
       'Implementation-Vendor' :'mcmoddev',
-      'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-      'Built-On-Java': "${System.getProperty('java.vm.version')} (${System.getProperty('java.vm.vendor')})"
-      'Built-On': "${project.mc_version}-${project.forge_version}",
+      'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+      'Built-On-Java': "${System.getProperty('java.vm.version')} (${System.getProperty('java.vm.vendor')})",
+      'Built-On': "${project.mc_version}-${project.forge_version}"
     )
   }
 }
+*/
 
 task deobfJar(type: Jar) {
   onlyIf {
@@ -405,7 +403,7 @@ task deobfJar(type: Jar) {
       'Implementation-Title': project.name + '-deobf',
       'Implementation-Version': project.version,
       'Implementation-Vendor' :'mcmoddev',
-      'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+      'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
       'Built-On-Java': "${System.getProperty('java.vm.version')} (${System.getProperty('java.vm.vendor')})",
       'Built-On': "${project.mc_version}-${project.forge_version}"
     )
@@ -435,6 +433,7 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
   )
 }
 
+/*
 task signJar(type: SignJar, dependsOn: reobfJar) {
   onlyIf {
     getBooleanProperty('do_sign_jar') &&
@@ -521,6 +520,7 @@ if (getBooleanProperty('do_sign_jar')) {
   build.dependsOn signSourceJar
   build.dependsOn signJavadocJar
 }
+*/
 
 tasks.publish.dependsOn build
 tasks.curseforge.dependsOn publish
@@ -533,7 +533,7 @@ artifacts {
     archives deobfJar
   }
   if (getBooleanProperty('create_source_jar')) {
-    archives sourceJar
+//    archives sourceJar
   }
   if (getBooleanProperty('create_javadoc_jar')) {
     archives javadocJar
@@ -557,9 +557,11 @@ publishing {
       version project.version
       from components.java
       if (getBooleanProperty('create_source_jar')) {
+      /*
         artifact sourceJar {
           classifier 'sources'
         }
+      */
       }
       if (getBooleanProperty('create_api_jar')) {
         artifact apiJar {
@@ -706,7 +708,7 @@ curseforge {
         }
       }
       if (getBooleanProperty('create_source_jar')) {
-        addArtifact(sourceJar) {
+        addArtifact(sourcesJar) {
           if (getBooleanProperty('cf_use_custom_display_name')) {
             displayName = "${project.name} ${project.display_version} Sources"
           }
