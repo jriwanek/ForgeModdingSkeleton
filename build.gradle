@@ -365,6 +365,7 @@ task apiJar(type: Jar) {
     getBooleanProperty('create_api_jar')
   }
 
+  description = 'Creates a JAR containing the API Classes.'
   classifier = 'api'
   from apiClasses
   // from sourceSets.api.output
@@ -391,6 +392,7 @@ task deobfJar(type: Jar) {
     getBooleanProperty('create_deobf_jar')
   }
 
+  description = 'Creates a JAR containing the non-obfuscated compiled code.'
   classifier = 'deobf'
   from sourceSets.main.output
   manifest {
@@ -416,11 +418,37 @@ task deobfJar(type: Jar) {
   }
 }
 
+task sourcesJar(type: Jar, dependsOn: classes) {
+  onlyIf {
+    getBooleanProperty('create_sources_jar')
+  }
+
+    description = 'Creates a JAR containing the source code.'
+    classifier = 'sources'
+    from sourceSets.main.allSource
+  manifest {
+    mainAttributes(
+      'Maven-Artifact': "${project.group}:${project.archivesBaseName}:${project.version}:sources",
+      'Timestamp': System.currentTimeMillis(),
+      'Specification-Title': 'examplemod',
+      'Specification-Vendor': 'mcmoddev',
+      'Specification-Version': '1',
+      'Implementation-Title': project.name + '-sources',
+      'Implementation-Version': project.version,
+      'Implementation-Vendor' :'mcmoddev',
+      'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+      'Built-On-Java': "${System.getProperty('java.vm.version')} (${System.getProperty('java.vm.vendor')})",
+      'Built-On': "${project.mc_version}-${project.forge_version}"
+    )
+  }
+}
+
 task javadocJar(type: Jar, dependsOn: javadoc) {
   onlyIf {
     getBooleanProperty('create_javadoc_jar')
   }
 
+  description = 'Creates a JAR containing the JavaDocs.'
   classifier = 'javadoc'
   from javadoc.getDestinationDir()
   manifest.mainAttributes(
@@ -440,6 +468,7 @@ task signJar(type: SignJar, dependsOn: reobfJar) {
     project.hasProperty('keyStore')
   }
 
+  description = 'Sign the Main JAR'
   inputFile = jar.archivePath
   outputFile = jar.archivePath
 
@@ -456,6 +485,7 @@ task signApiJar(type: SignJar) {
     project.hasProperty('keyStore')
   }
 
+  description = 'Sign the API JAR'
   keyStore = project.findProperty('keyStore')
   alias = project.findProperty('keyStoreAlias')
   storePass = project.findProperty('keyStorePass')
@@ -472,6 +502,7 @@ task signDeobfJar(type: SignJar) {
     project.hasProperty('keyStore')
   }
 
+  description = 'Sign the deobf JAR'
   keyStore = project.findProperty('keyStore')
   alias = project.findProperty('keyStoreAlias')
   storePass = project.findProperty('keyStorePass')
@@ -481,20 +512,21 @@ task signDeobfJar(type: SignJar) {
   outputFile = deobfJar.archivePath
 }
 
-task signSourceJar(type: SignJar) {
+task signSourcesJar(type: SignJar) {
   onlyIf {
     getBooleanProperty('create_source_jar') &&
     getBooleanProperty('do_sign_jar') &&
     project.hasProperty('keyStore')
   }
 
+  description = 'Sign the Sources JAR'
   keyStore = project.findProperty('keyStore')
   alias = project.findProperty('keyStoreAlias')
   storePass = project.findProperty('keyStorePass')
   keyPass = project.findProperty('keyStoreKeyPass')
 
-  inputFile = sourceJar.archivePath
-  outputFile = sourceJar.archivePath
+  inputFile = sourcesJar.archivePath
+  outputFile = sourcesJar.archivePath
 }
 
 task signJavadocJar(type: SignJar) {
@@ -517,7 +549,7 @@ if (getBooleanProperty('do_sign_jar')) {
   build.dependsOn signJar
   build.dependsOn signApiJar
   build.dependsOn signDeobfJar
-  build.dependsOn signSourceJar
+  build.dependsOn signSourcesJar
   build.dependsOn signJavadocJar
 }
 */
@@ -533,7 +565,7 @@ artifacts {
     archives deobfJar
   }
   if (getBooleanProperty('create_source_jar')) {
-//    archives sourceJar
+    archives sourcesJar
   }
   if (getBooleanProperty('create_javadoc_jar')) {
     archives javadocJar
@@ -557,11 +589,9 @@ publishing {
       version project.version
       from components.java
       if (getBooleanProperty('create_source_jar')) {
-      /*
-        artifact sourceJar {
+        artifact sourcesJar {
           classifier 'sources'
         }
-      */
       }
       if (getBooleanProperty('create_api_jar')) {
         artifact apiJar {
