@@ -39,6 +39,8 @@ apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'maven-publish'
 
+import net.minecraftforge.gradle.common.task.SignJar
+
 version = '1.0'
 group = 'com.mcmoddev.examplemod' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'examplemod'
@@ -461,8 +463,7 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
   )
 }
 
-/*
-task signJar(type: SignJar, dependsOn: reobfJar) {
+task signJar(type: SignJar, dependsOn: jar) {
   onlyIf {
     getBooleanProperty('do_sign_jar') &&
     project.hasProperty('keyStore')
@@ -478,6 +479,7 @@ task signJar(type: SignJar, dependsOn: reobfJar) {
   keyPass = project.findProperty('keyStoreKeyPass')
 }
 
+/*
 task signApiJar(type: SignJar) {
   onlyIf {
     getBooleanProperty('create_api_jar') &&
@@ -494,6 +496,7 @@ task signApiJar(type: SignJar) {
   inputFile = apiJar.archivePath
   outputFile = apiJar.archivePath
 }
+*/
 
 task signDeobfJar(type: SignJar) {
   onlyIf {
@@ -547,20 +550,31 @@ task signJavadocJar(type: SignJar) {
 
 if (getBooleanProperty('do_sign_jar')) {
   build.dependsOn signJar
-  build.dependsOn signApiJar
-  build.dependsOn signDeobfJar
-  build.dependsOn signSourcesJar
-  build.dependsOn signJavadocJar
+  /*
+  if (getBooleanProperty('create_api_jar')) {
+    build.dependsOn signApiJar
+  }
+  */
+  if (getBooleanProperty('create_deobf_jar')) {
+    build.dependsOn signDeobfJar
+  }
+  if (getBooleanProperty('create_source_jar')) {
+    build.dependsOn signSourcesJar
+  }
+  if (getBooleanProperty('create_javadoc_jar')) {
+    build.dependsOn signJavadocJar
+  }
 }
-*/
 
 tasks.publish.dependsOn build
 tasks.curseforge.dependsOn publish
 
 artifacts {
+  /*
   if (getBooleanProperty('create_api_jar')) {
     archives apiJar
   }
+  */
   if (getBooleanProperty('create_deobf_jar')) {
     archives deobfJar
   }
@@ -593,11 +607,13 @@ publishing {
           classifier 'sources'
         }
       }
+      /*
       if (getBooleanProperty('create_api_jar')) {
         artifact apiJar {
           classifier 'api'
         }
       }
+      */
       if (getBooleanProperty('create_deobf_jar')) {
         artifact deobfJar {
           classifier 'deobf'
@@ -730,6 +746,7 @@ curseforge {
           }
         }
       }
+      /*
       if (getBooleanProperty('create_api_jar')) {
         addArtifact(apiJar) {
           if (getBooleanProperty('curseforge_use_custom_display_name')) {
@@ -737,6 +754,7 @@ curseforge {
           }
         }
       }
+      */
       if (getBooleanProperty('create_source_jar')) {
         addArtifact(sourcesJar) {
           if (getBooleanProperty('curseforge_use_custom_display_name')) {
