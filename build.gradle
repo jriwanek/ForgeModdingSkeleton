@@ -17,8 +17,8 @@ buildscript {
     }
   }
   dependencies {
-    classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
-//  classpath group: 'com.jaredsburrows', name: 'gradle-checker-framework-plugin', version: '0.2.2'
+    classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: project.fg_version, changing: true
+    //classpath group: 'com.jaredsburrows', name: 'gradle-checker-framework-plugin', version: '0.2.2'
   }
 }
 
@@ -41,10 +41,6 @@ apply plugin: 'maven-publish'
 
 import net.minecraftforge.gradle.common.task.SignJar
 
-version = '1.0'
-group = 'com.mcmoddev.examplemod' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = 'examplemod'
-
 project.afterEvaluate {
   //final def junitPlatformTestTask = project.tasks.getByName('junitPlatformTest')
 
@@ -52,8 +48,8 @@ project.afterEvaluate {
   jacoco {
     // this tool version is compatible with
     toolVersion = '0.8.3'
-//  Not needed with new way
-//  applyTo junitPlatformTestTask
+    // Not needed with new way
+    //applyTo junitPlatformTestTask
   }
 
   // create junit platform jacoco task
@@ -61,8 +57,8 @@ project.afterEvaluate {
   {
     sourceDirectories = files('./src/main')
     classDirectories = files("${project.buildDir}/classes/main")
-//  Not needed with new way
-//  executionData junitPlatformTestTask
+    // Not needed with new way
+    //executionData junitPlatformTestTask
   })
 }
 
@@ -103,8 +99,8 @@ tasks.withType(JavaCompile) {
   options.encoding = 'UTF-8'
   options.compilerArgs = [
     '-Xlint:deprecation', // deprecation, rawtypes, cast, unchecked, all
-//  '-Xdiags:verbose',
-//  '-Werror'
+    //'-Xdiags:verbose',
+    //'-Werror'
   ]
 }
 
@@ -121,9 +117,9 @@ test {
 /*
   useJUnitPlatform {
     includeTags 'fast', 'smoke & feature-a'
-//  excludeTags 'slow', 'ci'
+    //excludeTags 'slow', 'ci'
     includeEngines 'junit-jupiter'
-//  excludeEngines 'junit-vintage'
+    //excludeEngines 'junit-vintage'
   }
 */
 }
@@ -155,7 +151,7 @@ eclipse.project {
 
 idea.module {
   downloadJavadoc = true
-//  inheritOutputDirs = true
+  //inheritOutputDirs = true
 }
 
 class Secrets {
@@ -192,7 +188,7 @@ if (secretFile.exists()) {
 }
 
 minecraft {
-  mappings channel: 'stable', version: '47-1.13.2'
+  mappings channel: 'stable', version: project.mcp_mappings_version
 
   //replace '@MOD_VERSION@', project.short_version
 
@@ -237,11 +233,11 @@ minecraft {
 
   if (project.hasProperty('mc_resolution')) {
     final def res = [
-					 '480p': [640, 480],
-					 '576p': [640, 576],
-					 '720p': [1280, 720],
-					 '1080p': [1920, 1080],
-					 'custom': [project.findProperty('mc_custom_resolution_width'), project.findProperty('mc_custom_resolution_height')]]
+                     '480p': [640, 480],
+                     '576p': [640, 576],
+                     '720p': [1280, 720],
+                     '1080p': [1920, 1080],
+                     'custom': [project.findProperty('mc_custom_resolution_width'), project.findProperty('mc_custom_resolution_height')]]
     final def choice = res?.get(project.mc_resolution)
     if (choice != null) {
       clientRunArgs += ['--width', choice[0]]
@@ -266,8 +262,8 @@ minecraft {
   //makeObfSourceJar = getBooleanProperty('create_source_jar')
 
   //useDepAts = getBooleanProperty('dep_has_ats')
-  if (project.hasProperty('at_file')) {
-    accessTransformer = file(findProperty('at_file'))
+  if (project.hasProperty('mod_at_file')) {
+    accessTransformer = file(findProperty('mod_at_file'))
   }
 
   // Default run configurations.
@@ -323,7 +319,7 @@ repositories {
 }
 
 dependencies {
-  minecraft 'net.minecraftforge:forge:1.13.2-25.0.219'
+  minecraft "net.minecraftforge:forge:${project.forge_mc_version}-${project.forge_version}"
 
   testCompile('org.junit.platform:junit-platform-launcher:1.4.+')
   testCompile('org.junit.jupiter:junit-jupiter-api:5.4.+') // testImplementation
@@ -334,7 +330,7 @@ dependencies {
   testCompile('org.mockito:mockito-junit-jupiter:2.+') {
     exclude group: 'org.junit.jupiter', module: 'junit-jupiter-engine'
   }
-  annotationProcessor group:'org.apache.logging.log4j', name:'log4j-core', version: '2.11.0'
+  annotationProcessor group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.11.0'
 }
 
 processResources {
@@ -356,7 +352,7 @@ jar {
       'Implementation-Vendor' :'mcmoddev',
       'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
       'Built-On-Java': "${System.getProperty('java.vm.version')} (${System.getProperty('java.vm.vendor')})",
-      'Built-On': "${project.mc_version}-${project.forge_version}"
+      'Built-On': "${project.forge_mc_version}-${project.forge_version}"
     )
   }
 }
@@ -383,7 +379,7 @@ task apiJar(type: Jar) {
       'Implementation-Vendor' :'mcmoddev',
       'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
       'Built-On-Java': "${System.getProperty('java.vm.version')} (${System.getProperty('java.vm.vendor')})",
-      'Built-On': "${project.mc_version}-${project.forge_version}"
+      'Built-On': "${project.forge_mc_version}-${project.forge_version}"
     )
   }
 }
@@ -409,12 +405,12 @@ task deobfJar(type: Jar) {
       'Implementation-Vendor' :'mcmoddev',
       'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
       'Built-On-Java': "${System.getProperty('java.vm.version')} (${System.getProperty('java.vm.vendor')})",
-      'Built-On': "${project.mc_version}-${project.forge_version}"
+      'Built-On': "${project.forge_mc_version}-${project.forge_version}"
     )
-    if (project.hasProperty('at_file')) {
-      attributes 'FMLAT' : project.at_file
+    if (project.hasProperty('mod_at_file')) {
+      attributes 'FMLAT': project.mod_at_file
     }
-    if(project.hasProperty('core_plugin')) {
+    if (project.hasProperty('core_plugin')) {
       attributes 'FMLCorePlugin': project.core_plugin
     }
   }
@@ -440,7 +436,7 @@ task sourcesJar(type: Jar, dependsOn: classes) {
       'Implementation-Vendor' :'mcmoddev',
       'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
       'Built-On-Java': "${System.getProperty('java.vm.version')} (${System.getProperty('java.vm.vendor')})",
-      'Built-On': "${project.mc_version}-${project.forge_version}"
+      'Built-On': "${project.forge_mc_version}-${project.forge_version}"
     )
   }
 }
@@ -669,7 +665,7 @@ publishing {
       if (secret.url != '') {
         url secret.url
       } else {
-        url "${project.buildDir}/repo"
+        url "file:///${project.buildDir}/repo"
         //TODO: From Forge MDK
         //url "file:///${project.projectDir}/mcmodsrepo"
       }
@@ -682,11 +678,11 @@ curseforge {
     apiKey = secret.curseforgeAPIKey
     project {
       id = project.curseforge_project_id
-	  if (project.hasProperty('curseforge_changelog_filename')) {
+      if (project.hasProperty('curseforge_changelog_filename')) {
         changelog = file(project.curseforge_changelog_filename)
-	  } else {
-	    changelog = ''
-	  }
+      } else {
+        changelog = ''
+      }
       if (project.hasProperty('curseforge_changelog_type')) {
         changelogType = project.curseforge_changelog_type
       }
@@ -793,10 +789,10 @@ sonarqube {
     } else if (secret.sonarOrganisation != '') {
       property 'sonar.organization', secret.sonarOrganization
     }
-    // property 'sonar.projectName', project.archivesBaseName
-    // property 'sonar.projectKey', "${project.group}:${project.archivesBaseName}"
-    // property 'sonar.branch.name', 'master-1.12'
-    // property 'sonar.branch.target', ''
+    //property 'sonar.projectName', project.archivesBaseName
+    //property 'sonar.projectKey', "${project.group}:${project.archivesBaseName}"
+    //property 'sonar.branch.name', 'master-1.13.2'
+    //property 'sonar.branch.target', ''
     property 'sonar.junit.reportPaths', "${project.buildDir}/test-results/junit-platform/*.xml"
     property 'sonar.jacoco.reportPaths', "${project.buildDir}/jacoco/junitPlatformTest.exec"
   }
@@ -828,7 +824,7 @@ String getModVersion(final String type, final String modFile) {
   if ((modFile != null) && (modFile != '')) {
     final File file = file(modFile)
     final def prefix = ~/^(?:\s*)(?:(?<modifier>public|protected|private) )?(?:(?<static>static) )?(?:(?<final>final) )?String $type = "(?:(?<major>\d*)\.)?(?:(?<minor>\d*)\.)?(?:(?<patch>[^."]*)\.?)(?<build>[^"]*)";$/
-    for(final String s in file.readLines()) {
+    for (final String s in file.readLines()) {
       final Matcher matcher = (s.trim() =~ prefix)
       if (matcher.matches()) {
         return "${matcher.group('major') ?: '0'}.${matcher.group('minor') ?: '0'}.${matcher.group('patch')}"
