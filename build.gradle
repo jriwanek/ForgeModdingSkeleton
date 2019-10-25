@@ -346,6 +346,9 @@ jar {
     if (project.hasProperty('mod_at_file')) {
       attributes 'FMLAT': project.at_file
     }
+    if (project.hasProperty('mod_contained_deps')) {
+        attributes 'ContainedDeps': project.mod_contained_deps
+	}
   }
 }
 
