@@ -10,5 +10,5 @@ jdk:
   - oraclejdk8
 before_install:
   - chmod a+x gradlew
-install: ./gradlew setupCIWorkspace -S
+install: skip
 script: ./gradlew clean build -S

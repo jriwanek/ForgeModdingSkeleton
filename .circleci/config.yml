@@ -31,10 +31,10 @@ jobs:
           command: |
            ./gradlew --version
 
-      - run:
-          name: Set up the workspace for ci build
-          command: |
-           ./gradlew setupCiWorkspace
+#      - run:
+#          name: Set up the workspace for ci build
+#          command: |
+#           ./gradlew setupCiWorkspace
 
       - run:
           name: Clean the workspace ready for a fresh build.
