@@ -291,7 +291,6 @@ dependencies {
   testCompile('org.junit.platform:junit-platform-launcher:1.4.+')
   testCompile('org.junit.jupiter:junit-jupiter-api:5.4.+') // testImplementation
   testRuntime('org.junit.jupiter:junit-jupiter-engine:5.4.+') //testRuntimeOnly
-  
   if (GradleVersion.current() >= GradleVersion.version('2.13')) {
     testCompileOnly 'junit:junit:4.12'
   }
@@ -337,14 +336,14 @@ jar {
       'Implementation-Vendor' :'mcmoddev',
       'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
       'Built-On-Java': "${System.getProperty('java.vm.version')} (${System.getProperty('java.vm.vendor')})",
-      'Built-On': "${project.mc_version}-${project.forge_version}"
+      'Built-On': "${project.forge_mc_version}-${project.forge_version}"
     )
     if (project.hasProperty('core_plugin')) {
       attributes 'FMLCorePluginContainsFMLMod': 'true'
       attributes 'FMLCorePlugin': project.core_plugin
     }
     if (project.hasProperty('mod_at_file')) {
-      attributes 'FMLAT': project.at_file
+      attributes 'FMLAT': project.mod_at_file
     }
     if (project.hasProperty('mod_contained_deps')) {
         attributes 'ContainedDeps': project.mod_contained_deps
@@ -400,8 +399,8 @@ task deobfJar(type: Jar) {
       'Built-On-Java': "${System.getProperty('java.vm.version')} (${System.getProperty('java.vm.vendor')})",
       'Built-On': "${project.forge_mc_version}-${project.forge_version}"
     )
-    if (project.hasProperty('at_file')) {
-      attributes 'FMLAT': project.at_file
+    if (project.hasProperty('mod_at_file')) {
+      attributes 'FMLAT': project.mod_at_file
     }
     if (project.hasProperty('core_plugin')) {
       attributes 'FMLCorePlugin': project.core_plugin
