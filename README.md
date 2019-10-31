@@ -1,7 +1,7 @@
 # ForgeModdingSkeleton
 Skeletons for building Forge mods
 
-## TODO:
+## TODO
 1) Support Curse ChangeLog from String (Partially done)
 2) Sonarqube & Jar Signing Support for Travis
 3) Sonarqube & Jar Signing Support for CircleCI
