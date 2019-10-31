@@ -20,40 +20,43 @@ public class MessagePotionUpdate implements IMessage {
 
 	public MessagePotionUpdate() { }
 
-	public static MessagePotionUpdate createUpdatePacket(TileEntity te) {
+	public static MessagePotionUpdate createUpdatePacket(final TileEntity te) {
 		IExampleCapability caps = te.getCapability(ExampleCapabilities.EXAMPLE_CAPABILITY, null);
-		if(caps != null)
+		if (caps != null) {
 			return new MessagePotionUpdate(te.getPos(), caps.serializeNBT());
-		else throw new IllegalArgumentException("Should only sync TileEntity.");
+		} else {
+			throw new IllegalArgumentException("Should only sync TileEntity.");
+		}
 	}
 
-	private MessagePotionUpdate(BlockPos pos, NBTTagCompound nbt) {
+	private MessagePotionUpdate(final BlockPos pos, final NBTTagCompound nbt) {
 		this.pos = pos;
 		this.potionUpdateData = nbt;
 	}
 
 	@Override
-	public void fromBytes(ByteBuf buf) {
+	public void fromBytes(final ByteBuf buf) {
 		this.pos = BlockPos.fromLong(buf.readLong());
 		this.potionUpdateData = ByteBufUtils.readTag(buf);
 	}
 
 	@Override
-	public void toBytes(ByteBuf buf) {
+	public void toBytes(final ByteBuf buf) {
 		buf.writeLong(pos.toLong());
 		ByteBufUtils.writeTag(buf, this.potionUpdateData);
 	}
 
 	public static class MessageHandlerPotionUpdate implements IMessageHandler<MessagePotionUpdate, IMessage> {
 		@Override
-		public IMessage onMessage(MessagePotionUpdate message, MessageContext ctx) {
+		public IMessage onMessage(final MessagePotionUpdate message, final MessageContext ctx) {
 			final FMLCommonHandler handler = FMLCommonHandler.instance();
 			handler.getWorldThread(ctx.getClientHandler()).addScheduledTask(
 					() -> {
 						TileEntity te = ExampleMod.getWorld().getTileEntity(message.pos);
 						IExampleCapability caps = te.getCapability(ExampleCapabilities.EXAMPLE_CAPABILITY, null);
-						if(caps != null)
+						if (caps != null) {
 							caps.deserializeNBT(message.potionUpdateData);
+						}
 					});
 			return null;
 		}

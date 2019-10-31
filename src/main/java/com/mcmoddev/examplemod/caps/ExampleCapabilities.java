@@ -20,16 +20,16 @@ public class ExampleCapabilities {
 		@Override
 		public NBTTagCompound serializeNBT() {
 			NBTTagCompound nbt = new NBTTagCompound();
-			return this.effect != null? effect.writeCustomPotionEffectToNBT(nbt) : nbt;
+			return this.effect != null ? effect.writeCustomPotionEffectToNBT(nbt) : nbt;
 		}
 
 		@Override
-		public void deserializeNBT(NBTTagCompound nbt) {
+		public void deserializeNBT(final NBTTagCompound nbt) {
 			this.effect = PotionEffect.readCustomPotionEffectFromNBT(nbt);
 		}
 
 		@Override
-		public void applyPotion(Potion potion, int duration, int amplifier) {
+		public void applyPotion(final Potion potion, final int duration, final int amplifier) {
 			this.effect = new PotionEffect(potion, duration, amplifier);
 		}
 
@@ -40,17 +40,19 @@ public class ExampleCapabilities {
 	}
 
 	public static void init() {
-		CapabilityManager.INSTANCE.register(IExampleCapability.class, 
+		CapabilityManager.INSTANCE.register(IExampleCapability.class,
 				new IStorage<IExampleCapability>() {
 					@Override
-					public NBTBase writeNBT(Capability<IExampleCapability> capability, IExampleCapability instance, EnumFacing side) {
+					public NBTBase writeNBT(final Capability<IExampleCapability> capability, final IExampleCapability instance, final EnumFacing side) {
 						return instance.serializeNBT();
 					}
 
 					@Override
-					public void readNBT(Capability<IExampleCapability> capability, IExampleCapability instance, EnumFacing side,
-							NBTBase nbt) {
-						if(nbt instanceof NBTTagCompound) instance.deserializeNBT((NBTTagCompound)nbt);
+					public void readNBT(final Capability<IExampleCapability> capability, final IExampleCapability instance, final EnumFacing side,
+							final NBTBase nbt) {
+						if (nbt instanceof NBTTagCompound) {
+							instance.deserializeNBT((NBTTagCompound) nbt);
+						}
 					}
 		}, DefaultImpl::new);
 	}

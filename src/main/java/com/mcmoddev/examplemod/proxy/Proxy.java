@@ -15,7 +15,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 public abstract class Proxy {
 	// uncomment this if you have ore generation
 	// private static WorldGenerator worldGen = new WorldGenerator();
-	
+
 	/**
 	 *
 	 * @param event The Event.
@@ -41,7 +41,7 @@ public abstract class Proxy {
 		// WorldGenerator.DIMENSION_END
 		//   or
 		// WorldGenerator.DIMENSION_ANY_OVERWORLD
-		// -- the first three are specific to the named dimensions - the last will 
+		// -- the first three are specific to the named dimensions - the last will
 		// spawn in any "Overworld" type dimension.
 	}
 
@@ -61,7 +61,9 @@ public abstract class Proxy {
 		//
 	}
 
-	public World getWorld() { return null; }
+	public World getWorld() {
+		return null;
+	}
 
 	/*
  	// Before 1.12

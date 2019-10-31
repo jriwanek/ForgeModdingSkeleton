@@ -6,12 +6,12 @@ import net.minecraftforge.common.capabilities.Capability;
 
 public class ExampleTileEntity extends TileEntity {
 	@Override
-	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+	public boolean hasCapability(final Capability<?> capability, final EnumFacing facing) {
 		return super.hasCapability(capability, facing);
 	}
 
 	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+	public <T> T getCapability(final Capability<T> capability, final EnumFacing facing) {
 		return super.getCapability(capability, facing);
 	}
 }
