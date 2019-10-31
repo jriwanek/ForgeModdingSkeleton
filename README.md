@@ -1,7 +1,7 @@
 # ForgeModdingSkeleton
 Skeletons for building Forge mods
 
-## TODO:
+## TODO
 1) Support Curse ChangeLog from String (Partially done)
 2) Sonarqube & Jar Signing Support for Travis
 3) Sonarqube & Jar Signing Support for CircleCI
@@ -17,7 +17,7 @@ Skeletons for building Forge mods
 13) Auto-selection of Forge latest LB and RB versions
 14) Auto-selection of Mappings
 
-## Known Caveats:
+## Known Caveats
 1) Many versions hard-coded
 2) Only supports the maven-publish plugin, not the old maven plugin which also supports SSH Pubkey authentication
 
@@ -26,7 +26,7 @@ Skeletons for building Forge mods
 2) Finish off JUnit5 feature set (I think this is done now)
 3) Make sure JaCoCo is integrated correctly with JUnit
 
-## Example Mod TODO:
+## Example Mod TODO
 1) Recipes
 2) Creative Tabs
 3) Block with Multiple Textures
