@@ -94,6 +94,7 @@ if (GradleVersion.current() >= GradleVersion.version('2.7')) {
   checkstyle {
     ignoreFailures = true
     toolVersion = '8.20' // 5.7 is default
+    showViolations = false
   }
 }
 
@@ -126,7 +127,7 @@ test {
       includeEngines 'junit-jupiter'
       //excludeEngines 'junit-vintage'
     }
-	*/
+    */
   }
 }
 
@@ -351,7 +352,7 @@ jar {
     }
     if (project.hasProperty('mod_contained_deps')) {
         attributes 'ContainedDeps': project.mod_contained_deps
-	}
+    }
   }
 }
 
