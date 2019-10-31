@@ -3,8 +3,11 @@
 #*.bat        text eol=crlf
 #*.bat        text eol=lf
 *.gradle     text diff=java
+mcmod.info   text
 *.java       text
 *.json       text
+*.lang       text
+*.mcmeta     text
 *.md         text
 *.properties text
 *.sh         text eol=lf
