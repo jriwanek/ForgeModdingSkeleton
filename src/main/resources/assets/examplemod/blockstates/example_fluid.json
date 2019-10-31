@@ -1,9 +1,11 @@
 {
-    "forge_marker": 1,
-    "variants": {
-        "fluid": {
-            "model": "forge:fluid",
-            "custom": { "fluid": "example_fluid" }
-        }
+  "forge_marker": 1,
+  "variants": {
+    "fluid": {
+      "model": "forge:fluid",
+      "custom": {
+        "fluid": "example_fluid"
+      }
     }
+  }
 }
