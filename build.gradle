@@ -195,7 +195,7 @@ if (secretFile.exists()) {
 }
 
 minecraft {
-  mappings channel: 'stable', version: project.mcp_mappings_version
+  mappings channel: project.mcp_mappings_channel, version: project.mcp_mappings_version
 
   //replace '@MOD_VERSION@', project.short_version
 
