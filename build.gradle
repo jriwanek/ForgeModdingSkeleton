@@ -48,7 +48,9 @@ project.afterEvaluate {
     // this tool version is compatible with
     toolVersion = '0.8.3'
     // Not needed with new way
-    //applyTo junitPlatformTestTask
+    //if (GradleVersion.current() < GradleVersion.version('4.6')) {
+      //applyTo junitPlatformTestTask
+    //}}
   }
 
   // create junit platform jacoco task
@@ -57,19 +59,23 @@ project.afterEvaluate {
     sourceDirectories = files('./src/main')
     classDirectories = files("${project.buildDir}/classes/main")
     // Not needed with new way
-    //executionData junitPlatformTestTask
+    //if (GradleVersion.current() < GradleVersion.version('4.6')) {
+    //  executionData junitPlatformTestTask
+    //}
   })
 }
 
 // Only works with JUnit Platform Launcher 1.2.0 and earlier
 /*
-junitPlatform {
-  // platformVersion '1.2.0'
-  // logManager 'org.apache.logging.log4j.jul.LogManager'
-  reportsDir file("${project.buildDir}/test-results/junit-platform")
-  // enableStandardTestTask true
-  // selectors (optional)
-  // filters (optional)
+if (GradleVersion.current() < GradleVersion.version('4.6')) {
+  junitPlatform {
+    // platformVersion '1.2.0'
+    // logManager 'org.apache.logging.log4j.jul.LogManager'
+    reportsDir file("${project.buildDir}/test-results/junit-platform")
+    // enableStandardTestTask true
+    // selectors (optional)
+    // filters (optional)
+  }
 }
 */
 
@@ -333,13 +339,13 @@ repositories {
 }
 
 dependencies {
-  testCompile('org.junit.platform:junit-platform-launcher:1.4.+')
-  testCompile('org.junit.jupiter:junit-jupiter-api:5.4.+') // testImplementation
-  testRuntime('org.junit.jupiter:junit-jupiter-engine:5.4.+') //testRuntimeOnly
+  testCompile('org.junit.platform:junit-platform-launcher:1.5.+')
+  testCompile('org.junit.jupiter:junit-jupiter-api:5.5.+') // testImplementation
+  testRuntime('org.junit.jupiter:junit-jupiter-engine:5.5.+') //testRuntimeOnly
   if (GradleVersion.current() >= GradleVersion.version('2.13')) {
     testCompileOnly 'junit:junit:4.12'
   }
-  testRuntime 'org.junit.vintage:junit-vintage-engine:5.4.+' //testRuntimeOnly
+  testRuntime 'org.junit.vintage:junit-vintage-engine:5.5.+' //testRuntimeOnly
   testCompile('org.mockito:mockito-core:2.+')
   testCompile('org.mockito:mockito-junit-jupiter:2.+') {
     exclude group: 'org.junit.jupiter', module: 'junit-jupiter-engine'
