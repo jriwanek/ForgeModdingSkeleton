@@ -98,6 +98,49 @@ if (GradleVersion.current() >= GradleVersion.version('2.7')) {
   }
 }
 
+pmd {
+  consoleOutput = false
+  ignoreFailures = true
+  sourceSets = [sourceSets.main]
+  reportsDir = file("$project.buildDir/reports/pmd")
+  rulePriority = 5
+  ruleSets = [
+    'java-android',
+    'java-basic',
+    'java-braces',
+    'java-clone',
+    'java-codesize',
+    'java-comments',
+    'java-controversial',
+    'java-coupling',
+    'java-design',
+    'java-empty',
+    'java-finalizers',
+    'java-imports',
+    'java-j2ee',
+    'java-javabeans',
+    'java-junit',
+    'java-logging-jakarta-commons',
+    'java-logging-java',
+//    'java-metrics', // Upsets 5.8.1
+    'java-migrating',
+    'java-migrating_to_junit4',
+    'java-naming',
+    'java-optimizations',
+//    'java-quickstart', // 6.x
+    'java-strictexception',
+    'java-strings',
+    'java-sunsecure',
+    'java-typeresolution',
+    'java-unnecessary',
+    'java-unusedcode'
+  ]
+  toolVersion = '5.8.1'; // 5.18.0
+  if (GradleVersion.current() >= GradleVersion.version('5.6')) {
+    incrementalAnalysis = true
+  }
+}
+
 tasks.withType(JavaCompile) {
   options.encoding = 'UTF-8'
   options.compilerArgs = [
