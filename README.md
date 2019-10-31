@@ -7,12 +7,12 @@ Skeletons for building Forge mods
 3) Sonarqube & Jar Signing Support for CircleCI
 4) Secret parser should support Gradle properties too
 5) Fix JUnit3, JUnit4 & JUnit Vintage compatibility (Should be done)
-6) Support for JUnit on gradle < 4.6 (Effectively done, Will be on different branch)
-7) Jar-in-Jar
-8) ContainedDeps
+6) Support for JUnit on gradle < 4.6 (Effectively done, Needs uncommented and tested)
+7) Jar-in-Jar (Partially done)
+8) ContainedDeps (Partially done)
 9) Shade
 10) Shadow
-11) Make all gradle version specific bits gated
+11) Make all gradle version specific bits gated (Mostly complete)
 12) Auto-selection selection of FG version based on MC version
 13) Auto-selection of Forge latest LB and RB versions
 14) Auto-selection of Mappings
