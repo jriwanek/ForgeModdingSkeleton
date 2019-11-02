@@ -33,7 +33,8 @@ plugins {
   id 'checkstyle' // 2.7 or later
 }
 
-apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'net.minecraftforge.gradle.forge' // FG2.x
+//apply plugin: 'forge' // FG1.x
 //apply plugin: 'com.jaredsburrows.checkerframework'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
