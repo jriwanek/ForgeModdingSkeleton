@@ -57,8 +57,13 @@ project.afterEvaluate {
   // create junit platform jacoco task
   project.task(type: JacocoReport, 'junitPlatformJacocoReport',
   {
-    sourceDirectories = files('./src/main')
-    classDirectories = files("${project.buildDir}/classes/main")
+    if (GradleVersion.current() >= GradleVersion.version('5.0')) {
+      getSourceDirectories().from(files('./src/main'))
+      getClassDirectories().from(files("${project.buildDir}/classes/main"))
+    } else {
+      sourceDirectories = files('./src/main')
+      classDirectories = files("${project.buildDir}/classes/main")
+    }
     // Not needed with new way
     //if (GradleVersion.current() < GradleVersion.version('4.6')) {
     //  executionData junitPlatformTestTask
@@ -143,9 +148,9 @@ pmd {
     'java-unnecessary',
     'java-unusedcode'
   ]
-  toolVersion = '5.8.1'; // 5.18.0
+  toolVersion = '5.8.1'; // 6.19.0
   if (GradleVersion.current() >= GradleVersion.version('5.6')) {
-    incrementalAnalysis = true
+//    incrementalAnalysis = true // Requires PMD 6.0.0 or newer
   }
 }
 
