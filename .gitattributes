@@ -1,6 +1,6 @@
 *            text=auto
 
-#*.bat        text eol=crlf
+*.bat        text eol=crlf
 #*.bat        text eol=lf
 *.gradle     text diff=java
 mcmod.info   text
@@ -10,6 +10,7 @@ mcmod.info   text
 *.mcmeta     text
 *.md         text
 *.properties text
+gradlew      text eol=lf
 *.sh         text eol=lf
 *.txt        text
 *.xml        text
