@@ -335,7 +335,7 @@ minecraft {
     client {
       workingDirectory project.file('run')
 
-      taskName "${project.name} Client"
+      taskName "${project.name}-Client"
 
       // Recommended logging data for a userdev environment
       property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
@@ -353,7 +353,7 @@ minecraft {
     server {
       workingDirectory project.file('run')
 
-      taskName "${project.name} Server"
+      taskName "${project.name}-Server"
 
       // Recommended logging data for a userdev environment
       property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
