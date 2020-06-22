@@ -39,6 +39,10 @@ apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'maven-publish'
 apply plugin: 'pmd'
+import org.gradle.util.GradleVersion
+if (GradleVersion.current() < GradleVersion.version('4.0')) {
+  apply plugin: 'findbugs'
+}
 
 import net.minecraftforge.gradle.common.task.SignJar
 
@@ -172,7 +176,6 @@ javadoc {
   failOnError = false
 }
 
-import org.gradle.util.GradleVersion
 test {
   if (GradleVersion.current() >= GradleVersion.version('4.6')) {
     useJUnitPlatform()
