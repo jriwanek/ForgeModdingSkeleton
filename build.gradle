@@ -253,7 +253,9 @@ if (secretFile.exists()) {
 
 minecraft {
   version = project.forge_mc_version + '-' + project.forge_version
-  mappings = project.mcp_mappings_version
+  if (project.forge_mc_version > "1.7.2") {
+    mappings = project.mcp_mappings_version
+  }
 
   if (project.hasProperty('runDir')) {
     runDir = project.runDir
