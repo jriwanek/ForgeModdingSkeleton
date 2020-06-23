@@ -98,6 +98,7 @@ if (GradleVersion.current() >= GradleVersion.version('4.0')) {
     reportLevel = 'low'
     //includeFilter = file("$rootProject.projectDir/config/spotbugs-filter.xml")
   }
+
   tasks.withType(com.github.spotbugs.SpotBugsTask) {
     reports {
       xml.enabled = false
@@ -207,6 +208,8 @@ static String getBuildNumber() {
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
+compileJava.sourceCompatibility = JavaVersion.VERSION_1_8
+compileJava.targetCompatibility = JavaVersion.VERSION_1_8
 
 eclipse.project {
   buildCommand 'org.eclipse.buildship.core.gradleprojectbuilder'
@@ -268,10 +271,10 @@ minecraft {
   } else {
     if (project.hasProperty('runDir')) {
       assetDir = project.runDir
-    } else if (file('../run').exists()) {
-      assetDir = '../run'
+    } else if (file('../assets').exists()) {
+      assetDir = '../assets'
     } else {
-      assetDir = 'run'
+      assetDir = 'eclipse/assets'
     }
   }
 
@@ -366,7 +369,6 @@ dependencies {
   testCompile('org.junit.platform:junit-platform-launcher:1.2.+')
   testCompile('org.junit.jupiter:junit-jupiter-api:5.2.+') // testImplementation
   testRuntime('org.junit.jupiter:junit-jupiter-engine:5.2.+') //testRuntimeOnly
-  
   if (GradleVersion.current() >= GradleVersion.version('2.13')) {
     testCompileOnly 'junit:junit:4.12'
   }
