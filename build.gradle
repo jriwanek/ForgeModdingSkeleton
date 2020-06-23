@@ -206,6 +206,8 @@ static String getBuildNumber() {
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
+compileJava.sourceCompatibility = JavaVersion.VERSION_1_8
+compileJava.targetCompatibility = JavaVersion.VERSION_1_8
 
 eclipse.project {
   buildCommand 'org.eclipse.buildship.core.gradleprojectbuilder'
