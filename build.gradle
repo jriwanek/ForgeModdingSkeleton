@@ -3,9 +3,10 @@ buildscript {
     mavenLocal()
     jcenter()
     mavenCentral()
+    removeIf { it instanceof MavenArtifactRepository && it.url.host == 'files.minecraftforge.net' }
     maven {
       name = 'forge'
-      url = 'https://files.minecraftforge.net/maven'
+      url = 'https://maven.minecraftforge.net/'
     }
     maven {
       name = 'gradle'
@@ -387,7 +388,7 @@ repositories {
 dependencies {
   minecraft "net.minecraftforge:forge:${project.forge_mc_version}-${project.forge_version}"
 
-  testCompile('org.junit.platform:junit-platform-launcher:1.4.+')
+  testCompile('org.junit.platform:junit-platform-launcher:1.5.+')
   testCompile('org.junit.jupiter:junit-jupiter-api:5.5.+') // testImplementation
   testRuntime('org.junit.jupiter:junit-jupiter-engine:5.5.+') //testRuntimeOnly
   if (GradleVersion.current() >= GradleVersion.version('2.13')) {
