@@ -367,13 +367,13 @@ repositories {
 }
 
 dependencies {
-  testCompile('org.junit.platform:junit-platform-launcher:1.2.+')
-  testCompile('org.junit.jupiter:junit-jupiter-api:5.2.+') // testImplementation
-  testRuntime('org.junit.jupiter:junit-jupiter-engine:5.2.+') //testRuntimeOnly
+  testCompile('org.junit.platform:junit-platform-launcher:1.5.+')
+  testCompile('org.junit.jupiter:junit-jupiter-api:5.5.+') // testImplementation
+  testRuntime('org.junit.jupiter:junit-jupiter-engine:5.5.+') //testRuntimeOnly
   if (GradleVersion.current() >= GradleVersion.version('2.13')) {
     testCompileOnly 'junit:junit:4.12'
   }
-  testRuntime 'org.junit.vintage:junit-vintage-engine:5.2.+' //testRuntimeOnly
+  testRuntime 'org.junit.vintage:junit-vintage-engine:5.5.+' //testRuntimeOnly
   testCompile('org.mockito:mockito-core:2.+')
   testCompile('org.mockito:mockito-junit-jupiter:2.+') {
     exclude group: 'org.junit.jupiter', module: 'junit-jupiter-engine'
