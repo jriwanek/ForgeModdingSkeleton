@@ -36,14 +36,14 @@ pipeline {
             tools {
                 jdk "oraclejdk11" // the name you have given the JDK installation in Global Tool Configuration
             }
-//            environment {
-//                scannerHome = tool 'SonarQube Scanner' // the name you have given the Sonar Scanner (in Global Tool Configuration)
-//            }
+            environment {
+                scannerHome = tool 'SonarQube Scanner' // the name you have given the Sonar Scanner (in Global Tool Configuration)
+            }
             steps {
-                sh './gradlew curseforge'
-//                withSonarQubeEnv(installationName: 'SonarQube') {
-//                    sh "${scannerHome}/bin/sonar-scanner -X"
-//                }
+//                sh './gradlew curseforge'
+                withSonarQubeEnv(installationName: 'SonarQube') {
+                    sh "${scannerHome}/bin/sonar-scanner -X"
+                }
             }
         }
     }
