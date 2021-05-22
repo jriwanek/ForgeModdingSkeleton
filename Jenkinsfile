@@ -1,6 +1,11 @@
 pipeline {
     agent any
+    environment {
+        GRADLE_OPTS = '-Dorg.gradle.caching=true -Dorg.gradle.configureondemand=true -Dorg.gradle.console=verbose -Dorg.gradle.logging.level=info -Dorg.gradle.warning.mode=all'
+//      JAVA_OPTS = ''
+    }
     tools {
+        git 'Git'
         gradle 'Gradle 4.9'
         jdk 'oraclejdk8'
     }
