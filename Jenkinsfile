@@ -74,7 +74,7 @@ pipeline {
             steps {
                 recordIssues(tools: [java()])
                 archiveArtifacts artifacts: 'build/libs/*.jar', followSymlinks: false
-                javadoc javadocDir: '**/build/docs/javadoc', keepAll: false
+                javadoc javadocDir: 'build/docs/javadoc', keepAll: false
                 junit allowEmptyResults: true, testResults: '**/build/test-results/junit-platform/*.xml'
                 jacoco classPattern: '**/build/classes/java', execPattern: '**/build/jacoco/**.exec', sourceInclusionPattern: '**/*.java', sourcePattern: '**/src/main/java'
                 recordIssues(tools: [checkStyle(pattern: '**/build/reports/checkstyle/*.xml')])
