@@ -79,14 +79,18 @@ pipeline {
         }
         stage('postbuild') {
             steps {
-                recordIssues(tools: [java()])
                 archiveArtifacts artifacts: 'build/libs/*.jar', followSymlinks: false
                 javadoc javadocDir: 'build/docs/javadoc', keepAll: false
                 junit allowEmptyResults: true, testResults: '**/build/test-results/junit-platform/*.xml'
                 jacoco classPattern: '**/build/classes/java', execPattern: '**/build/jacoco/**.exec', sourceInclusionPattern: '**/*.java', sourcePattern: '**/src/main/java'
+                recordIssues(tools: [java()])
+                recordIssues(tools: [javaDoc()])
                 recordIssues(tools: [checkStyle(pattern: '**/build/reports/checkstyle/*.xml')])
                 recordIssues(tools: [pmdParser(pattern: '**/build/reports/pmd/*.xml')])
+//              recordIssues(tools: [findBugs(pattern: '*/build/reports/findbugs/*.xml', useRankAsPriority: true)])
                 recordIssues(tools: [spotBugs(pattern: '**/build/reports/spotbugs/*.xml', useRankAsPriority: true)])
+                recordIssues(tools: [junitParser(pattern: '**/build/test-results/junit-platform/*.xml')])
+                recordIssues(tools: [sonarQube(pattern: '**/sonar-report.json')])
             }
         }
     }
