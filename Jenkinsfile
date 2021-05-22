@@ -5,7 +5,7 @@ pipeline {
         jdk 'oraclejdk8'
     }
     stages {
-        stage('Prepare for build') {
+        stage('prebuild') {
             steps {
                 sh 'rm -rf build/libs'
                 sh 'chmod +x gradlew'
@@ -15,35 +15,39 @@ pipeline {
                 sh 'export'
             }
         }
-        stage('Set up CI Workspace') {
+        stage('CIWorkspace') {
             steps {
                 withGradle {
                     sh './gradlew clean setupCiWorkspace'
 		}
             }
         }
-        stage('Build') {
+        stage('build') {
             steps {
                 withGradle {
                     sh './gradlew clean build'
                 }
             }
         }
-        stage('Deploy to maven') {
+        stage('publish') {
             steps {
-                withGradle {
-                    sh './gradlew publish'
+                withCredentials([file(credentialsId: 'secret.json', variable: 'SECRET_FILE')]) {
+                    withGradle {
+                        sh './gradlew publish'
+                    }
                 }
             }
         }
-        stage('Deploy to curseforge') {
+        stage('CurseForge') {
             steps {
-                withGradle {
-                    sh './gradlew curseforge'
+                withCredentials([file(credentialsId: 'secret.json', variable: 'SECRET_FILE')]) {
+                    withGradle {
+                        sh './gradlew curseforge'
+                    }
                 }
             }
         }
-        stage('SonarQube analysis') {
+        stage('SonarQube') {
             tools {
                 jdk "oraclejdk11"
             }
@@ -51,8 +55,10 @@ pipeline {
                 scannerHome = tool 'SonarQube'
             }
             steps {
-//              withGradle {
-//                  sh './gradlew sonarqube'
+//              withCredentials([file(credentialsId: 'secret.json', variable: 'SECRET_FILE')]) {
+//                  withGradle {
+//                      sh './gradlew sonarqube'
+//                  }
 //              }
                 withSonarQubeEnv(installationName: 'SonarCloud', , envOnly: false) {
                     sh "${scannerHome}/bin/sonar-scanner -Dsonar.java.jdkHome=${JAVA_HOME}"
