@@ -70,5 +70,17 @@ pipeline {
                 }
             }
         }
+        stage('postbuild') {
+            steps {
+                recordIssues(tools: [java()])
+                archiveArtifacts artifacts: '', followSymlinks: false
+                javadoc javadocDir: 'build/docs/javadoc', keepAll: false
+                junit allowEmptyResults: true, testResults: '**/build/test-results/junit-platform/*.xml'
+                jacoco classPattern: '**/build/classes/java', execPattern: '**/build/jacoco/**.exec', sourceInclusionPattern: '**/*.java', sourcePattern: '**/src/main/java'
+                recordIssues(tools: [checkStyle(pattern: '**/build/reports/checkstyle/*.xml')])
+                recordIssues(tools: [pmdParser(pattern: '**/build/reports/pmd/*.xml')])
+                recordIssues(tools: [spotBugs(pattern: '**/build/reports/spotbugs/*.xml', useRankAsPriority: true)])
+            }
+        }
     }
 }
