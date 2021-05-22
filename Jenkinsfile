@@ -2,7 +2,7 @@ pipeline {
     agent any
     tools {
         gradle 'Gradle 4.9'
-        jdk 'oraclejdk8' // the name you have given the JDK installation in Global Tool Configuration
+        jdk 'oraclejdk8'
     }
     stages {
         stage('Prepare for build') {
@@ -17,36 +17,45 @@ pipeline {
         }
         stage('Set up CI Workspace') {
             steps {
-                sh './gradlew clean setupCiWorkspace'
+                withGradle {
+                    sh './gradlew clean setupCiWorkspace'
+		}
             }
         }
         stage('Build') {
             steps {
-                sh './gradlew clean build'
+                withGradle {
+                    sh './gradlew clean build'
+                }
             }
         }
         stage('Deploy to maven') {
             steps {
-                sh './gradlew publish'
-				
+                withGradle {
+                    sh './gradlew publish'
+                }
             }
         }
         stage('Deploy to curseforge') {
             steps {
-                sh './gradlew curseforge'
+                withGradle {
+                    sh './gradlew curseforge'
+                }
             }
         }
         stage('SonarQube analysis') {
             tools {
-                jdk "oraclejdk11" // the name you have given the JDK installation in Global Tool Configuration
+                jdk "oraclejdk11"
             }
             environment {
-                scannerHome = tool 'SonarQube' // the name you have given the Sonar Scanner (in Global Tool Configuration)
+                scannerHome = tool 'SonarQube'
             }
             steps {
-//                sh './gradlew curseforge'
+//              withGradle {
+//                  sh './gradlew sonarqube'
+//              }
                 withSonarQubeEnv(installationName: 'SonarCloud', , envOnly: false) {
-                    sh "${scannerHome}/bin/sonar-scanner -X -Dsonar.java.jdkHome=${JAVA_HOME}"
+                    sh "${scannerHome}/bin/sonar-scanner -Dsonar.java.jdkHome=${JAVA_HOME}"
                 }
             }
         }
