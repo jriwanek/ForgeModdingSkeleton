@@ -9,6 +9,10 @@ pipeline {
             steps {
                 sh 'rm -rf build/libs'
                 sh 'chmod +x gradlew'
+                sh 'java -version'
+                sh 'gradle -version'
+                sh './gradlew -version'
+                sh 'export'
             }
         }
         stage('Set up CI Workspace') {
