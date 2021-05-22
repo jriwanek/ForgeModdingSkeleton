@@ -1,0 +1,50 @@
+pipeline {
+    agent any
+    tools {
+        gradle 'gradle 4.9'
+        jdk 'jdk8' // the name you have given the JDK installation in Global Tool Configuration
+    }
+    stages {
+        stage('Prepare for build') {
+            steps {
+                sh 'rm -rf build/libs'
+                sh 'chmod +x gradlew'
+            }
+        }
+        stage('Set up CI Workspace') {
+            steps {
+                sh './gradlew clean setupCiWorkspace'
+            }
+        }
+        stage('Build') {
+            steps {
+                sh './gradlew clean build'
+            }
+        }
+        stage('Deploy to maven') {
+            steps {
+                sh './gradlew publish'
+				
+            }
+        }
+        stage('Deploy to curseforge') {
+            steps {
+                sh './gradlew curseforge'
+            }
+        }
+        stage('SonarQube analysis') {
+            tools {
+                jdk "jdk11" // the name you have given the JDK installation in Global Tool Configuration
+            }
+//            environment {
+//                scannerHome = tool 'SonarQube Scanner' // the name you have given the Sonar Scanner (in Global Tool Configuration)
+//            }
+            steps {
+                sh './gradlew curseforge'
+//                withSonarQubeEnv(installationName: 'SonarQube') {
+//                    sh "${scannerHome}/bin/sonar-scanner -X"
+//                }
+            }
+        }
+    }
+}
