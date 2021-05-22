@@ -41,7 +41,7 @@ pipeline {
             }
             steps {
 //                sh './gradlew curseforge'
-                withSonarQubeEnv(installationName: 'SonarQube') {
+                withSonarQubeEnv(installationName: 'SonarCloud', , envOnly: false) {
                     sh "${scannerHome}/bin/sonar-scanner -X"
                 }
             }
