@@ -1,8 +1,8 @@
 pipeline {
     agent any
     tools {
-        gradle 'gradle 4.9'
-        jdk 'jdk8' // the name you have given the JDK installation in Global Tool Configuration
+        gradle 'Gradle 4.9'
+        jdk 'oraclejdk8' // the name you have given the JDK installation in Global Tool Configuration
     }
     stages {
         stage('Prepare for build') {
@@ -34,7 +34,7 @@ pipeline {
         }
         stage('SonarQube analysis') {
             tools {
-                jdk "jdk11" // the name you have given the JDK installation in Global Tool Configuration
+                jdk "oraclejdk11" // the name you have given the JDK installation in Global Tool Configuration
             }
 //            environment {
 //                scannerHome = tool 'SonarQube Scanner' // the name you have given the Sonar Scanner (in Global Tool Configuration)
