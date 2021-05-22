@@ -30,7 +30,14 @@ pipeline {
         stage('build') {
             steps {
                 withGradle {
-                    sh './gradlew clean build'
+                    sh './gradlew build'
+                }
+            }
+        }
+        stage('test') {
+            steps {
+                withGradle {
+                    sh './gradlew test'
                 }
             }
         }
@@ -47,7 +54,7 @@ pipeline {
             steps {
                 withCredentials([file(credentialsId: 'secret.json', variable: 'SECRET_FILE')]) {
                     withGradle {
-                        sh './gradlew curseforge'
+                        sh './gradlew -x publish curseforge'
                     }
                 }
             }
