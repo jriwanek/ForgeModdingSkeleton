@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        GRADLE_OPTS = '-Dorg.gradle.caching=true -Dorg.gradle.configureondemand=true -Dorg.gradle.console=rich -Dorg.gradle.logging.level=info -Dorg.gradle.warning.mode=all'
+        GRADLE_OPTS = '-Dorg.gradle.caching=true -Dorg.gradle.configureondemand=true -Dorg.gradle.console=rich -Dorg.gradle.logging.level=lifecycle -Dorg.gradle.warning.mode=all'
 //      JAVA_OPTS = ''
     }
     tools {
