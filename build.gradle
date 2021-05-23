@@ -24,6 +24,7 @@ buildscript {
 }
 
 plugins {
+  id "com.gradle.build-scan" version "1.16"
   id 'com.github.spotbugs' version '1.6.9' // 4.0 or later
   id 'com.matthewprenger.cursegradle' version '1.4.0'
   id 'org.sonarqube' version '2.8'
@@ -44,6 +45,13 @@ apply plugin: 'pmd'
 import org.gradle.util.GradleVersion
 if (GradleVersion.current() < GradleVersion.version('4.0')) {
   apply plugin: 'findbugs'
+}
+
+buildScan {
+  publishAlways()
+//publishAlwaysIf(System.getenv("CI"))
+  licenseAgreementUrl = 'https://gradle.com/terms-of-service';
+  licenseAgree = 'yes'
 }
 
 project.afterEvaluate {
@@ -255,14 +263,26 @@ if (secretFile.exists()) {
 
 minecraft {
   version = project.forge_mc_version + '-' + project.forge_version
-  mappings = project.mcp_mappings_version
+  if ((project.forge_mc_version != "1.6.4") && (project.forge_mc_version != "1.7.2")) {
+    mappings = project.mcp_mappings_version
+  }
 
-  if (project.hasProperty('runDir')) {
-    runDir = project.runDir
-  } else if (file('../run').exists()) {
-    runDir = '../run'
+  if ((project.fg_version != '1.0-SNAPSHOT') && (project.fg_version != '1.1-SNAPSHOT')) {
+    if (project.hasProperty('runDir')) {
+      runDir = project.runDir
+    } else if (file('../run').exists()) {
+      runDir = '../run'
+    } else {
+      runDir = 'run'
+    }
   } else {
-    runDir = 'run'
+    if (project.hasProperty('runDir')) {
+      assetDir = project.runDir
+    } else if (file('../assets').exists()) {
+      assetDir = '../assets'
+    } else {
+      assetDir = 'eclipse/assets'
+    }
   }
 
   replace '@MOD_VERSION@', project.short_version
@@ -334,9 +354,11 @@ minecraft {
     serverRunArgs += project.server_game_args
   }
 
-  makeObfSourceJar = getBooleanProperty('create_source_jar')
+  if ((project.fg_version != '1.0-SNAPSHOT') && (project.fg_version != '1.1-SNAPSHOT') && (project.fg_version != '1.2-SNAPSHOT')) {
+    makeObfSourceJar = getBooleanProperty('create_source_jar')
 
-  useDepAts = getBooleanProperty('dep_has_ats')
+    useDepAts = getBooleanProperty('dep_has_ats')
+  }
 }
 
 repositories {
