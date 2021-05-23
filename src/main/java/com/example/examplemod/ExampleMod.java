@@ -1,7 +1,7 @@
 package com.example.examplemod;
 
 import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
+import net.minecraft.block.Blocks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -52,8 +52,8 @@ public class ExampleMod {
     private void enqueueIMC(final InterModEnqueueEvent event) {
         // some example code to dispatch IMC to another mod
         InterModComms.sendTo("examplemod", "helloworld", () -> {
-			LOGGER.info("Hello world from the MDK"); return "Hello world";
-		});
+            LOGGER.info("Hello world from the MDK"); return "Hello world";
+        });
     }
 
     private void processIMC(final InterModProcessEvent event) {
@@ -62,6 +62,7 @@ public class ExampleMod {
                 map(m -> m.getMessageSupplier().get()).
                 collect(Collectors.toList()));
     }
+
     // You can use SubscribeEvent and let the Event Bus discover methods to call
     @SubscribeEvent
     public void onServerStarting(final FMLServerStartingEvent event) {
