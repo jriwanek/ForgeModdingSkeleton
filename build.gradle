@@ -619,8 +619,8 @@ if (getBooleanProperty('do_sign_jar')) {
 }
 */
 
-//tasks.publish.dependsOn build
-//tasks.curseforge.dependsOn publish
+tasks.publish.dependsOn build
+tasks.curseforge.dependsOn publish
 
 artifacts {
   if (getBooleanProperty('create_api_jar')) {
@@ -637,9 +637,8 @@ artifacts {
   }
 }
 
-/*
-publishing {
-  publications {
+//publishing {
+  publishing.publications {
     mavenJava(MavenPublication) {
       groupId project.group
       artifactId project.archivesBaseName
@@ -665,7 +664,7 @@ publishing {
           classifier 'javadoc'
         }
       }
-      / *
+      /*
       pom {
         name = 'Example'
         description = 'An Example'
@@ -696,10 +695,10 @@ publishing {
           url = 'https://mcmoddev.com/'
         }
       }
-      * /
+      */
     }
   }
-  repositories {
+  publishing.repositories {
     maven {
       if ((secret.username != '') && (secret.password != '')) {
         credentials {
@@ -714,8 +713,7 @@ publishing {
       }
     }
   }
-}
-*/
+//}
 
 curseforge {
   if (project.hasProperty('curseforge_project_id')) {
