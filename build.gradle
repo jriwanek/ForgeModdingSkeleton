@@ -3,7 +3,7 @@ buildscript {
     mavenLocal()
     jcenter()
     mavenCentral()
-    removeIf { it instanceof MavenArtifactRepository && it.url.host == 'files.minecraftforge.net' }    
+    removeIf { it instanceof MavenArtifactRepository && it.url.host == 'files.minecraftforge.net' }
     maven {
       name = 'forge'
       url = 'https://maven.minecraftforge.net/'
@@ -378,7 +378,7 @@ repositories {
   mavenLocal()
   jcenter()
   mavenCentral()
-    removeIf { it instanceof MavenArtifactRepository && it.url.host == 'files.minecraftforge.net' }
+  removeIf { it instanceof MavenArtifactRepository && it.url.host == 'files.minecraftforge.net' }
   maven {
     name 'MMD'
     url 'https://maven.mcmoddev.com/'
