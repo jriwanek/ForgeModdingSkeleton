@@ -53,7 +53,9 @@ if (GradleVersion.current() < GradleVersion.version('4.0')) {
 }
 
 buildScan {
-  publishAlways()
+  if (System.getenv('CI')) {
+    publishAlways()
+  }
 //publishAlwaysIf(System.getenv("CI"))
   licenseAgreementUrl = 'https://gradle.com/terms-of-service';
   licenseAgree = 'yes'
