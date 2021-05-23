@@ -4,8 +4,11 @@ pipeline {
         GRADLE_OPTS = '-Dorg.gradle.caching=true -Dorg.gradle.configureondemand=true -Dorg.gradle.warning.mode=all'
 //      JAVA_OPTS = ''
     }
+    options {
+        ansiColor('xterm')
+    }
     tools {
-        git 'Git'
+//      git 'Git'
         gradle 'Gradle 4.9'
         jdk 'oraclejdk8'
     }
