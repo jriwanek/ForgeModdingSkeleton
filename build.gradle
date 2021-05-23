@@ -912,7 +912,7 @@ sonarqube {
     }
     //property 'sonar.projectName', project.archivesBaseName
     //property 'sonar.projectKey', "${project.group}:${project.archivesBaseName}"
-    //property 'sonar.branch.name', 'master-1.13.2'
+    //property 'sonar.branch.name', 'forgegradle-4'
     //property 'sonar.branch.target', ''
     property 'sonar.junit.reportPaths', "${project.buildDir}/test-results/junit-platform/*.xml"
     property 'sonar.jacoco.reportPaths', "${project.buildDir}/jacoco/junitPlatformTest.exec"
