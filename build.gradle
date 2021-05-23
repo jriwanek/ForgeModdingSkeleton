@@ -35,8 +35,13 @@ plugins {
   id 'checkstyle' // 2.7 or later
 }
 
-//apply plugin: 'net.minecraftforge.gradle.forge' // FG2.x
-apply plugin: 'forge' // FG1.x
+if ((project.fg_version == '1.0-SNAPSHOT') || (project.fg_version == '1.1-SNAPSHOT') || (project.fg_version == '1.2-SNAPSHOT')) {
+  apply plugin: 'forge'
+}else if ((project.fg_version == '2.0-SNAPSHOT') || (project.fg_version == '2.1-SNAPSHOT') || (project.fg_version == '2.2-SNAPSHOT') || (project.fg_version == '2.3-SNAPSHOT')) {
+  apply plugin: 'net.minecraftforge.gradle.forge'
+} else {
+  apply plugin: 'net.minecraftforge.gradle'
+}
 //apply plugin: 'com.jaredsburrows.checkerframework'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
