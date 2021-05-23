@@ -1,6 +1,6 @@
 // Workaround to make the JUnit Platform Gradle Plugin available using the `plugins` DSL
 // See https://github.com/junit-team/junit5/issues/768
-if (!(GradleVersion.current() <= GradleVersion.version('2.14.1'))) {
+if (!(GradleVersion.current() <= GradleVersion.version('3.4.1'))) {
 pluginManagement {
   repositories {
     gradlePluginPortal()
