@@ -712,7 +712,7 @@ publishing {
   publications {
     mavenJava(MavenPublication) {
       //TODO: From Forge MDK
-	  artifact jar
+      artifact jar
       //artifact reobfArtifact
       //artifact reobfJar
       groupId project.group
