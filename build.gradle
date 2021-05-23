@@ -27,7 +27,7 @@ plugins {
   id "com.gradle.build-scan" version "1.16"
   id 'com.github.spotbugs' version '1.6.5' // 4.0 or later
   id 'com.matthewprenger.cursegradle' version '1.4.0'
-  id 'org.sonarqube' version '2.8'
+  id 'org.sonarqube' version '3.2'
   id 'se.bjurr.gitchangelog.git-changelog-gradle-plugin' version '1.60'
   id 'org.junit.platform.gradle.plugin' version '1.2.0'
   id 'maven-publish'
@@ -269,7 +269,7 @@ if (secretFile.exists()) {
     + '"curseforgeAPIKey" : "' + (System.getenv('curse_auth') ?: '00000000-0000-0000-0000-000000000000') + '",'
     + '"sonarHost" : "' + (System.getenv('SONAR_HOST_URL') ?: 'https://sonarcloud.io') + '",'
     + '"sonarOrganization" : "' + (System.getenv('SONAR_ORGANIZATION') ?: '') + '",'
-    + '"sonarToken" : "' + (System.getenv('SONAR_AUTH_TOKEN') ?: 0) + '"}'
+    + '"sonarToken" : "' + (System.getenv('SONAR_TOKEN') ?: 0) + '"}'
   )
 }
 
@@ -831,19 +831,49 @@ sonarqube {
       property 'sonar.host.url', project.sonar_host_url
     } else if (secret.sonarHost != '') {
       property 'sonar.host.url', secret.sonarHost
+    } else {
+      property 'sonar.host.url', 'https://sonarcloud.io'
     }
-    property 'sonar.login', secret.sonarToken
+
+    if (secret.sonarToken != '') {
+      property 'sonar.login', secret.sonarToken
+    }
+
     if (project.hasProperty('sonar_organisation')) {
       property 'sonar.organization', project.sonar_organisation
     } else if (secret.sonarOrganisation != '') {
       property 'sonar.organization', secret.sonarOrganization
+    } else {
+	  property 'sonar.organization', 'unset'
+	}
+
+    if (project.hasProperty('sonar_project_key')) {
+      property 'sonar.projectKey', project.sonar_project_key
     }
-    //property 'sonar.projectName', project.archivesBaseName
-    //property 'sonar.projectKey', "${project.group}:${project.archivesBaseName}"
-    //property 'sonar.branch.name', 'forgegradle-1'
-    //property 'sonar.branch.target', ''
+
+    if (project.hasProperty('sonar_project_name')) {
+      property 'sonar.projectName', project.sonar_project_name
+	}
+
+    if (project.hasProperty('sonar_project_description')) {
+      property 'sonar.projectDescription', project.sonar_project_description
+	}
+
+    if (project.hasProperty('sonar_project_version')) {
+      property 'sonar.projectVersion', project.sonar_project_version
+	}
+
+    if (project.hasProperty('sonar_branch_name')) {
+      property 'sonar.branch.name', project.sonar_branch_name
+    }
+
+    if (project.hasProperty('sonar_branch_target')) {
+      property 'sonar.branch.target', project.sonar_branch_target
+    }
+
     property 'sonar.junit.reportPaths', "${project.buildDir}/test-results/junit-platform/*.xml"
     property 'sonar.jacoco.reportPaths', "${project.buildDir}/jacoco/junitPlatformTest.exec"
+    //property 'sonar.groovy.jacoco.reportPath', ""
   }
 }
 
