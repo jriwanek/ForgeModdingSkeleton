@@ -88,15 +88,43 @@ pipeline {
                 junit allowEmptyResults: true, testResults: '**/build/test-results/junit-platform/*.xml'
                 jacoco classPattern: '**/build/classes/java', execPattern: '**/build/jacoco/**.exec', sourceInclusionPattern: '**/*.java', sourcePattern: '**/src/main/java'
                 findBuildScans()
-//              recordIssues(tools: [errorProne(pattern: 'ReportFilePattern', reportEncoding: 'UTF-8')])
+//              if (fileExists('')) {
+//                  recordIssues(tools: [errorProne(pattern: 'ReportFilePattern', reportEncoding: 'UTF-8')])
+//              } else {
+//                  echo 'No ErrorProne report available'
+//              }
                 recordIssues(tools: [java()])
                 recordIssues(tools: [javaDoc()])
-                recordIssues(tools: [checkStyle(pattern: '**/build/reports/checkstyle/*.xml')])
-                recordIssues(tools: [pmdParser(pattern: '**/build/reports/pmd/*.xml')])
-//              recordIssues(tools: [findBugs(pattern: '*/build/reports/findbugs/*.xml', useRankAsPriority: true)])
-                recordIssues(tools: [spotBugs(pattern: '**/build/reports/spotbugs/*.xml', useRankAsPriority: true)])
-                recordIssues(tools: [junitParser(pattern: '**/build/test-results/junit-platform/*.xml')])
-//              recordIssues(tools: [sonarQube(pattern: '**/sonar-report.json')])
+                if (fileExists('**/build/reports/checkstyle/*.xml')) {
+                    recordIssues(tools: [checkStyle(pattern: '**/build/reports/checkstyle/*.xml')])
+                } else {
+                    echo 'No CheckStyle report available'
+                }
+                if (fileExists('**/build/reports/pmd/*.xml')) {
+                    recordIssues(tools: [pmdParser(pattern: '**/build/reports/pmd/*.xml')])
+                } else {
+                    echo 'No PMD report available'
+                }
+                if (fileExists('*/build/reports/findbugs/*.xml')) {
+                    recordIssues(tools: [findBugs(pattern: '*/build/reports/findbugs/*.xml', useRankAsPriority: true)])
+                } else {
+                    echo 'No FindBugs report available'
+                }
+                if (fileExists('**/build/reports/spotbugs/*.xml')) {
+                    recordIssues(tools: [spotBugs(pattern: '**/build/reports/spotbugs/*.xml', useRankAsPriority: true)])
+                } else {
+                    echo 'No SpotBugs report available'
+                }
+                if (fileExists('**/build/test-results/junit-platform/*.xml')) {
+                    recordIssues(tools: [junitParser(pattern: '**/build/test-results/junit-platform/*.xml')])
+                } else {
+                    echo 'No JUnit Report available'
+                }
+                if (fileExists('**/sonar-report.json')) {
+                    recordIssues(tools: [sonarQube(pattern: '**/sonar-report.json')])
+                } else {
+                    echo 'No SonarQube report available'
+                }
             }
         }
     }
