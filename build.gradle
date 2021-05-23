@@ -72,7 +72,7 @@ project.afterEvaluate {
   // configure jacoco to analyze the junitPlatformTest task
   jacoco {
     // this tool version is compatible with
-    toolVersion = '0.8.3'
+    toolVersion = '0.8.3' // 0.8.4 uses ASM 7.1, 0.8.6 uses ASM 8.0.1, 0.8.7 uses ASM 9.1
     // Not needed with new way
     //if (gradleOlderThan('4.6')) {
       //applyTo junitPlatformTestTask
@@ -113,7 +113,7 @@ if (gradleOlderThan('4.6')) {
 if (gradleNewerThan('4.0')) {
   spotbugs {
     ignoreFailures = true
-    toolVersion = '3.1.6'
+    toolVersion = '3.1.7' // 3.1.8 uses ASM 6.2.1
     effort = 'max'
     reportLevel = 'low'
     //includeFilter = file("$rootProject.projectDir/config/spotbugs-filter.xml")
@@ -141,7 +141,7 @@ if (gradleNewerThan('4.0')) {
 checkstyle {
   ignoreFailures = true
   if (gradleNewerThan('2.7')) {
-    toolVersion = '8.20' // 5.7 is default
+    toolVersion = '8.23' // 8.42
   } else {
     toolVersion = '6.7'
   }
@@ -190,7 +190,7 @@ pmd {
     'java-unusedcode'
   ]
   if (gradleNewerThan('2.3')) {
-    toolVersion = '5.8.1'; // 6.19.0
+    toolVersion = '5.8.1'; // 6.0.1, 6.34.0
   } else {
     toolVersion = '5.1.3';
   }
