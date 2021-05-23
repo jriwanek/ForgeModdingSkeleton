@@ -46,6 +46,8 @@ if (GradleVersion.current() < GradleVersion.version('4.0')) {
   apply plugin: 'findbugs'
 }
 
+buildScan { licenseAgreementUrl = 'https://gradle.com/terms-of-service'; licenseAgree = 'yes' }
+
 project.afterEvaluate {
   //final def junitPlatformTestTask = project.tasks.getByName('junitPlatformTest')
 
