@@ -116,8 +116,13 @@ if (gradleNewerThan('4.0')) {
 
   tasks.withType(com.github.spotbugs.SpotBugsTask) {
     reports {
-      xml.enabled = true
-      html.enabled = false
+      if (isCi()) {
+        xml.enabled = true
+        html.enabled = false
+      } else {
+        xml.enabled = false
+        html.enabled = true
+      }
     }
   }
 }
@@ -892,6 +897,10 @@ boolean gradleOlderThan(final String version) {
 
 boolean gradleNewerThan(final String version) {
   return GradleVersion.current() >= GradleVersion.version(version)
+}
+
+boolean isCi() {
+  return System.getenv('CI')
 }
 
 boolean getBooleanProperty(final String property) {
