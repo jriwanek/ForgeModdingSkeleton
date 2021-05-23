@@ -27,7 +27,7 @@ pipeline {
             steps {
                 withGradle {
                     sh './gradlew clean setupCiWorkspace'
-		}
+                }
             }
         }
         stage('build') {
