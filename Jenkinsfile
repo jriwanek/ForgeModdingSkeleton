@@ -88,13 +88,13 @@ pipeline {
                 junit allowEmptyResults: true, testResults: '**/build/test-results/junit-platform/*.xml'
                 jacoco classPattern: '**/build/classes/java', execPattern: '**/build/jacoco/**.exec', sourceInclusionPattern: '**/*.java', sourcePattern: '**/src/main/java'
                 findBuildScans()
+                recordIssues(tools: [java()])
+                recordIssues(tools: [javaDoc()])
 //              if (fileExists('')) {
 //                  recordIssues(tools: [errorProne(pattern: 'ReportFilePattern', reportEncoding: 'UTF-8')])
 //              } else {
 //                  echo 'No ErrorProne report available'
 //              }
-                recordIssues(tools: [java()])
-                recordIssues(tools: [javaDoc()])
                 if (fileExists('**/build/reports/checkstyle/*.xml')) {
                     recordIssues(tools: [checkStyle(pattern: '**/build/reports/checkstyle/*.xml')])
                 } else {
@@ -110,21 +110,18 @@ pipeline {
                 } else {
                     echo 'No FindBugs report available'
                 }
-                if (fileExists('**/build/reports/spotbugs/*.xml')) {
-                    recordIssues(tools: [spotBugs(pattern: '**/build/reports/spotbugs/*.xml', useRankAsPriority: true)])
-                } else {
-                    echo 'No SpotBugs report available'
-                }
-                if (fileExists('**/build/test-results/junit-platform/*.xml')) {
-                    recordIssues(tools: [junitParser(pattern: '**/build/test-results/junit-platform/*.xml')])
-                } else {
-                    echo 'No JUnit Report available'
-                }
-                if (fileExists('**/sonar-report.json')) {
-                    recordIssues(tools: [sonarQube(pattern: '**/sonar-report.json')])
-                } else {
-                    echo 'No SonarQube report available'
-                }
+            }
+            when { expression { fileExists('**/build/reports/spotbugs/*.xml') } }
+            steps {
+                recordIssues(tools: [spotBugs(pattern: '**/build/reports/spotbugs/*.xml', useRankAsPriority: true)])
+            }
+            when { expression { fileExists('**/build/test-results/junit-platform/*.xml') } }
+            steps {
+                recordIssues(tools: [junitParser(pattern: '**/build/test-results/junit-platform/*.xml')])
+            }
+            when { expression { fileExists('**/sonar-report.json') } }
+            steps {
+                recordIssues(tools: [sonarQube(pattern: '**/sonar-report.json')])
             }
         }
     }
