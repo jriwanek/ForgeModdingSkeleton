@@ -699,38 +699,52 @@ artifacts {
           classifier 'javadoc'
         }
       }
-      /*
-      pom {
-        name = 'Example'
-        description = 'An Example'
-        url = 'https://github.com/Examples/Example'
-        packaging = 'jar'
-        //inceptionYear = ''
-        licenses {
-          license {
-            name = 'GNU Lesser General Public License, Version 2.1'
-            url = 'https://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt'
+      if (getBooleanProperty(pom_information)) {
+        pom {
+          name = project.name
+          description = project.description
+          url = project.pom_url
+          packaging = 'jar'
+          //inceptionYear = ''
+          if (getBooleanProperty(pom_license_information)) {
+            licenses {
+              license {
+                name = project.pom_license_name
+                url = project.pom_license_url
+				distribution = 'repo'
+				comments = project.pom_comments
+              }
+            }
           }
-        }
-        scm {
-          connection = 'scm:git:git://github.com/Examples/Example.git'
-          developerConnection = 'scm:git:git@github.com:Examples/Example.git'
-          url = 'https://github.com/Examples/Example'
-        }
-        issueManagement {
-          system = 'github'
-          url = 'https://github.com/Examples/Example.git/issues'
-        }
-        ciManagement {
-          system = 'jenkins'
-          url = 'https://ci.mcmoddev.com/'
-        }
-        organization {
-          name = 'Minecraft Mod Development'
-          url = 'https://mcmoddev.com/'
+          if (getBooleanProperty(pom_scm_information)) {
+            scm {
+              connection = project.pom_scm_connection
+              developerConnection = project.pom_scm_developer_connection
+			  // tag
+              url = project.pom_scm_url
+            }
+          }
+          if (getBooleanProperty(pom_issue_information)) {
+            issueManagement {
+              system = project.pom_issue_system
+              url = project.pom_issue_url
+            }
+          }
+          if (getBooleanProperty(pom_ci_information)) {
+            ciManagement {
+              system = project.pom_ci_system
+              url = project.pom_ci_url
+            }
+          }
+          if (getBooleanProperty(pom_organisation_information)) {
+            organization {
+              name = project.pom_organization_name
+              url = project.pom_organization_url
+            }
+          }
+          // contributors, developers, distributionManagement
         }
       }
-      */
     }
   }
   publishing.repositories {
