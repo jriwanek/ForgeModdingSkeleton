@@ -446,12 +446,12 @@ jar {
     mainAttributes(
       'Maven-Artifact': "${project.group}:${project.archivesBaseName}:${project.version}",
       'Timestamp': System.currentTimeMillis(),
-      'Specification-Title': 'examplemod',
-      'Specification-Vendor': 'mcmoddev',
+      'Specification-Title': project.modid,
+      'Specification-Vendor': project.vendor,
       'Specification-Version': '1',
       'Implementation-Title': project.archivesBaseName,
       'Implementation-Version': project.version,
-      'Implementation-Vendor' :'mcmoddev',
+      'Implementation-Vendor' : project.vendor,
       'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
       'Built-On-Java': "${System.getProperty('java.vm.version')} (${System.getProperty('java.vm.vendor')})",
       'Built-On': "${project.forge_mc_version}-${project.forge_version}"
@@ -482,12 +482,12 @@ task apiJar(type: Jar) {
     mainAttributes(
       'Maven-Artifact': "${project.group}:${project.archivesBaseName}:${project.version}:api",
       'Timestamp': System.currentTimeMillis(),
-      'Specification-Title': 'examplemod',
-      'Specification-Vendor': 'mcmoddev',
+      'Specification-Title': project.modid,
+      'Specification-Vendor': project.vendor,
       'Specification-Version': '1',
-      'Implementation-Title': project.name + '-api',
+      'Implementation-Title': project.archivesBaseName + '-api',
       'Implementation-Version': project.version,
-      'Implementation-Vendor' :'mcmoddev',
+      'Implementation-Vendor' : project.vendor,
       'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
       'Built-On-Java': "${System.getProperty('java.vm.version')} (${System.getProperty('java.vm.vendor')})",
       'Built-On': "${project.forge_mc_version}-${project.forge_version}"
@@ -507,12 +507,12 @@ task deobfJar(type: Jar) {
     mainAttributes(
       'Maven-Artifact': "${project.group}:${project.archivesBaseName}:${project.version}:deobf",
       'Timestamp': System.currentTimeMillis(),
-      'Specification-Title': 'examplemod',
-      'Specification-Vendor': 'mcmoddev',
+      'Specification-Title': project.modid,
+      'Specification-Vendor': project.vendor,
       'Specification-Version': '1',
-      'Implementation-Title': project.name + '-deobf',
+      'Implementation-Title': project.archivesBaseName + '-deobf',
       'Implementation-Version': project.version,
-      'Implementation-Vendor' :'mcmoddev',
+      'Implementation-Vendor' : project.vendor,
       'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
       'Built-On-Java': "${System.getProperty('java.vm.version')} (${System.getProperty('java.vm.vendor')})",
       'Built-On': "${project.forge_mc_version}-${project.forge_version}"
@@ -537,9 +537,14 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
   manifest.mainAttributes(
     'Maven-Artifact': "${project.group}:${project.archivesBaseName}:${project.version}:javadoc",
     'Timestamp': System.currentTimeMillis(),
-    'Implementation-Title': project.name + '-javadoc',
+    'Specification-Title': project.modid,
+    'Specification-Vendor': project.vendor,
+    'Specification-Version': '1',
+    'Implementation-Title': project.archivesBaseName + '-javadoc',
     'Implementation-Version': project.version,
-    'Built-On-Java': "${System.getProperty('java.vm.version')} + (${System.getProperty('java.vm.vendor')})",
+    'Implementation-Vendor' : project.vendor,
+    'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+    'Built-On-Java': "${System.getProperty('java.vm.version')} (${System.getProperty('java.vm.vendor')})",
     'Built-On': "${project.forge_mc_version}-${project.forge_version}"
   )
 }
