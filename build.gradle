@@ -113,7 +113,7 @@ if (gradleOlderThan('4.6')) {
 if (gradleNewerThan('4.0')) {
   spotbugs {
     ignoreFailures = true
-    toolVersion = '3.1.7' // 3.1.8 uses ASM 6.2.1
+    toolVersion = '3.1.7' // 3.1.7 uses ASM 6.2, 3.1.8 uses ASM 6.2.1
     effort = 'max'
     reportLevel = 'low'
     //includeFilter = file("$rootProject.projectDir/config/spotbugs-filter.xml")
