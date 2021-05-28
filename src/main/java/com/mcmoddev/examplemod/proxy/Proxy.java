@@ -32,8 +32,8 @@ public abstract class Proxy {
 	 * @param event The Event.
 	 */
 	public void init(final FMLInitializationEvent event) {
-		// if you have any ore generation, you want to do something like the following for all
-		// of your ores:
+		// if you have any ore generation, you want to do something like the following
+		// for all of your ores:
 		// worldGen.addBlock( block, minHeight, maxHeight, dimension, spawn-size );
 		// 'dimension'should be one of:
 		// WorldGenerator.DIMENSION_OVERWORLD
@@ -61,6 +61,10 @@ public abstract class Proxy {
 		//
 	}
 
+	/**
+	 *
+	 * @return World The World
+	 */
 	public World getWorld() {
 		return null;
 	}

@@ -13,16 +13,16 @@ public final class ExampleModFluids {
 	/**
 	 *
 	 */
-	private ExampleModFluids() {
-		//
-	}
+	public static final Fluid EXAMPLE_FLUID = new Fluid("example_fluid",
+			new ResourceLocation(ExampleMod.MODID, "blocks/example_fluid_still"),
+			new ResourceLocation(ExampleMod.MODID, "blocks/example_fluid_flow"));
 
 	/**
 	 *
 	 */
-	public static final Fluid EXAMPLE_FLUID = new Fluid("example_fluid",
-			new ResourceLocation(ExampleMod.MODID, "blocks/example_fluid_still"),
-			new ResourceLocation(ExampleMod.MODID, "blocks/example_fluid_flow"));
+	private ExampleModFluids() {
+		//
+	}
 
 	/**
 	 *

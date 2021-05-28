@@ -14,12 +14,12 @@ public final class ExampleModItems {
 	/**
 	 *
  	 */
-	private ExampleModItems() {
-		//
-	}
+	public static final Item EXAMPLE_ITEM = null;
 
 	/**
 	 *
  	 */
-	public static final Item EXAMPLE_ITEM = null;
+	private ExampleModItems() {
+		//
+	}
 }

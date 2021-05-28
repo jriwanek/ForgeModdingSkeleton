@@ -10,26 +10,66 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenMinable;
 
+/**
+ *
+ * @author
+ *
+ */
 public class MineableOre extends WorldGenMinable {
+
+	/**
+	 *
+	 */
 	private int minHeight;
+
+	/**
+	 *
+	 */
 	private int maxHeight;
+
+	/**
+	 *
+	 */
 	private int dimension;
 
+	/**
+	 *
+	 */
 	public MineableOre() {
 		this(Blocks.AIR.getDefaultState(), 0);
 	}
 
-	public MineableOre(final IBlockState state, final int minHeight, final int maxHeight, final int dimension, final int count) {
+	/**
+	 *
+	 * @param state IBlockState
+	 * @param minHeightIn int
+	 * @param maxHeightIn int
+	 * @param dimensionIn int
+	 * @param count int
+	 */
+	public MineableOre(final IBlockState state, final int minHeightIn, final int maxHeightIn, final int dimensionIn,
+			final int count) {
 		super(state, count);
-		this.minHeight = minHeight;
-		this.maxHeight = maxHeight;
-		this.dimension = dimension;
+		this.minHeight = minHeightIn;
+		this.maxHeight = maxHeightIn;
+		this.dimension = dimensionIn;
 	}
 
+	/**
+	 *
+	 * @param state IBlockState
+	 * @param blockCount int
+	 */
 	public MineableOre(final IBlockState state, final int blockCount) {
 		this(state, 0, 256, WorldGenerator.DIMENSION_ANY_OVERWORLD, blockCount);
 	}
 
+	/**
+	 *
+	 * @param state IBlockState
+	 * @param blockCount int
+	 * @param blockMatch Predicate<IBlockState>
+	 */
 	public MineableOre(final IBlockState state, final int blockCount, final Predicate<IBlockState> blockMatch) {
 		super(state, blockCount, blockMatch);
 		this.minHeight = 0;
@@ -37,41 +77,68 @@ public class MineableOre extends WorldGenMinable {
 		this.dimension = WorldGenerator.DIMENSION_ANY_OVERWORLD;
 	}
 
+	/**
+	 *
+	 * @return int Dimension
+	 */
 	public int getDimension() {
 		return this.dimension;
 	}
 
+	/**
+	 *
+	 * @return int MinHeight
+	 */
 	public int getMinHeight() {
 		return this.minHeight;
 	}
 
+	/**
+	 *
+	 * @return int MaxHeight
+	 */
 	public int getMaxHeight() {
 		return this.maxHeight;
 	}
 
-	public void setDimension(final int dimension) {
-		this.dimension = dimension;
+	/**
+	 *
+	 * @param dimensionIn int
+	 */
+	public void setDimension(final int dimensionIn) {
+		this.dimension = dimensionIn;
 	}
 
-	public void setMinHeight(final int minHeight) {
-		if (minHeight >= this.maxHeight) {
+	/**
+	 *
+	 * @param minHeightIn int
+	 */
+	public void setMinHeight(final int minHeightIn) {
+		if (minHeightIn >= this.maxHeight) {
 			throw new IllegalArgumentException("minimum height must be below maximum height");
 		} else {
-			this.minHeight = minHeight;
+			this.minHeight = minHeightIn;
 		}
 	}
 
-	public void setMaxHeight(final int maxHeight) {
-		if (maxHeight <= this.minHeight) {
+	/**
+	 *
+	 * @param maxHeightIn int
+	 */
+	public void setMaxHeight(final int maxHeightIn) {
+		if (maxHeightIn <= this.minHeight) {
 			throw new IllegalArgumentException("maximum height must be above minimum height");
 		} else {
-			this.maxHeight = maxHeight;
+			this.maxHeight = maxHeightIn;
 		}
 	}
 
+	/**
+	 *
+	 */
 	@Override
 	public boolean generate(final World world, final Random random, final BlockPos pos) {
-		int bound = this.maxHeight - this.minHeight;
+		final int bound = this.maxHeight - this.minHeight;
 		return super.generate(world, random, pos.add(8 + random.nextInt(8),
 				random.nextInt(bound) + this.minHeight, 8 + random.nextInt(8)));
 	}

@@ -59,6 +59,14 @@ public final class ExampleMod {
 	/**
 	 *
 	 */
+	@SidedProxy(
+				clientSide = "com.mcmoddev.examplemod.proxy.ClientProxy",
+				serverSide = "com.mcmoddev.examplemod.proxy.ServerProxy")
+	private static Proxy proxy = null;
+
+	/**
+	 *
+	 */
 	private static final class InstanceHolder {
 
 		/**
@@ -75,14 +83,6 @@ public final class ExampleMod {
 	public static ExampleMod instance() {
 		return InstanceHolder.INSTANCE;
 	}
-
-	/**
-	 *
- 	 */
-	@SidedProxy(
-				clientSide = "com.mcmoddev.examplemod.proxy.ClientProxy",
-				serverSide = "com.mcmoddev.examplemod.proxy.ServerProxy")
-	private static Proxy proxy = null;
 
 	/**
 	 *
@@ -132,6 +132,10 @@ public final class ExampleMod {
 		proxy.postInit(event);
 	}
 
+	/**
+	 *
+	 * @return World
+	 */
 	public static World getWorld() {
 		return proxy.getWorld();
 	}

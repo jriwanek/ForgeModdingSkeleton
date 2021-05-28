@@ -14,17 +14,17 @@ public final class ExampleModBlocks {
 	/**
 	 *
 	 */
-	private ExampleModBlocks() {
-		//
-	}
-
-	/**
-	 *
-	 */
     public static final Block EXAMPLE_BLOCK = null;
 
 	/**
 	 *
 	 */
 	public static final Block EXAMPLE_FLUID = null;
+
+	/**
+	 *
+	 */
+	private ExampleModBlocks() {
+		//
+	}
 }

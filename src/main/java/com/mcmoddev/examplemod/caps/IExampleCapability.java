@@ -9,9 +9,20 @@ import net.minecraftforge.common.util.INBTSerializable;
  * Example capability which applies the potion effect.
  * */
 public interface IExampleCapability extends INBTSerializable<NBTTagCompound> {
-	/** Tries to apply the Potion. */
-	public void applyPotion(Potion potion, int duration, int amplifier);
 
-	/** Gets current potion effect. */
-	public PotionEffect getEffect();
+	/**
+	 * Tries to apply the Potion.
+	 *
+	 * @param potion Potion
+	 * @param duration int
+	 * @param amplifier int
+	 */
+	void applyPotion(Potion potion, int duration, int amplifier);
+
+	/**
+	 * Gets current Potion Effect.
+	 *
+	 * @return PotionEffect
+	 */
+	PotionEffect getEffect();
 }
