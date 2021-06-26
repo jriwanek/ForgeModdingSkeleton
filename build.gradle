@@ -966,11 +966,11 @@ boolean isFG2() {
   return (project.fg_version == '2.0-SNAPSHOT') || (project.fg_version == '2.1-SNAPSHOT') || (project.fg_version == '2.2-SNAPSHOT') || (project.fg_version == '2.3-SNAPSHOT')
 }
 
-boolean gradleOlderThan(final String version) {
+static boolean gradleOlderThan(final String version) {
   return GradleVersion.current() < GradleVersion.version(version)
 }
 
-boolean gradleNewerThan(final String version) {
+static boolean gradleNewerThan(final String version) {
   return GradleVersion.current() >= GradleVersion.version(version)
 }
 
