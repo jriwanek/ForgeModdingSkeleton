@@ -6,8 +6,6 @@ import net.minecraftforge.common.capabilities.Capability;
 
 /**
  *
- * @author
- *
  */
 public class ExampleTileEntity extends TileEntity {
 

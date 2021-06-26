@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.mcmoddev.examplemod.oregen;
 
 import java.util.LinkedList;
@@ -17,8 +14,8 @@ import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraftforge.fml.common.IWorldGenerator;
 
 /**
- * @author madman
  *
+ * @author madman
  */
 public class WorldGenerator implements IWorldGenerator {
 

@@ -12,8 +12,6 @@ import net.minecraft.world.gen.feature.WorldGenMinable;
 
 /**
  *
- * @author
- *
  */
 public class MineableOre extends WorldGenMinable {
 

@@ -12,8 +12,6 @@ import net.minecraftforge.common.capabilities.CapabilityManager;
 
 /**
  *
- * @author
- *
  */
 public class ExampleCapabilities {
 
@@ -31,8 +29,6 @@ public class ExampleCapabilities {
 	};
 
 	/**
-	 *
-	 * @author
 	 *
 	 */
 	public static class DefaultImpl implements IExampleCapability {

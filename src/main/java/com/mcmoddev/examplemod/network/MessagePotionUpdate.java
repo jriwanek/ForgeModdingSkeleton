@@ -16,8 +16,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 /**
  *
- * @author
- *
  */
 public class MessagePotionUpdate implements IMessage {
 
@@ -65,7 +63,7 @@ public class MessagePotionUpdate implements IMessage {
 	/**
 	 * Convert from the supplied buffer into your specific message type.
 	 *
-	 * @param buf
+	 * @param buf buffer
 	 */
 	@Override
 	public void fromBytes(final ByteBuf buf) {
@@ -76,7 +74,7 @@ public class MessagePotionUpdate implements IMessage {
     /**
      * Deconstruct your message into the supplied byte buffer.
      *
-     * @param buf
+     * @param buf buffer
      */
 	@Override
 	public void toBytes(final ByteBuf buf) {
@@ -85,8 +83,6 @@ public class MessagePotionUpdate implements IMessage {
 	}
 
 	/**
-	 *
-	 * @author
 	 *
 	 */
 	public static class MessageHandlerPotionUpdate implements IMessageHandler<MessagePotionUpdate, IMessage> {
