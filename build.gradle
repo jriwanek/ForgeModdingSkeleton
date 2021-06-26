@@ -23,8 +23,8 @@ buildscript {
     }
     classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: project.fg_version
     if (GradleVersion.current() > GradleVersion.version('3.3')) {
-//    classpath group: 'com.jaredsburrows', name: 'gradle-checker-framework-plugin', version: '0.2.2'
-    } else {
+      classpath group: 'org.checkerframework', name: 'checkerframework-gradle-plugin', version: '0.5.22'
+//  } else {
 //    classpath group: 'com.jaredsburrows', name: 'gradle-checker-framework-plugin', version: '0.2.1'
     }
   }
@@ -54,10 +54,14 @@ if (isFG1()) {
 } else {
   apply plugin: 'net.minecraftforge.gradle'
 }
-if (gradleOlderThan('3.4')) {
+
+import org.gradle.util.GradleVersion
+if (gradleNewerThan('3.4')) {
+  apply plugin: 'org.checkerframework'
+//} else {
 //  apply plugin: 'com.jaredsburrows.checkerframework'
 }
-import org.gradle.util.GradleVersion
+
 if (gradleNewerThan('4.0')) {
   apply plugin: 'com.github.spotbugs'
 } else {
@@ -1007,4 +1011,11 @@ if (gradleNewerThan('2.1')) {
 
 Object findProperty(final String propertyName) {
   return hasProperty(propertyName) ? property(propertyName) : null
+}
+
+checkerFramework {
+  checkers = [
+//    'org.checkerframework.checker.units.UnitsChecker',
+    'org.checkerframework.checker.nullness.NullnessChecker'
+  ]
 }
