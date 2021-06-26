@@ -1,8 +1,8 @@
 buildscript {
   repositories {
     mavenLocal()
-    jcenter()
     mavenCentral()
+    jcenter()
     removeIf { it instanceof MavenArtifactRepository && it.url.host == 'files.minecraftforge.net' }
     maven {
       name = 'forge'
@@ -401,8 +401,8 @@ minecraft {
 
 repositories {
   mavenLocal()
-  jcenter()
   mavenCentral()
+  jcenter()
 
   maven {
     name 'MMD'
