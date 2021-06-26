@@ -238,9 +238,13 @@ test {
   }
 }
 
-//project.ext.short_version = '1.0.0'
-//ext.short_version = getModVersion('VERSION', <path to file containing version string)
-project.ext.short_version = getModVersion('VERSION')
+if (project.hasProperty('mod_version')) {
+  project.ext.short_version = project.mod_version
+} else if (project.hasProperty('mod_version_file')) {
+  ext.short_version = getModVersion((project.hasProperty('mod_version_const') ? project.mc_version : 'VERSION'), project.mod_version_file)
+} else {
+  project.ext.short_version = getModVersion((project.hasProperty('mod_version_const') ? project.mc_version : 'VERSION'))
+}
 version = (project.hasProperty('mc_version') ? project.mc_version : project.forge_mc_version) + '-' + short_version
 project.ext.display_version = short_version
 
