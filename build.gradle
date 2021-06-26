@@ -829,12 +829,6 @@ curseforge {
                 incompatible "${it}"
               }
             }
-            if (project.hasProperty('curseforge_includes')) {
-              final def includes = "${project.curseforge_includes}".split(', ')
-              includes.each {
-                include "${it}"
-              }
-            }
           }
         }
       }
