@@ -861,6 +861,13 @@ curseforge {
         }
       }
     }
+    options {
+      debug = getBooleanProperty('curseforge_debug')
+      javaVersionAutoDetect = true
+      detectNewerJava = false
+      javaIntegration = true
+      forgeGradleIntegration = true
+    }
   }
 }
 
