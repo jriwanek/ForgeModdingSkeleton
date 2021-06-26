@@ -704,14 +704,14 @@ publishing {
           classifier 'javadoc'
         }
       }
-      if (project.hasProperty('pom_information') && getBooleanProperty('pom_information')) {
+      if (getBooleanProperty('pom_information')) {
         pom {
           name = project.name
           description = project.description
           url = project.pom_url
           packaging = 'jar'
           //inceptionYear = ''
-          if (project.hasProperty('pom_license_information') && getBooleanProperty('pom_license_information')) {
+          if (getBooleanProperty('pom_license_information')) {
             licenses {
               license {
                 name = project.pom_license_name
@@ -721,7 +721,7 @@ publishing {
               }
             }
           }
-          if (project.hasProperty('pom_scm_information') && getBooleanProperty('pom_scm_information')) {
+          if (getBooleanProperty('pom_scm_information')) {
             scm {
               connection = project.pom_scm_connection
               developerConnection = project.pom_scm_developer_connection
@@ -729,19 +729,19 @@ publishing {
               url = project.pom_scm_url
             }
           }
-          if (project.hasProperty('pom_issue_information') && getBooleanProperty('pom_issue_information')) {
+          if (getBooleanProperty('pom_issue_information')) {
             issueManagement {
               system = project.pom_issue_system
               url = project.pom_issue_url
             }
           }
-          if (project.hasProperty('pom_ci_information') && getBooleanProperty('pom_ci_information')) {
+          if (getBooleanProperty('pom_ci_information')) {
             ciManagement {
               system = project.pom_ci_system
               url = project.pom_ci_url
             }
           }
-          if (project.hasProperty('pom_organisation_information') && getBooleanProperty('pom_organisation_information')) {
+          if (getBooleanProperty('pom_organisation_information')) {
             organization {
               name = project.pom_organization_name
               url = project.pom_organization_url
