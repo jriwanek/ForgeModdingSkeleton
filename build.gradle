@@ -196,13 +196,13 @@ pmd {
     'java-unnecessary',
     'java-unusedcode'
   ]
-  if (gradleNewerThan('2.3')) {
-    toolVersion = '5.8.1' // 6.0.1, 6.34.0
+  if (gradleNewerThan('5.6')) {
+    toolVersion = '6.34.0'
+    incrementalAnalysis = true
+  } else if (gradleNewerThan('2.4')) {
+    toolVersion = '5.8.1'
   } else {
     toolVersion = '5.1.3'
-  }
-  if (gradleNewerThan('5.6')) {
-//    incrementalAnalysis = true // Requires PMD 6.0.0 or newer
   }
 }
 
