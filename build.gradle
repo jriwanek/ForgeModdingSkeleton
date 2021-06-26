@@ -138,6 +138,9 @@ if (gradleNewerThan('4.0')) {
     toolVersion = "3.0.1" // Required for Java 8
 //  toolVersion = "2.0.3" // Required for Java ?
 //  toolVersion = "1.3.9" // Required for Java ?	
+    ignoreFailures = true
+    effort = 'max'
+    reportLevel = 'low'
   }
 }
 
