@@ -18,8 +18,10 @@ buildscript {
     }
   }
   dependencies {
-    if (GradleVersion.current() >= GradleVersion.version('4.0')) {
+    if (GradleVersion.current() >= GradleVersion.version('4.7')) {
       classpath group: 'gradle.plugin.com.github.spotbugs', name: 'spotbugs-gradle-plugin', version: '1.6.9'
+    } else if (GradleVersion.current() >= GradleVersion.version('4.0')) {
+      classpath group: 'gradle.plugin.com.github.spotbugs', name: 'spotbugs-gradle-plugin', version: '1.6.5'
     }
     classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: project.fg_version
     if (GradleVersion.current() > GradleVersion.version('3.3')) {
@@ -34,7 +36,7 @@ plugins {
   id 'com.gradle.build-scan' version '1.16'
 //id 'com.jaredsburrows.checkerframework' version '0.2.1'// Gradle 3.3 or earlier
 //id 'com.jaredsburrows.checkerframework' version '0.2.2'// Gradle 3.4/4.0 or later
-//id 'com.github.spotbugs' version '1.6.9' // 1.6.9 for Gradle 4.0
+//id 'com.github.spotbugs' version '1.6.9' // 1.6.5 for Gradle 4.0-4.6, 1.6.9 for Gradle 4.7+
   id 'com.matthewprenger.cursegradle' version '1.4.0'
   id 'org.sonarqube' version '3.3'
   id 'se.bjurr.gitchangelog.git-changelog-gradle-plugin' version '1.66'
@@ -145,7 +147,7 @@ if (gradleNewerThan('4.0')) {
   findbugs {
     toolVersion = "3.0.1" // Required for Java 8
 //  toolVersion = "2.0.3" // Required for Java ?
-//  toolVersion = "1.3.9" // Required for Java ?	
+//  toolVersion = "1.3.9" // Required for Java ?
     ignoreFailures = true
     effort = 'max'
     reportLevel = 'low'
@@ -189,7 +191,7 @@ pmd {
 //  'java-j2ee',
 //  'java-javabeans',
     'java-junit',
-    'java-logging-jakarta-commons',
+//  'java-logging-jakarta-commons',
     'java-logging-java',
 //    'java-metrics', // Upsets 5.8.1
     'java-migrating',
