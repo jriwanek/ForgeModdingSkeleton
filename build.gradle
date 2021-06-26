@@ -141,16 +141,15 @@ if (gradleNewerThan('4.0')) {
   }
 }
 
-if (GradleVersion.current() >= GradleVersion.version('2.7')) {
-  checkstyle {
-    ignoreFailures = true
-    if (gradleNewerThan('2.7')) {
-      toolVersion = '8.23' // 8.42
-    } else {
-      toolVersion = '6.7'
-    }
-    showViolations = false
+checkstyle {
+  ignoreFailures = true
+  if (gradleNewerThan('2.7')) {
+    toolVersion = '8.43'
+  } else {
+    configFile = file("${project.projectDir}/config/checkstyle/checkstyle-6.xml")
+    toolVersion = '6.7' // 6.19, 6.2 - ~6.19/8.28 requires jdk7, 6.0 - 6.1.1 jdk6, 5.9 for jdk5
   }
+  showViolations = false
 }
 
 pmd {
