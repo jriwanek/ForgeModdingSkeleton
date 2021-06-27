@@ -31,3 +31,18 @@ if ((GradleVersion.current() >= GradleVersion.version('4.6')) && (GradleVersion.
   enableFeaturePreview('GRADLE_METADATA')		// Previously -Dorg.gradle.gradlemetadata=true
 }
 */
+
+plugins {
+  id 'com.gradle.enterprise' version '3.6.3'
+}
+
+gradleEnterprise {
+  buildScan {
+//  if (System.getenv('CI')) {
+//    publishAlways()
+//  }
+    publishAlwaysIf(System.getenv('CI'))
+    termsOfServiceUrl = "https://gradle.com/terms-of-service"
+    termsOfServiceAgree = "yes"
+  }
+}

@@ -33,7 +33,7 @@ buildscript {
 }
 
 plugins {
-  id 'com.gradle.enterprise' version '3.6.3'
+//id 'com.gradle.build-scan' version '3.6.3' // Gradle 5.x
 //id 'com.jaredsburrows.checkerframework' version '0.2.1'// Gradle 3.3 or earlier
 //id 'com.jaredsburrows.checkerframework' version '0.2.2'// Gradle 3.4/4.0 or later
 //id 'com.github.spotbugs' version '4.7.1' // 1.6.5 for Gradle 4.0-4.6, 1.6.9 for Gradle 4.7+
@@ -72,6 +72,7 @@ if (gradleNewerThan('4.0')) {
 
 import net.minecraftforge.gradle.common.task.SignJar
 
+/*
 gradleEnterprise {
   buildScan {
 //  if (System.getenv('CI')) {
@@ -82,6 +83,7 @@ gradleEnterprise {
     termsOfServiceAgree = "yes"
   }
 }
+*/
 
 project.afterEvaluate {
   //final def junitPlatformTestTask = project.tasks.getByName('junitPlatformTest')
