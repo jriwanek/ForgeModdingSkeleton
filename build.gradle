@@ -19,7 +19,7 @@ buildscript {
   }
   dependencies {
     if (GradleVersion.current() >= GradleVersion.version('4.7')) {
-      classpath group: 'gradle.plugin.com.github.spotbugs', name: 'spotbugs-gradle-plugin', version: '4.7.1'
+      classpath group: 'gradle.plugin.com.github.spotbugs.snom', name: 'spotbugs-gradle-plugin', version: '4.7.1'
     } else if (GradleVersion.current() >= GradleVersion.version('4.0')) {
       classpath group: 'gradle.plugin.com.github.spotbugs', name: 'spotbugs-gradle-plugin', version: '1.6.5'
     }
