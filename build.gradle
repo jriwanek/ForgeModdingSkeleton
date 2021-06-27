@@ -33,7 +33,7 @@ buildscript {
 }
 
 plugins {
-  id 'com.gradle.build-scan' version '1.16'
+  id "com.gradle.build-scan" version "3.6.3"
 //id 'com.jaredsburrows.checkerframework' version '0.2.1'// Gradle 3.3 or earlier
 //id 'com.jaredsburrows.checkerframework' version '0.2.2'// Gradle 3.4/4.0 or later
 //id 'com.github.spotbugs' version '4.7.1' // 1.6.5 for Gradle 4.0-4.6, 1.6.9 for Gradle 4.7+
@@ -72,13 +72,15 @@ if (gradleNewerThan('4.0')) {
 
 import net.minecraftforge.gradle.common.task.SignJar
 
-buildScan {
-  if (System.getenv('CI')) {
-    publishAlways()
+gradleEnterprise {
+  buildScan {
+//  if (System.getenv('CI')) {
+//    publishAlways()
+//  }
+    publishAlwaysIf(System.getenv('CI'))
+    termsOfServiceUrl = "https://gradle.com/terms-of-service"
+    termsOfServiceAgree = "yes"
   }
-//publishAlwaysIf(System.getenv("CI"))
-  licenseAgreementUrl = 'https://gradle.com/terms-of-service'
-  licenseAgree = 'yes'
 }
 
 project.afterEvaluate {
