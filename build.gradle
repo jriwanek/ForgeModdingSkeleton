@@ -749,19 +749,19 @@ artifacts {
               url = project.pom_scm_url
             }
           }
-          if (getBooleanProperty('pom_issue_information') && gradleNewerThan('4.5')) {
+          if (getBooleanProperty('pom_issue_information') && gradleNewerThan('4.8')) {
             issueManagement {
               system = project.pom_issue_system
               url = project.pom_issue_url
             }
           }
-          if (getBooleanProperty('pom_ci_information') && gradleNewerThan('4.5')) {
+          if (getBooleanProperty('pom_ci_information') && gradleNewerThan('4.8')) {
             ciManagement {
               system = project.pom_ci_system
               url = project.pom_ci_url
             }
           }
-          if (getBooleanProperty('pom_organisation_information') && gradleNewerThan('4.5')) {
+          if (getBooleanProperty('pom_organisation_information') && gradleNewerThan('4.8')) {
             organization {
               name = project.pom_organization_name
               url = project.pom_organization_url
