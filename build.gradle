@@ -767,13 +767,13 @@ if (isFG1()) {
     storePass = project.findProperty('keyStorePass')
     keyPass = project.findProperty('keyStoreKeyPass')
 
-    if (!isFG3()) {
+//  if (!isFG3()) {
       inputFile = sourceJar.archivePath
       outputFile = sourceJar.archivePath
-    } else {
-      inputFile = sourcesJar.archivePath
-      outputFile = sourcesJar.archivePath
-    }
+//  } else {
+//    inputFile = sourcesJar.archivePath
+//    outputFile = sourcesJar.archivePath
+//  }
   }
 
   task signJavadocJar(type: signType) {
@@ -801,10 +801,12 @@ if (getBooleanProperty('do_sign_jar') && (!isFG1())) {
   if (getBooleanProperty('create_deobf_jar')) {
     build.dependsOn signDeobfJar
   }
-  if (getBooleanProperty('create_source_jar') && !isFG3()) {
-    build.dependsOn signSourceJar
-  } else {
-    build.dependsOn signSourcesJar
+  if (getBooleanProperty('create_source_jar')) {
+//  if (!isFG3()) {
+      build.dependsOn signSourceJar
+//  } else {
+//    build.dependsOn signSourcesJar
+//  }
   }
   if (getBooleanProperty('create_javadoc_jar')) {
     build.dependsOn signJavadocJar
@@ -821,10 +823,12 @@ artifacts {
   if (getBooleanProperty('create_deobf_jar')) {
     archives deobfJar
   }
-  if (getBooleanProperty('create_source_jar') && !isFG3()) {
-    archives sourceJar
-  } else {
-    archives sourcesJar
+  if (getBooleanProperty('create_source_jar')) {
+//  if (!isFG3()) {
+      archives sourceJar
+//  } else {
+//    archives sourcesJar
+//  }
   }
   if (getBooleanProperty('create_javadoc_jar')) {
     archives javadocJar
@@ -838,14 +842,16 @@ artifacts {
       artifactId project.archivesBaseName
       version project.version
       from components.java
-      if (getBooleanProperty('create_source_jar') && !isFG3()) {
-        artifact sourceJar {
-          classifier 'sources'
-        }
-      } else {
-        artifact sourcesJar {
-          classifier 'sources'
-        }
+      if (getBooleanProperty('create_source_jar')) {
+//      if (!isFG3()) {
+          artifact sourceJar {
+            classifier 'sources'
+          }
+//      } else {
+//        artifact sourcesJar {
+//          classifier 'sources'
+//        }
+//      }
       }
       if (getBooleanProperty('create_api_jar') && !isFG3()) {
         artifact apiJar {
@@ -997,18 +1003,20 @@ curseforge {
           }
         }
       }
-      if (getBooleanProperty('create_source_jar') && !isFG3()) {
-        addArtifact(sourceJar) {
-          if (getBooleanProperty('curseforge_use_custom_display_name')) {
-            displayName = "${project.name} ${project.display_version} Sources"
+      if (getBooleanProperty('create_source_jar')) {
+//      if (!isFG3()) {
+          addArtifact(sourceJar) {
+            if (getBooleanProperty('curseforge_use_custom_display_name')) {
+              displayName = "${project.name} ${project.display_version} Sources"
+            }
           }
-        }
-      } else {
-        addArtifact(sourcesJar) {
-          if (getBooleanProperty('curseforge_use_custom_display_name')) {
-            displayName = "${project.name} ${project.display_version} Sources"
-          }
-        }
+//      } else {
+//        addArtifact(sourcesJar) {
+//          if (getBooleanProperty('curseforge_use_custom_display_name')) {
+//            displayName = "${project.name} ${project.display_version} Sources"
+//          }
+//        }
+//      }
       }
       if (getBooleanProperty('create_deobf_jar')) {
         addArtifact(deobfJar) {
