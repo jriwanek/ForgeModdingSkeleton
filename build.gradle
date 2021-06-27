@@ -1,8 +1,8 @@
 buildscript {
   repositories {
     mavenLocal()
-    jcenter()
     mavenCentral()
+    jcenter()
     removeIf { it instanceof MavenArtifactRepository && it.url.host == 'files.minecraftforge.net' }
     maven {
       name = 'forge'
@@ -18,34 +18,68 @@ buildscript {
     }
   }
   dependencies {
+    if (GradleVersion.current() >= GradleVersion.version('4.7')) {
+      classpath group: 'gradle.plugin.com.github.spotbugs', name: 'spotbugs-gradle-plugin', version: '4.7.1'
+    } else if (GradleVersion.current() >= GradleVersion.version('4.0')) {
+      classpath group: 'gradle.plugin.com.github.spotbugs', name: 'spotbugs-gradle-plugin', version: '1.6.5'
+    }
     classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: project.fg_version, changing: true
-    //classpath group: 'com.jaredsburrows', name: 'gradle-checker-framework-plugin', version: '0.2.2'
+    if (GradleVersion.current() > GradleVersion.version('3.3')) {
+      classpath group: 'org.checkerframework', name: 'checkerframework-gradle-plugin', version: '0.5.22'
+//  } else {
+//    classpath group: 'com.jaredsburrows', name: 'gradle-checker-framework-plugin', version: '0.2.1'
+    }
   }
 }
 
 plugins {
-  id 'com.github.spotbugs' version '4.7.1' // 4.0 or later
+  id 'com.gradle.build-scan' version '1.16'
+//id 'com.jaredsburrows.checkerframework' version '0.2.1'// Gradle 3.3 or earlier
+//id 'com.jaredsburrows.checkerframework' version '0.2.2'// Gradle 3.4/4.0 or later
+//id 'com.github.spotbugs' version '4.7.1' // 1.6.5 for Gradle 4.0-4.6, 1.6.9 for Gradle 4.7+
   id 'com.matthewprenger.cursegradle' version '1.4.0'
-  id 'org.sonarqube' version '2.8'
-  id 'se.bjurr.gitchangelog.git-changelog-gradle-plugin' version '1.60'
-//id 'org.junit.platform.gradle.plugin' version '1.2.0'
-  id 'maven-publish'
+  id 'org.sonarqube' version '3.3'
+  id 'se.bjurr.gitchangelog.git-changelog-gradle-plugin' version '1.66'
+//id 'org.junit.platform.gradle.plugin' version '1.2.0' // Gradle 3.5 through 4.5
   id 'jacoco'
-  id 'checkstyle' // 2.7 or later
+  id 'checkstyle'
+  id 'pmd'
+  id 'eclipse'
+  id 'idea'
+  id 'maven-publish'
 }
 
-apply plugin: 'net.minecraftforge.gradle'
-//apply plugin: 'com.jaredsburrows.checkerframework'
-apply plugin: 'eclipse'
-apply plugin: 'idea'
-apply plugin: 'maven-publish'
-apply plugin: 'pmd'
+if (isFG1()) {
+  apply plugin: 'forge'
+} else if (isFG2()) {
+  apply plugin: 'net.minecraftforge.gradle.forge'
+} else if (isFG3()) {
+  apply plugin: 'net.minecraftforge.gradle'
+}
+
 import org.gradle.util.GradleVersion
-if (GradleVersion.current() < GradleVersion.version('4.0')) {
+if (gradleNewerThan('3.4')) {
+  apply plugin: 'org.checkerframework'
+} else {
+//  apply plugin: 'com.jaredsburrows.checkerframework'
+}
+
+if (gradleNewerThan('4.0')) {
+  apply plugin: 'com.github.spotbugs'
+} else {
   apply plugin: 'findbugs'
 }
 
 import net.minecraftforge.gradle.common.task.SignJar
+
+buildScan {
+  if (System.getenv('CI')) {
+    publishAlways()
+  }
+//publishAlwaysIf(System.getenv("CI"))
+  licenseAgreementUrl = 'https://gradle.com/terms-of-service'
+  licenseAgree = 'yes'
+}
 
 project.afterEvaluate {
   //final def junitPlatformTestTask = project.tasks.getByName('junitPlatformTest')
@@ -53,17 +87,17 @@ project.afterEvaluate {
   // configure jacoco to analyze the junitPlatformTest task
   jacoco {
     // this tool version is compatible with
-    toolVersion = '0.8.3'
+    toolVersion = '0.8.3' // 0.8.3 uses ASM 7.0.4, 0.8.4 uses ASM 7.1, 0.8.6 uses ASM 8.0.1, 0.8.7 uses ASM 9.1
     // Not needed with new way
-    //if (GradleVersion.current() < GradleVersion.version('4.6')) {
+    //if (gradleOlderThan('4.6')) {
       //applyTo junitPlatformTestTask
-    //}}
+    //}
   }
 
   // create junit platform jacoco task
   project.task(type: JacocoReport, 'junitPlatformJacocoReport',
   {
-    if (GradleVersion.current() >= GradleVersion.version('5.0')) {
+    if (gradleNewerThan('5.0')) {
       getSourceDirectories().from(files('./src/main'))
       getClassDirectories().from(files("${project.buildDir}/classes/main"))
     } else {
@@ -71,15 +105,14 @@ project.afterEvaluate {
       classDirectories = files("${project.buildDir}/classes/main")
     }
     // Not needed with new way
-    //if (GradleVersion.current() < GradleVersion.version('4.6')) {
+    //if (gradleOlderThan('4.6')) {
     //  executionData junitPlatformTestTask
     //}
   })
 }
 
 // Only works with JUnit Platform Launcher 1.2.0 and earlier
-/*
-if (GradleVersion.current() < GradleVersion.version('4.6')) {
+if (gradleOlderThan('4.6')) {
   junitPlatform {
     // platformVersion '1.2.0'
     // logManager 'org.apache.logging.log4j.jul.LogManager'
@@ -89,12 +122,11 @@ if (GradleVersion.current() < GradleVersion.version('4.6')) {
     // filters (optional)
   }
 }
-*/
 
-if (GradleVersion.current() >= GradleVersion.version('4.0')) {
+if (gradleNewerThan('4.0')) {
   spotbugs {
     ignoreFailures = true
-    toolVersion = '4.2.3'
+    toolVersion = '4.2.3' // 3.1.7 uses ASM 6.2, 3.1.8 uses ASM 6.2.1
     effort = 'max'
     reportLevel = 'low'
     //includeFilter = file("$rootProject.projectDir/config/spotbugs-filter.xml")
@@ -102,43 +134,64 @@ if (GradleVersion.current() >= GradleVersion.version('4.0')) {
 
   tasks.withType(com.github.spotbugs.snom.SpotBugsTask) {
     reports {
-      xml.enabled = false
-      html.enabled = true
+      if (isCi()) {
+        xml.enabled = true
+        html.enabled = false
+      } else {
+        xml.enabled = false
+        html.enabled = true
+      }
     }
+  }
+} else {
+  findbugs {
+    toolVersion = "3.0.1" // Required for Java 8
+//  toolVersion = "2.0.3" // Required for Java ?
+//  toolVersion = "1.3.9" // Required for Java ?
+    ignoreFailures = true
+    effort = 'max'
+    reportLevel = 'low'
   }
 }
 
-if (GradleVersion.current() >= GradleVersion.version('2.7')) {
-  checkstyle {
-    ignoreFailures = true
-    toolVersion = '8.42' // 5.7 is default
-    showViolations = false
+checkstyle {
+  ignoreFailures = true
+  if (gradleNewerThan('2.7')) {
+    toolVersion = '8.43'
+  } else {
+    configFile = file("${project.projectDir}/config/checkstyle/checkstyle-6.xml")
+    toolVersion = '6.7' // 6.19, 6.2 - ~6.19/8.28 requires jdk7, 6.0 - 6.1.1 jdk6, 5.9 for jdk5
   }
+  showViolations = false
 }
 
 pmd {
-  consoleOutput = false
+  if (gradleNewerThan('2.1')) {
+    consoleOutput = false
+  }
   ignoreFailures = true
   sourceSets = [sourceSets.main]
   reportsDir = file("$project.buildDir/reports/pmd")
-  rulePriority = 5
+  if (gradleNewerThan('2.8')) {
+    rulePriority = 5
+  }
   ruleSets = [
-    'java-android',
+//  'java-android',
     'java-basic',
     'java-braces',
     'java-clone',
-    'java-codesize',
-    'java-comments',
-    'java-controversial',
-    'java-coupling',
+//  'java-codesize',
+//  'java-comments',
+//  'java-controversial',
+//  'java-coupling',
     'java-design',
     'java-empty',
     'java-finalizers',
     'java-imports',
-    'java-j2ee',
-    'java-javabeans',
+//  'java-j2ee',
+//  'java-javabeans',
     'java-junit',
-    'java-logging-jakarta-commons',
+//  'java-logging-jakarta-commons',
     'java-logging-java',
 //    'java-metrics', // Upsets 5.8.1
     'java-migrating',
@@ -153,9 +206,13 @@ pmd {
     'java-unnecessary',
     'java-unusedcode'
   ]
-  toolVersion = '6.19.0'; // 6.19.0
-  if (GradleVersion.current() >= GradleVersion.version('5.6')) {
-//    incrementalAnalysis = true // Requires PMD 6.0.0 or newer
+  if (gradleNewerThan('5.6')) {
+    toolVersion = '6.34.0'
+    incrementalAnalysis = true
+  } else if (gradleNewerThan('2.4')) {
+    toolVersion = '5.8.1'
+  } else {
+    toolVersion = '5.1.3'
   }
 }
 
@@ -178,7 +235,7 @@ javadoc {
 }
 
 test {
-  if (GradleVersion.current() >= GradleVersion.version('4.6')) {
+  if (gradleNewerThan('4.6')) {
     useJUnitPlatform()
     /*
     useJUnitPlatform {
@@ -191,9 +248,13 @@ test {
   }
 }
 
-//project.ext.short_version = '1.0.0'
-//ext.short_version = getModVersion('VERSION', <path to file containing version string)
-project.ext.short_version = getModVersion('VERSION')
+if (project.hasProperty('mod_version')) {
+  project.ext.short_version = project.mod_version
+} else if (project.hasProperty('mod_version_file')) {
+  ext.short_version = getModVersion((project.hasProperty('mod_version_const') ? project.mc_version : 'VERSION'), project.mod_version_file)
+} else {
+  project.ext.short_version = getModVersion((project.hasProperty('mod_version_const') ? project.mc_version : 'VERSION'))
+}
 version = (project.hasProperty('mc_version') ? project.mc_version : project.forge_mc_version) + '-' + short_version
 project.ext.display_version = short_version
 
@@ -250,19 +311,44 @@ if (secretFile.exists()) {
     + '"curseforgeAPIKey" : "' + (System.getenv('curse_auth') ?: '00000000-0000-0000-0000-000000000000') + '",'
     + '"sonarHost" : "' + (System.getenv('SONAR_HOST_URL') ?: 'https://sonarcloud.io') + '",'
     + '"sonarOrganization" : "' + (System.getenv('SONAR_ORGANIZATION') ?: '') + '",'
-    + '"sonarToken" : "' + (System.getenv('SONAR_AUTH_TOKEN') ?: 0) + '"}'
+    + '"sonarToken" : "' + (System.getenv('SONAR_TOKEN') ?: 0) + '"}'
   )
 }
 
 minecraft {
-  mappings channel: project.mcp_mappings_channel, version: project.mcp_mappings_version
-
-  //replace '@MOD_VERSION@', project.short_version
-
-  if (project.hasProperty('signSHA1') && getBooleanProperty('do_sign_jar')) {
-    //replace '@FINGERPRINT@', project.findProperty('signSHA1')
+  if (isFG3()) {
+    mappings channel: project.mcp_mappings_channel, version: project.mcp_mappings_version
   } else {
-    //replace '@FINGERPRINT@', ''
+    version = project.forge_mc_version + '-' + project.forge_version
+    if ((project.forge_mc_version != "1.6.4") && (project.forge_mc_version != "1.7.2")) {
+      mappings = project.mcp_mappings_version
+    }
+
+    if ((project.fg_version != '1.0-SNAPSHOT') && (project.fg_version != '1.1-SNAPSHOT')) {
+      if (project.hasProperty('runDir')) {
+        runDir = project.runDir
+      } else if (file('../run').exists()) {
+        runDir = '../run'
+      } else {
+        runDir = 'run'
+      }
+    } else {
+      if (project.hasProperty('runDir')) {
+        assetDir = project.runDir
+      } else if (file('../assets').exists()) {
+        assetDir = '../assets'
+      } else {
+        assetDir = 'eclipse/assets'
+      }
+    }
+
+    replace '@MOD_VERSION@', project.short_version
+
+    if (project.hasProperty('signSHA1') && getBooleanProperty('do_sign_jar') && !isFG1()) {
+      replace '@FINGERPRINT@', project.findProperty('signSHA1')
+    } else {
+      replace '@FINGERPRINT@', ''
+    }
   }
 
   if (project.hasProperty('core_plugin')) {
@@ -326,97 +412,105 @@ minecraft {
     serverRunArgs += project.server_game_args
   }
 
-  //makeObfSourceJar = getBooleanProperty('create_source_jar')
+  if (isFG2()) {
+    makeObfSourceJar = getBooleanProperty('create_source_jar')
 
-  //useDepAts = getBooleanProperty('dep_has_ats')
-  if (project.hasProperty('mod_at_file')) {
-    accessTransformer = file(findProperty('mod_at_file'))
+    useDepAts = getBooleanProperty('dep_has_ats')
   }
 
-  // Default run configurations.
-  // These can be tweaked, removed, or duplicated as needed.
-  runs {
-    client {
-      workingDirectory project.file('run')
-
-      taskName 'runClient'
-
-      // Recommended logging data for a userdev environment
-      // The markers can be changed as needed.
-      // "SCAN": For mods scan.
-      // "REGISTRIES": For firing of registry events.
-      // "REGISTRYDUMP": For getting the contents of all registries.
-      property 'forge.logging.markers', 'REGISTRIES'
-
-      // Recommended logging level for the console
-      // You can set various levels here.
-      // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
-      property 'forge.logging.console.level', 'debug'
-
-      mods {
-        examplemod {
-          source sourceSets.main
-        }
-      }
+  if (isFG3()) {
+    if (project.hasProperty('mod_at_file')) {
+      accessTransformer = file(findProperty('mod_at_file'))
     }
 
-    server {
-      workingDirectory project.file('run')
+    // Default run configurations.
+    // These can be tweaked, removed, or duplicated as needed.
+    runs {
+      client {
+        workingDirectory project.file('run')
 
-      taskName 'runServer'
+        taskName 'runClient'
 
-      // Recommended logging data for a userdev environment
-      // The markers can be changed as needed.
-      // "SCAN": For mods scan.
-      // "REGISTRIES": For firing of registry events.
-      // "REGISTRYDUMP": For getting the contents of all registries.
-      property 'forge.logging.markers', 'REGISTRIES'
+        // Recommended logging data for a userdev environment
+        // The markers can be changed as needed.
+        // "SCAN": For mods scan.
+        // "REGISTRIES": For firing of registry events.
+        // "REGISTRYDUMP": For getting the contents of all registries.
+        property 'forge.logging.markers', 'REGISTRIES'
 
-      // Recommended logging level for the console
-      // You can set various levels here.
-      // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
-      property 'forge.logging.console.level', 'debug'
+        // Recommended logging level for the console
+        // You can set various levels here.
+        // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
+        property 'forge.logging.console.level', 'debug'
 
-      mods {
-        examplemod {
-          source sourceSets.main
-        }
-      }
-    }
-    data {
-      workingDirectory project.file('run')
-
-      // Recommended logging data for a userdev environment
-      // The markers can be changed as needed.
-      // "SCAN": For mods scan.
-      // "REGISTRIES": For firing of registry events.
-      // "REGISTRYDUMP": For getting the contents of all registries.
-      property 'forge.logging.markers', 'REGISTRIES'
-
-      // Recommended logging level for the console
-      // You can set various levels here.
-      // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
-      property 'forge.logging.console.level', 'debug'
-
-      // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
-      args '--mod', 'examplemod', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
-
-      mods {
+        mods {
           examplemod {
-              source sourceSets.main
+            source sourceSets.main
           }
+        }
+      }
+
+      server {
+        workingDirectory project.file('run')
+
+        taskName 'runServer'
+
+        // Recommended logging data for a userdev environment
+        // The markers can be changed as needed.
+        // "SCAN": For mods scan.
+        // "REGISTRIES": For firing of registry events.
+        // "REGISTRYDUMP": For getting the contents of all registries.
+        property 'forge.logging.markers', 'REGISTRIES'
+
+        // Recommended logging level for the console
+        // You can set various levels here.
+        // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
+        property 'forge.logging.console.level', 'debug'
+
+        mods {
+          examplemod {
+            source sourceSets.main
+          }
+        }
+      }
+
+      data {
+        workingDirectory project.file('run')
+
+        // Recommended logging data for a userdev environment
+        // The markers can be changed as needed.
+        // "SCAN": For mods scan.
+        // "REGISTRIES": For firing of registry events.
+        // "REGISTRYDUMP": For getting the contents of all registries.
+        property 'forge.logging.markers', 'REGISTRIES'
+
+        // Recommended logging level for the console
+        // You can set various levels here.
+        // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
+        property 'forge.logging.console.level', 'debug'
+
+        // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
+        args '--mod', 'examplemod', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+
+        mods {
+          examplemod {
+            source sourceSets.main
+          }
+        }
       }
     }
   }
 }
 
-// Include resources generated by data generators.
-sourceSets.main.resources { srcDir 'src/generated/resources' }
+if (isFG3()) {
+  // Include resources generated by data generators.
+  sourceSets.main.resources { srcDir 'src/generated/resources' }
+}
 
 repositories {
   mavenLocal()
-  jcenter()
   mavenCentral()
+  jcenter()
   removeIf { it instanceof MavenArtifactRepository && it.url.host == 'files.minecraftforge.net' }
   maven {
     name 'MMD'
@@ -425,12 +519,14 @@ repositories {
 }
 
 dependencies {
-  minecraft "net.minecraftforge:forge:${project.forge_mc_version}-${project.forge_version}"
+  if (isFG3()) {
+    minecraft "net.minecraftforge:forge:${project.forge_mc_version}-${project.forge_version}"
+  }
 
   testCompile('org.junit.platform:junit-platform-launcher:1.7.+')
   testCompile('org.junit.jupiter:junit-jupiter-api:5.7.+') // testImplementation
   testRuntime('org.junit.jupiter:junit-jupiter-engine:5.7.+') //testRuntimeOnly
-  if (GradleVersion.current() >= GradleVersion.version('2.13')) {
+  if (gradleNewerThan('2.13')) {
     testCompileOnly 'junit:junit:4.13.2'
   }
   testRuntime 'org.junit.vintage:junit-vintage-engine:5.7.+' //testRuntimeOnly
@@ -438,12 +534,27 @@ dependencies {
   testCompile('org.mockito:mockito-junit-jupiter:2.+') {
     exclude group: 'org.junit.jupiter', module: 'junit-jupiter-engine'
   }
-  if (GradleVersion.current() >= GradleVersion.version('4.6')) {
-    annotationProcessor group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.11.0'
+  if (gradleNewerThan('4.6')) {
+//    annotationProcessor group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.11.0'
   }
 }
 
 processResources {
+  if (!isFG3()) {
+    inputs.property 'version', project.short_version
+    inputs.property 'mcversion', project.minecraft.version
+
+    from (sourceSets.main.resources.srcDirs) {
+      include 'mcmod.info'
+      expand 'version': project.short_version, 'mcversion': project.minecraft.version
+    }
+
+    from (sourceSets.main.resources.srcDirs) {
+      exclude 'mcmod.info'
+    }
+
+    rename '(.+_at.cfg)', 'META-INF/$1'
+  }
 }
 
 jar {
@@ -454,23 +565,32 @@ jar {
     mainAttributes(
       'Maven-Artifact': "${project.group}:${project.archivesBaseName}:${project.version}",
       'Timestamp': System.currentTimeMillis(),
-      'Specification-Title': 'examplemod',
-      'Specification-Vendor': 'mcmoddev',
+      'Specification-Title': project.modid,
+      'Specification-Vendor': project.vendor,
       'Specification-Version': '1',
       'Implementation-Title': project.archivesBaseName,
       'Implementation-Version': project.version,
-      'Implementation-Vendor' :'mcmoddev',
+      'Implementation-Vendor' : project.vendor,
       'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
       'Built-On-Java': "${System.getProperty('java.vm.version')} (${System.getProperty('java.vm.vendor')})",
       'Built-On': "${project.forge_mc_version}-${project.forge_version}"
     )
+    if (!isFG3()) {
+      if (project.hasProperty('core_plugin')) {
+        attributes 'FMLCorePluginContainsFMLMod': 'true'
+        attributes 'FMLCorePlugin': project.core_plugin
+      }
+      if (project.hasProperty('mod_at_file')) {
+        attributes 'FMLAT': project.mod_at_file
+      }
+    }
     if (project.hasProperty('mod_contained_deps')) {
         attributes 'ContainedDeps': project.mod_contained_deps
     }
   }
 }
 
-/*
+if (!isFG3()) {
 task apiJar(type: Jar) {
   onlyIf {
     getBooleanProperty('create_api_jar')
@@ -484,19 +604,19 @@ task apiJar(type: Jar) {
     mainAttributes(
       'Maven-Artifact': "${project.group}:${project.archivesBaseName}:${project.version}:api",
       'Timestamp': System.currentTimeMillis(),
-      'Specification-Title': 'examplemod',
-      'Specification-Vendor': 'mcmoddev',
+      'Specification-Title': project.modid,
+      'Specification-Vendor': project.vendor,
       'Specification-Version': '1',
-      'Implementation-Title': project.name + '-api',
+      'Implementation-Title': project.archivesBaseName + '-api',
       'Implementation-Version': project.version,
-      'Implementation-Vendor' :'mcmoddev',
+      'Implementation-Vendor' : project.vendor,
       'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
       'Built-On-Java': "${System.getProperty('java.vm.version')} (${System.getProperty('java.vm.vendor')})",
       'Built-On': "${project.forge_mc_version}-${project.forge_version}"
     )
   }
 }
-*/
+}
 
 task deobfJar(type: Jar) {
   onlyIf {
@@ -510,12 +630,12 @@ task deobfJar(type: Jar) {
     mainAttributes(
       'Maven-Artifact': "${project.group}:${project.archivesBaseName}:${project.version}:deobf",
       'Timestamp': System.currentTimeMillis(),
-      'Specification-Title': 'examplemod',
-      'Specification-Vendor': 'mcmoddev',
+      'Specification-Title': project.modid,
+      'Specification-Vendor': project.vendor,
       'Specification-Version': '1',
-      'Implementation-Title': project.name + '-deobf',
+      'Implementation-Title': project.archivesBaseName + '-deobf',
       'Implementation-Version': project.version,
-      'Implementation-Vendor' :'mcmoddev',
+      'Implementation-Vendor' : project.vendor,
       'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
       'Built-On-Java': "${System.getProperty('java.vm.version')} (${System.getProperty('java.vm.vendor')})",
       'Built-On': "${project.forge_mc_version}-${project.forge_version}"
@@ -529,14 +649,15 @@ task deobfJar(type: Jar) {
   }
 }
 
-task sourcesJar(type: Jar, dependsOn: classes) {
+if (!isFG2()) {
+task sourceJar(type: Jar, dependsOn: classes) {
   onlyIf {
     getBooleanProperty('create_source_jar')
   }
 
-    description = 'Creates a JAR containing the source code.'
-    classifier = 'sources'
-    from sourceSets.main.allSource
+  description = 'Creates a JAR containing the source code.'
+  classifier = 'sources'
+  from sourceSets.main.allSource
   manifest {
     mainAttributes(
       'Maven-Artifact': "${project.group}:${project.archivesBaseName}:${project.version}:sources",
@@ -553,6 +674,7 @@ task sourcesJar(type: Jar, dependsOn: classes) {
     )
   }
 }
+}
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
   onlyIf {
@@ -565,110 +687,129 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
   manifest.mainAttributes(
     'Maven-Artifact': "${project.group}:${project.archivesBaseName}:${project.version}:javadoc",
     'Timestamp': System.currentTimeMillis(),
-    'Implementation-Title': project.name + '-javadoc',
+    'Specification-Title': project.modid,
+    'Specification-Vendor': project.vendor,
+    'Specification-Version': '1',
+    'Implementation-Title': project.archivesBaseName + '-javadoc',
     'Implementation-Version': project.version,
-    'Built-On-Java': "${System.getProperty('java.vm.version')} + (${System.getProperty('java.vm.vendor')})",
+    'Implementation-Vendor' : project.vendor,
+    'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+    'Built-On-Java': "${System.getProperty('java.vm.version')} (${System.getProperty('java.vm.vendor')})",
     'Built-On': "${project.forge_mc_version}-${project.forge_version}"
   )
 }
 
-task signJar(type: SignJar, dependsOn: jar) {
-  onlyIf {
-    getBooleanProperty('do_sign_jar') &&
-    project.hasProperty('keyStore')
+def signType
+if (isFG1()) {
+  signType = Jar
+} else {
+  signType = SignJar
+
+  task signJar(type: SignJar, dependsOn: jar) {
+    onlyIf {
+      getBooleanProperty('do_sign_jar') &&
+      project.hasProperty('keyStore')
+    }
+
+    description = 'Sign the Main JAR'
+    inputFile = jar.archivePath
+    outputFile = jar.archivePath
+
+    keyStore = project.findProperty('keyStore')
+    alias = project.findProperty('keyStoreAlias')
+    storePass = project.findProperty('keyStorePass')
+    keyPass = project.findProperty('keyStoreKeyPass')
   }
 
-  description = 'Sign the Main JAR'
-  inputFile = jar.archivePath
-  outputFile = jar.archivePath
+  if (!isFG3()) {
+  task signApiJar(type: SignJar) {
+    onlyIf {
+      getBooleanProperty('create_api_jar') &&
+      getBooleanProperty('do_sign_jar') &&
+      project.hasProperty('keyStore')
+    }
 
-  keyStore = project.findProperty('keyStore')
-  alias = project.findProperty('keyStoreAlias')
-  storePass = project.findProperty('keyStorePass')
-  keyPass = project.findProperty('keyStoreKeyPass')
-}
+    description = 'Sign the API JAR'
+    keyStore = project.findProperty('keyStore')
+    alias = project.findProperty('keyStoreAlias')
+    storePass = project.findProperty('keyStorePass')
+    keyPass = project.findProperty('keyStoreKeyPass')
 
-/*
-task signApiJar(type: SignJar) {
-  onlyIf {
-    getBooleanProperty('create_api_jar') &&
-    getBooleanProperty('do_sign_jar') &&
-    project.hasProperty('keyStore')
+    inputFile = apiJar.archivePath
+    outputFile = apiJar.archivePath
+  }
   }
 
-  description = 'Sign the API JAR'
-  keyStore = project.findProperty('keyStore')
-  alias = project.findProperty('keyStoreAlias')
-  storePass = project.findProperty('keyStorePass')
-  keyPass = project.findProperty('keyStoreKeyPass')
+  task signDeobfJar(type: SignJar) {
+    onlyIf {
+      getBooleanProperty('create_deobf_jar') &&
+      getBooleanProperty('do_sign_jar') &&
+      project.hasProperty('keyStore')
+    }
 
-  inputFile = apiJar.archivePath
-  outputFile = apiJar.archivePath
-}
-*/
+    description = 'Sign the deobf JAR'
+    keyStore = project.findProperty('keyStore')
+    alias = project.findProperty('keyStoreAlias')
+    storePass = project.findProperty('keyStorePass')
+    keyPass = project.findProperty('keyStoreKeyPass')
 
-task signDeobfJar(type: SignJar) {
-  onlyIf {
-    getBooleanProperty('create_deobf_jar') &&
-    getBooleanProperty('do_sign_jar') &&
-    project.hasProperty('keyStore')
+    inputFile = deobfJar.archivePath
+    outputFile = deobfJar.archivePath
   }
 
-  description = 'Sign the deobf JAR'
-  keyStore = project.findProperty('keyStore')
-  alias = project.findProperty('keyStoreAlias')
-  storePass = project.findProperty('keyStorePass')
-  keyPass = project.findProperty('keyStoreKeyPass')
+  task signSourceJar(type: SignJar) {
+    onlyIf {
+      getBooleanProperty('create_source_jar') &&
+      getBooleanProperty('do_sign_jar') &&
+      project.hasProperty('keyStore')
+    }
 
-  inputFile = deobfJar.archivePath
-  outputFile = deobfJar.archivePath
-}
+    description = 'Sign the Sources JAR'
+    keyStore = project.findProperty('keyStore')
+    alias = project.findProperty('keyStoreAlias')
+    storePass = project.findProperty('keyStorePass')
+    keyPass = project.findProperty('keyStoreKeyPass')
 
-task signSourcesJar(type: SignJar) {
-  onlyIf {
-    getBooleanProperty('create_source_jar') &&
-    getBooleanProperty('do_sign_jar') &&
-    project.hasProperty('keyStore')
+//  if (!isFG3()) {
+      inputFile = sourceJar.archivePath
+      outputFile = sourceJar.archivePath
+//  } else {
+//    inputFile = sourcesJar.archivePath
+//    outputFile = sourcesJar.archivePath
+//  }
   }
 
-  description = 'Sign the Sources JAR'
-  keyStore = project.findProperty('keyStore')
-  alias = project.findProperty('keyStoreAlias')
-  storePass = project.findProperty('keyStorePass')
-  keyPass = project.findProperty('keyStoreKeyPass')
+  task signJavadocJar(type: SignJar) {
+    onlyIf {
+      getBooleanProperty('create_javadoc_jar') &&
+      getBooleanProperty('do_sign_jar') &&
+      project.hasProperty('keyStore')
+    }
 
-  inputFile = sourcesJar.archivePath
-  outputFile = sourcesJar.archivePath
-}
+    keyStore = project.findProperty('keyStore')
+    alias = project.findProperty('keyStoreAlias')
+    storePass = project.findProperty('keyStorePass')
+    keyPass = project.findProperty('keyStoreKeyPass')
 
-task signJavadocJar(type: SignJar) {
-  onlyIf {
-    getBooleanProperty('create_javadoc_jar') &&
-    getBooleanProperty('do_sign_jar') &&
-    project.hasProperty('keyStore')
+    inputFile = javadocJar.archivePath
+    outputFile = javadocJar.archivePath
   }
-
-  keyStore = project.findProperty('keyStore')
-  alias = project.findProperty('keyStoreAlias')
-  storePass = project.findProperty('keyStorePass')
-  keyPass = project.findProperty('keyStoreKeyPass')
-
-  inputFile = javadocJar.archivePath
-  outputFile = javadocJar.archivePath
 }
 
-if (getBooleanProperty('do_sign_jar')) {
+if (getBooleanProperty('do_sign_jar') && (!isFG1())) {
   build.dependsOn signJar
-  /*
-  if (getBooleanProperty('create_api_jar')) {
+  if (getBooleanProperty('create_api_jar') && !isFG3()) {
     build.dependsOn signApiJar
   }
-  */
   if (getBooleanProperty('create_deobf_jar')) {
     build.dependsOn signDeobfJar
   }
   if (getBooleanProperty('create_source_jar')) {
-    build.dependsOn signSourcesJar
+//  if (!isFG3()) {
+      build.dependsOn signSourceJar
+//  } else {
+//    build.dependsOn signSourcesJar
+//  }
   }
   if (getBooleanProperty('create_javadoc_jar')) {
     build.dependsOn signJavadocJar
@@ -685,16 +826,18 @@ publish.dependsOn('reobfJar')
 tasks.curseforge.dependsOn publish
 
 artifacts {
-  /*
-  if (getBooleanProperty('create_api_jar')) {
+  if (getBooleanProperty('create_api_jar') && !isFG3()) {
     archives apiJar
   }
-  */
   if (getBooleanProperty('create_deobf_jar')) {
     archives deobfJar
   }
   if (getBooleanProperty('create_source_jar')) {
-    archives sourcesJar
+//  if (!isFG3()) {
+      archives sourceJar
+//  } else {
+//    archives sourcesJar
+//  }
   }
   if (getBooleanProperty('create_javadoc_jar')) {
     archives javadocJar
@@ -712,7 +855,7 @@ publishing {
   publications {
     mavenJava(MavenPublication) {
       //TODO: From Forge MDK
-      artifact jar
+      //artifact jar
       //artifact reobfArtifact
       //artifact reobfJar
       groupId project.group
@@ -720,17 +863,21 @@ publishing {
       version project.version
       from components.java
       if (getBooleanProperty('create_source_jar')) {
-        artifact sourcesJar {
-          classifier 'sources'
-        }
+//      if (!isFG3()) {
+          artifact sourceJar {
+            classifier 'sources'
+          }
+//      } else {
+//        artifact sourcesJar {
+//          classifier 'sources'
+//        }
+//      }
       }
-      /*
-      if (getBooleanProperty('create_api_jar')) {
+      if (getBooleanProperty('create_api_jar') && !isFG3()) {
         artifact apiJar {
           classifier 'api'
         }
       }
-      */
       if (getBooleanProperty('create_deobf_jar')) {
         artifact deobfJar {
           classifier 'deobf'
@@ -741,38 +888,52 @@ publishing {
           classifier 'javadoc'
         }
       }
-      /*
-      pom {
-        name = 'Example'
-        description = 'An Example'
-        url = 'https://github.com/Examples/Example'
-        packaging = 'jar'
-        //inceptionYear = ''
-        licenses {
-          license {
-            name = 'GNU Lesser General Public License, Version 2.1'
-            url = 'https://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt'
+      if (getBooleanProperty('pom_information') && gradleNewerThan('4.8')) {
+        pom {
+          name = project.name
+          description = project.description
+          url = project.pom_url
+          packaging = 'jar'
+          //inceptionYear = ''
+          if (getBooleanProperty('pom_license_information')) {
+            licenses {
+              license {
+                name = project.pom_license_name
+                url = project.pom_license_url
+                distribution = 'repo'
+                comments = project.pom_comments
+              }
+            }
           }
-        }
-        scm {
-          connection = 'scm:git:git://github.com/Examples/Example.git'
-          developerConnection = 'scm:git:git@github.com:Examples/Example.git'
-          url = 'https://github.com/Examples/Example'
-        }
-        issueManagement {
-          system = 'github'
-          url = 'https://github.com/Examples/Example.git/issues'
-        }
-        ciManagement {
-          system = 'jenkins'
-          url = 'https://ci.mcmoddev.com/'
-        }
-        organization {
-          name = 'Minecraft Mod Development'
-          url = 'https://mcmoddev.com/'
+          if (getBooleanProperty('pom_scm_information')) {
+            scm {
+              connection = project.pom_scm_connection
+              developerConnection = project.pom_scm_developer_connection
+              // tag
+              url = project.pom_scm_url
+            }
+          }
+          if (getBooleanProperty('pom_issue_information')) {
+            issueManagement {
+              system = project.pom_issue_system
+              url = project.pom_issue_url
+            }
+          }
+          if (getBooleanProperty('pom_ci_information')) {
+            ciManagement {
+              system = project.pom_ci_system
+              url = project.pom_ci_url
+            }
+          }
+          if (getBooleanProperty('pom_organisation_information')) {
+            organization {
+              name = project.pom_organization_name
+              url = project.pom_organization_url
+            }
+          }
+          // contributors, developers, distributionManagement
         }
       }
-      */
     }
   }
   repositories {
@@ -795,7 +956,7 @@ publishing {
 }
 
 curseforge {
-  if (project.hasProperty('curseforge_project_id')) {
+  if (project.hasProperty('curseforge_project_id') && getBooleanProperty('curseforge_do_upload')) {
     apiKey = secret.curseforgeAPIKey
     project {
       id = project.curseforge_project_id
@@ -854,30 +1015,30 @@ curseforge {
                 incompatible "${it}"
               }
             }
-            if (project.hasProperty('curseforge_includes')) {
-              final def includes = "${project.curseforge_includes}".split(', ')
-              includes.each {
-                include "${it}"
-              }
-            }
           }
         }
       }
-      /*
-      if (getBooleanProperty('create_api_jar')) {
+      if (getBooleanProperty('create_api_jar') && !isFG3()) {
         addArtifact(apiJar) {
           if (getBooleanProperty('curseforge_use_custom_display_name')) {
             displayName = "${project.name} ${project.display_version} API"
           }
         }
       }
-      */
       if (getBooleanProperty('create_source_jar')) {
-        addArtifact(sourcesJar) {
-          if (getBooleanProperty('curseforge_use_custom_display_name')) {
-            displayName = "${project.name} ${project.display_version} Sources"
+//      if (!isFG3()) {
+          addArtifact(sourceJar) {
+            if (getBooleanProperty('curseforge_use_custom_display_name')) {
+              displayName = "${project.name} ${project.display_version} Sources"
+            }
           }
-        }
+//      } else {
+//        addArtifact(sourcesJar) {
+//          if (getBooleanProperty('curseforge_use_custom_display_name')) {
+//            displayName = "${project.name} ${project.display_version} Sources"
+//          }
+//        }
+//      }
       }
       if (getBooleanProperty('create_deobf_jar')) {
         addArtifact(deobfJar) {
@@ -894,6 +1055,13 @@ curseforge {
         }
       }
     }
+    options {
+      debug = getBooleanProperty('curseforge_debug')
+      javaVersionAutoDetect = true
+      detectNewerJava = false
+      javaIntegration = true
+      forgeGradleIntegration = true
+    }
   }
 }
 
@@ -903,19 +1071,49 @@ sonarqube {
       property 'sonar.host.url', project.sonar_host_url
     } else if (secret.sonarHost != '') {
       property 'sonar.host.url', secret.sonarHost
+    } else {
+      property 'sonar.host.url', 'https://sonarcloud.io'
     }
-    property 'sonar.login', secret.sonarToken
+
+    if (secret.sonarToken != '') {
+      property 'sonar.login', secret.sonarToken
+    }
+
     if (project.hasProperty('sonar_organisation')) {
       property 'sonar.organization', project.sonar_organisation
     } else if (secret.sonarOrganisation != '') {
       property 'sonar.organization', secret.sonarOrganization
+    } else {
+      property 'sonar.organization', 'unset'
     }
-    //property 'sonar.projectName', project.archivesBaseName
-    //property 'sonar.projectKey', "${project.group}:${project.archivesBaseName}"
-    //property 'sonar.branch.name', 'forgegradle-4'
-    //property 'sonar.branch.target', ''
+
+    if (project.hasProperty('sonar_project_key')) {
+      property 'sonar.projectKey', project.sonar_project_key
+    }
+
+    if (project.hasProperty('sonar_project_name')) {
+      property 'sonar.projectName', project.sonar_project_name
+    }
+
+    if (project.hasProperty('sonar_project_description')) {
+      property 'sonar.projectDescription', project.sonar_project_description
+    }
+
+    if (project.hasProperty('sonar_project_version')) {
+      property 'sonar.projectVersion', project.sonar_project_version
+    }
+
+    if (project.hasProperty('sonar_branch_name')) {
+      property 'sonar.branch.name', project.sonar_branch_name
+    }
+
+    if (project.hasProperty('sonar_branch_target')) {
+      property 'sonar.branch.target', project.sonar_branch_target
+    }
+
     property 'sonar.junit.reportPaths', "${project.buildDir}/test-results/junit-platform/*.xml"
     property 'sonar.jacoco.reportPaths', "${project.buildDir}/jacoco/junitPlatformTest.exec"
+    //property 'sonar.groovy.jacoco.reportPath', ""
   }
 }
 
@@ -955,6 +1153,30 @@ String getModVersion(final String type, final String modFile) {
   return '0.0.0'
 }
 
+boolean isFG1() {
+ return (project.fg_version == '1.0-SNAPSHOT') || (project.fg_version == '1.1-SNAPSHOT') || (project.fg_version == '1.2-SNAPSHOT')
+}
+
+boolean isFG2() {
+  return (project.fg_version == '2.0-SNAPSHOT') || (project.fg_version == '2.1-SNAPSHOT') || (project.fg_version == '2.2-SNAPSHOT') || (project.fg_version == '2.3-SNAPSHOT')
+}
+
+boolean isFG3() {
+  return (!isFG1() && !isFG2())
+}
+
+static boolean gradleOlderThan(final String version) {
+  return GradleVersion.current() < GradleVersion.version(version)
+}
+
+static boolean gradleNewerThan(final String version) {
+  return GradleVersion.current() >= GradleVersion.version(version)
+}
+
+static boolean isCi() {
+  return System.getenv('CI')
+}
+
 boolean getBooleanProperty(final String property) {
   if (project.hasProperty(property)) {
     return ((String) project.findProperty(property)).toBoolean()
@@ -963,12 +1185,21 @@ boolean getBooleanProperty(final String property) {
   }
 }
 
-task gitChangelog(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
-  file = new File('CHANGELOG.md')
-  gitHubIssuePattern = "nonada123"
-  templateContent = file('changelog.mustache').getText('UTF-8')
+if (gradleNewerThan('2.1')) {
+  task gitChangelog(type: se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask) {
+    file = new File('CHANGELOG.md')
+    gitHubIssuePattern = "nonada123"
+    templateContent = file('changelog.mustache').getText('UTF-8')
+  }
 }
 
 Object findProperty(final String propertyName) {
-  return hasProperty(propertyName) ? property(propertyName) : null;
+  return hasProperty(propertyName) ? property(propertyName) : null
+}
+
+checkerFramework {
+  checkers = [
+//    'org.checkerframework.checker.units.UnitsChecker',
+    'org.checkerframework.checker.nullness.NullnessChecker'
+  ]
 }
