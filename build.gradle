@@ -51,16 +51,16 @@ plugins {
 
 if (isFG1()) {
   apply plugin: 'forge'
-}else if (isFG2()) {
+} else if (isFG2()) {
   apply plugin: 'net.minecraftforge.gradle.forge'
-} else {
+} else if (isFG3()) {
   apply plugin: 'net.minecraftforge.gradle'
 }
 
 import org.gradle.util.GradleVersion
 if (gradleNewerThan('3.4')) {
   apply plugin: 'org.checkerframework'
-//} else {
+} else {
 //  apply plugin: 'com.jaredsburrows.checkerframework'
 }
 
@@ -89,7 +89,7 @@ project.afterEvaluate {
     // Not needed with new way
     //if (gradleOlderThan('4.6')) {
       //applyTo junitPlatformTestTask
-    //}}
+    //}
   }
 
   // create junit platform jacoco task
@@ -110,7 +110,6 @@ project.afterEvaluate {
 }
 
 // Only works with JUnit Platform Launcher 1.2.0 and earlier
-/*
 if (gradleOlderThan('4.6')) {
   junitPlatform {
     // platformVersion '1.2.0'
@@ -121,7 +120,6 @@ if (gradleOlderThan('4.6')) {
     // filters (optional)
   }
 }
-*/
 
 if (gradleNewerThan('4.0')) {
   spotbugs {
@@ -316,35 +314,39 @@ if (secretFile.exists()) {
 }
 
 minecraft {
-  version = project.forge_mc_version + '-' + project.forge_version
-  if ((project.forge_mc_version != "1.6.4") && (project.forge_mc_version != "1.7.2")) {
-    mappings = project.mcp_mappings_version
-  }
-
-  if ((project.fg_version != '1.0-SNAPSHOT') && (project.fg_version != '1.1-SNAPSHOT')) {
-    if (project.hasProperty('runDir')) {
-      runDir = project.runDir
-    } else if (file('../run').exists()) {
-      runDir = '../run'
-    } else {
-      runDir = 'run'
-    }
+  if (isFG3()) {
+    mappings channel: project.mcp_mappings_channel, version: project.mcp_mappings_version
   } else {
-    if (project.hasProperty('runDir')) {
-      assetDir = project.runDir
-    } else if (file('../assets').exists()) {
-      assetDir = '../assets'
-    } else {
-      assetDir = 'eclipse/assets'
+    version = project.forge_mc_version + '-' + project.forge_version
+    if ((project.forge_mc_version != "1.6.4") && (project.forge_mc_version != "1.7.2")) {
+      mappings = project.mcp_mappings_version
     }
-  }
 
-  replace '@MOD_VERSION@', project.short_version
+    if ((project.fg_version != '1.0-SNAPSHOT') && (project.fg_version != '1.1-SNAPSHOT')) {
+      if (project.hasProperty('runDir')) {
+        runDir = project.runDir
+      } else if (file('../run').exists()) {
+        runDir = '../run'
+      } else {
+        runDir = 'run'
+      }
+    } else {
+      if (project.hasProperty('runDir')) {
+        assetDir = project.runDir
+      } else if (file('../assets').exists()) {
+        assetDir = '../assets'
+      } else {
+        assetDir = 'eclipse/assets'
+      }
+    }
 
-  if (project.hasProperty('signSHA1') && getBooleanProperty('do_sign_jar') && isFG2()) {
-    replace '@FINGERPRINT@', project.findProperty('signSHA1')
-  } else {
-    replace '@FINGERPRINT@', ''
+    replace '@MOD_VERSION@', project.short_version
+
+    if (project.hasProperty('signSHA1') && getBooleanProperty('do_sign_jar') && !isFG1()) {
+      replace '@FINGERPRINT@', project.findProperty('signSHA1')
+    } else {
+      replace '@FINGERPRINT@', ''
+    }
   }
 
   if (project.hasProperty('core_plugin')) {
@@ -413,13 +415,101 @@ minecraft {
 
     useDepAts = getBooleanProperty('dep_has_ats')
   }
+
+  if (isFG3()) {
+    if (project.hasProperty('mod_at_file')) {
+      accessTransformer = file(findProperty('mod_at_file'))
+    }
+
+    // Default run configurations.
+    // These can be tweaked, removed, or duplicated as needed.
+    runs {
+      client {
+        workingDirectory project.file('run')
+
+        taskName 'runClient'
+
+        // Recommended logging data for a userdev environment
+        // The markers can be changed as needed.
+        // "SCAN": For mods scan.
+        // "REGISTRIES": For firing of registry events.
+        // "REGISTRYDUMP": For getting the contents of all registries.
+        property 'forge.logging.markers', 'REGISTRIES'
+
+        // Recommended logging level for the console
+        // You can set various levels here.
+        // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
+        property 'forge.logging.console.level', 'debug'
+
+        mods {
+          examplemod {
+            source sourceSets.main
+          }
+        }
+      }
+
+      server {
+        workingDirectory project.file('run')
+
+        taskName 'runServer'
+
+        // Recommended logging data for a userdev environment
+        // The markers can be changed as needed.
+        // "SCAN": For mods scan.
+        // "REGISTRIES": For firing of registry events.
+        // "REGISTRYDUMP": For getting the contents of all registries.
+        property 'forge.logging.markers', 'REGISTRIES'
+
+        // Recommended logging level for the console
+        // You can set various levels here.
+        // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
+        property 'forge.logging.console.level', 'debug'
+
+        mods {
+          examplemod {
+            source sourceSets.main
+          }
+        }
+      }
+
+      data {
+        workingDirectory project.file('run')
+
+        // Recommended logging data for a userdev environment
+        // The markers can be changed as needed.
+        // "SCAN": For mods scan.
+        // "REGISTRIES": For firing of registry events.
+        // "REGISTRYDUMP": For getting the contents of all registries.
+        property 'forge.logging.markers', 'REGISTRIES'
+
+        // Recommended logging level for the console
+        // You can set various levels here.
+        // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
+        property 'forge.logging.console.level', 'debug'
+
+        // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
+        args '--mod', 'examplemod', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+
+        mods {
+          examplemod {
+            source sourceSets.main
+          }
+        }
+      }
+    }
+  }
+}
+
+if (isFG3()) {
+  // Include resources generated by data generators.
+  sourceSets.main.resources { srcDir 'src/generated/resources' }
 }
 
 repositories {
   mavenLocal()
   mavenCentral()
   jcenter()
-
+  removeIf { it instanceof MavenArtifactRepository && it.url.host == 'files.minecraftforge.net' }
   maven {
     name 'MMD'
     url 'https://maven.mcmoddev.com/'
@@ -427,6 +517,10 @@ repositories {
 }
 
 dependencies {
+  if (isFG3()) {
+    minecraft "net.minecraftforge:forge:${project.forge_mc_version}-${project.forge_version}"
+  }
+
   testCompile('org.junit.platform:junit-platform-launcher:1.7.+')
   testCompile('org.junit.jupiter:junit-jupiter-api:5.7.+') // testImplementation
   testRuntime('org.junit.jupiter:junit-jupiter-engine:5.7.+') //testRuntimeOnly
@@ -444,19 +538,21 @@ dependencies {
 }
 
 processResources {
-  inputs.property 'version', project.short_version
-  inputs.property 'mcversion', project.minecraft.version
+  if (!isFG3()) {
+    inputs.property 'version', project.short_version
+    inputs.property 'mcversion', project.minecraft.version
 
-  from (sourceSets.main.resources.srcDirs) {
-    include 'mcmod.info'
-    expand 'version': project.short_version, 'mcversion': project.minecraft.version
+    from (sourceSets.main.resources.srcDirs) {
+      include 'mcmod.info'
+      expand 'version': project.short_version, 'mcversion': project.minecraft.version
+    }
+
+    from (sourceSets.main.resources.srcDirs) {
+      exclude 'mcmod.info'
+    }
+
+    rename '(.+_at.cfg)', 'META-INF/$1'
   }
-
-  from (sourceSets.main.resources.srcDirs) {
-    exclude 'mcmod.info'
-  }
-
-  rename '(.+_at.cfg)', 'META-INF/$1'
 }
 
 jar {
@@ -477,12 +573,14 @@ jar {
       'Built-On-Java': "${System.getProperty('java.vm.version')} (${System.getProperty('java.vm.vendor')})",
       'Built-On': "${project.forge_mc_version}-${project.forge_version}"
     )
-    if (project.hasProperty('core_plugin')) {
-      attributes 'FMLCorePluginContainsFMLMod': 'true'
-      attributes 'FMLCorePlugin': project.core_plugin
-    }
-    if (project.hasProperty('mod_at_file')) {
-      attributes 'FMLAT': project.mod_at_file
+    if (!isFG3()) {
+      if (project.hasProperty('core_plugin')) {
+        attributes 'FMLCorePluginContainsFMLMod': 'true'
+        attributes 'FMLCorePlugin': project.core_plugin
+      }
+      if (project.hasProperty('mod_at_file')) {
+        attributes 'FMLAT': project.mod_at_file
+      }
     }
     if (project.hasProperty('mod_contained_deps')) {
         attributes 'ContainedDeps': project.mod_contained_deps
@@ -490,6 +588,7 @@ jar {
   }
 }
 
+if (!isFG3())
 task apiJar(type: Jar) {
   onlyIf {
     getBooleanProperty('create_api_jar')
@@ -547,6 +646,33 @@ task deobfJar(type: Jar) {
   }
 }
 
+if (!isFG2()) {
+task sourceJar(type: Jar, dependsOn: classes) {
+  onlyIf {
+    getBooleanProperty('create_source_jar')
+  }
+
+  description = 'Creates a JAR containing the source code.'
+  classifier = 'sources'
+  from sourceSets.main.allSource
+  manifest {
+    mainAttributes(
+      'Maven-Artifact': "${project.group}:${project.archivesBaseName}:${project.version}:sources",
+      'Timestamp': System.currentTimeMillis(),
+      'Specification-Title': 'examplemod',
+      'Specification-Vendor': 'mcmoddev',
+      'Specification-Version': '1',
+      'Implementation-Title': project.name + '-sources',
+      'Implementation-Version': project.version,
+      'Implementation-Vendor' :'mcmoddev',
+      'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+      'Built-On-Java': "${System.getProperty('java.vm.version')} (${System.getProperty('java.vm.vendor')})",
+      'Built-On': "${project.forge_mc_version}-${project.forge_version}"
+    )
+  }
+}
+}
+
 task javadocJar(type: Jar, dependsOn: javadoc) {
   onlyIf {
     getBooleanProperty('create_javadoc_jar')
@@ -570,10 +696,11 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
   )
 }
 
+def signType
 if (isFG1()) {
-  def signType = Jar
-} else if (isFG2()) {
-  def signType = SignJar
+  signType = Jar
+} else {
+  signType = SignJar
 
   task signJar(type: signType) {
     onlyIf {
@@ -591,6 +718,7 @@ if (isFG1()) {
     keyPass = project.findProperty('keyStoreKeyPass')
   }
 
+  if (!isFG3()) {
   task signApiJar(type: signType) {
     onlyIf {
       getBooleanProperty('create_api_jar') &&
@@ -606,6 +734,7 @@ if (isFG1()) {
 
     inputFile = apiJar.archivePath
     outputFile = apiJar.archivePath
+  }
   }
 
   task signDeobfJar(type: signType) {
@@ -638,9 +767,12 @@ if (isFG1()) {
     storePass = project.findProperty('keyStorePass')
     keyPass = project.findProperty('keyStoreKeyPass')
 
-    if (isFG2()) {
+    if (!isFG3()) {
       inputFile = sourceJar.archivePath
       outputFile = sourceJar.archivePath
+    } else {
+      inputFile = sourcesJar.archivePath
+      outputFile = sourcesJar.archivePath
     }
   }
 
@@ -663,14 +795,16 @@ if (isFG1()) {
 
 if (getBooleanProperty('do_sign_jar') && (!isFG1())) {
   build.dependsOn signJar
-  if (getBooleanProperty('create_api_jar')) {
+  if (getBooleanProperty('create_api_jar') && !isFG3()) {
     build.dependsOn signApiJar
   }
   if (getBooleanProperty('create_deobf_jar')) {
     build.dependsOn signDeobfJar
   }
-  if (getBooleanProperty('create_source_jar')) {
+  if (getBooleanProperty('create_source_jar') && !isFG3()) {
     build.dependsOn signSourceJar
+  } else {
+    build.dependsOn signSourcesJar
   }
   if (getBooleanProperty('create_javadoc_jar')) {
     build.dependsOn signJavadocJar
@@ -681,14 +815,16 @@ tasks.publish.dependsOn build
 tasks.curseforge.dependsOn publish
 
 artifacts {
-  if (getBooleanProperty('create_api_jar')) {
+  if (getBooleanProperty('create_api_jar') && !isFG3()) {
     archives apiJar
   }
   if (getBooleanProperty('create_deobf_jar')) {
     archives deobfJar
   }
-  if (getBooleanProperty('create_source_jar') && isFG2()) {
+  if (getBooleanProperty('create_source_jar') && !isFG3()) {
     archives sourceJar
+  } else {
+    archives sourcesJar
   }
   if (getBooleanProperty('create_javadoc_jar')) {
     archives javadocJar
@@ -702,12 +838,16 @@ artifacts {
       artifactId project.archivesBaseName
       version project.version
       from components.java
-      if (getBooleanProperty('create_source_jar') && isFG2()) {
+      if (getBooleanProperty('create_source_jar') && !isFG3()) {
         artifact sourceJar {
           classifier 'sources'
         }
+      } else {
+        artifact sourcesJar {
+          classifier 'sources'
+        }
       }
-      if (getBooleanProperty('create_api_jar')) {
+      if (getBooleanProperty('create_api_jar') && !isFG3()) {
         artifact apiJar {
           classifier 'api'
         }
@@ -734,8 +874,8 @@ artifacts {
               license {
                 name = project.pom_license_name
                 url = project.pom_license_url
-				distribution = 'repo'
-				comments = project.pom_comments
+                distribution = 'repo'
+                comments = project.pom_comments
               }
             }
           }
@@ -743,7 +883,7 @@ artifacts {
             scm {
               connection = project.pom_scm_connection
               developerConnection = project.pom_scm_developer_connection
-			  // tag
+              // tag
               url = project.pom_scm_url
             }
           }
@@ -850,15 +990,21 @@ curseforge {
           }
         }
       }
-      if (getBooleanProperty('create_api_jar')) {
+      if (getBooleanProperty('create_api_jar') && !isFG3()) {
         addArtifact(apiJar) {
           if (getBooleanProperty('curseforge_use_custom_display_name')) {
             displayName = "${project.name} ${project.display_version} API"
           }
         }
       }
-      if (getBooleanProperty('create_source_jar')) {
+      if (getBooleanProperty('create_source_jar') && !isFG3()) {
         addArtifact(sourceJar) {
+          if (getBooleanProperty('curseforge_use_custom_display_name')) {
+            displayName = "${project.name} ${project.display_version} Sources"
+          }
+        }
+      } else {
+        addArtifact(sourcesJar) {
           if (getBooleanProperty('curseforge_use_custom_display_name')) {
             displayName = "${project.name} ${project.display_version} Sources"
           }
@@ -908,8 +1054,8 @@ sonarqube {
     } else if (secret.sonarOrganisation != '') {
       property 'sonar.organization', secret.sonarOrganization
     } else {
-	  property 'sonar.organization', 'unset'
-	}
+      property 'sonar.organization', 'unset'
+    }
 
     if (project.hasProperty('sonar_project_key')) {
       property 'sonar.projectKey', project.sonar_project_key
@@ -917,15 +1063,15 @@ sonarqube {
 
     if (project.hasProperty('sonar_project_name')) {
       property 'sonar.projectName', project.sonar_project_name
-	}
+    }
 
     if (project.hasProperty('sonar_project_description')) {
       property 'sonar.projectDescription', project.sonar_project_description
-	}
+    }
 
     if (project.hasProperty('sonar_project_version')) {
       property 'sonar.projectVersion', project.sonar_project_version
-	}
+    }
 
     if (project.hasProperty('sonar_branch_name')) {
       property 'sonar.branch.name', project.sonar_branch_name
@@ -983,6 +1129,10 @@ boolean isFG1() {
 
 boolean isFG2() {
   return (project.fg_version == '2.0-SNAPSHOT') || (project.fg_version == '2.1-SNAPSHOT') || (project.fg_version == '2.2-SNAPSHOT') || (project.fg_version == '2.3-SNAPSHOT')
+}
+
+boolean isFG3() {
+  return (!isFG1() && !isFG2())
 }
 
 static boolean gradleOlderThan(final String version) {
