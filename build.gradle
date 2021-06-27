@@ -33,7 +33,7 @@ buildscript {
 }
 
 plugins {
-  id "com.gradle.build-scan" version "3.6.3"
+  id 'com.gradle.enterprise' version '3.6.3'
 //id 'com.jaredsburrows.checkerframework' version '0.2.1'// Gradle 3.3 or earlier
 //id 'com.jaredsburrows.checkerframework' version '0.2.2'// Gradle 3.4/4.0 or later
 //id 'com.github.spotbugs' version '4.7.1' // 1.6.5 for Gradle 4.0-4.6, 1.6.9 for Gradle 4.7+
