@@ -211,7 +211,7 @@ pmd {
     'java-unusedcode'
   ]
   if (gradleNewerThan('5.6')) {
-    toolVersion = '6.34.0'
+    toolVersion = '6.35.0'
     incrementalAnalysis = true
   } else if (gradleNewerThan('2.4')) {
     toolVersion = '5.8.1'
