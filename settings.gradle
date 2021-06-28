@@ -2,17 +2,6 @@ plugins {
   id 'com.gradle.enterprise' version '3.6.3'
 }
 
-gradleEnterprise {
-  buildScan {
-//  if (System.getenv('CI')) {
-//    publishAlways()
-//  }
-    publishAlwaysIf(System.getenv('CI'))
-    termsOfServiceUrl = "https://gradle.com/terms-of-service"
-    termsOfServiceAgree = "yes"
-  }
-}
-
 // Workaround to make the JUnit Platform Gradle Plugin available using the `plugins` DSL
 // See https://github.com/junit-team/junit5/issues/768
 if (!(GradleVersion.current() <= GradleVersion.version('2.14.1'))) {
