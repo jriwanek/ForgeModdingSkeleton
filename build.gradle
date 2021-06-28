@@ -174,12 +174,14 @@ pmd {
     consoleOutput = false
   }
   ignoreFailures = true
-  sourceSets = [sourceSets.main]
+  sourceSets = [sourceSets.main, sourceSets.test]
   reportsDir = file("$project.buildDir/reports/pmd")
   if (gradleNewerThan('2.8')) {
     rulePriority = 5
   }
+  ruleSetFiles = files('config/pmd/pmd.xml')
   ruleSets = [
+/*
 //  'java-android',
     'java-basic',
     'java-braces',
@@ -197,18 +199,19 @@ pmd {
     'java-junit',
 //  'java-logging-jakarta-commons',
     'java-logging-java',
-//    'java-metrics', // Upsets 5.8.1
+//  'java-metrics', // Upsets 5.8.1
     'java-migrating',
     'java-migrating_to_junit4',
     'java-naming',
     'java-optimizations',
-//    'java-quickstart', // 6.x
+//  'java-quickstart', // 6.x
     'java-strictexception',
     'java-strings',
     'java-sunsecure',
     'java-typeresolution',
     'java-unnecessary',
     'java-unusedcode'
+*/
   ]
   if (gradleNewerThan('5.6')) {
     toolVersion = '6.35.0'
