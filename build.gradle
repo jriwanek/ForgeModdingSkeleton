@@ -498,15 +498,15 @@ dependencies {
     minecraft "net.minecraftforge:forge:${project.forge_mc_version}-${project.forge_version}"
   }
 
-  testCompile('org.junit.platform:junit-platform-launcher:1.7.+')
-  testCompile('org.junit.jupiter:junit-jupiter-api:5.7.+') // testImplementation
-  testRuntime('org.junit.jupiter:junit-jupiter-engine:5.7.+') //testRuntimeOnly
+  testImplementation('org.junit.platform:junit-platform-launcher:1.7.+') // testCompile
+  testImplementation('org.junit.jupiter:junit-jupiter-api:5.7.+') // testCompile
+  testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.7.+') // testRuntime
   if (gradleNewerThan('2.13')) {
     testCompileOnly 'junit:junit:4.13.2'
   }
-  testRuntime 'org.junit.vintage:junit-vintage-engine:5.7.+' //testRuntimeOnly
-  testCompile('org.mockito:mockito-core:2.+')
-  testCompile('org.mockito:mockito-junit-jupiter:2.+') {
+  testRuntimeOnly 'org.junit.vintage:junit-vintage-engine:5.7.+' //testRuntime
+  testImplementation('org.mockito:mockito-core:2.+') // testCompile
+  testImplementation('org.mockito:mockito-junit-jupiter:2.+') { // testCompile
     exclude group: 'org.junit.jupiter', module: 'junit-jupiter-engine'
   }
   if (gradleNewerThan('4.6')) {
