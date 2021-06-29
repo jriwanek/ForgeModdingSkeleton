@@ -59,7 +59,7 @@ if (isFG1()) {
 
 import org.gradle.util.GradleVersion
 if (gradleNewerThan('3.4')) {
-  apply plugin: 'org.checkerframework'
+//  apply plugin: 'org.checkerframework'
 } else {
 //  apply plugin: 'com.jaredsburrows.checkerframework'
 }
@@ -1175,9 +1175,11 @@ Object findProperty(final String propertyName) {
   return hasProperty(propertyName) ? property(propertyName) : null
 }
 
+/*
 checkerFramework {
   checkers = [
 //    'org.checkerframework.checker.units.UnitsChecker',
     'org.checkerframework.checker.nullness.NullnessChecker'
   ]
 }
+*/
