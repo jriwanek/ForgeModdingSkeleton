@@ -113,7 +113,7 @@ project.afterEvaluate {
 }
 
 // Only works with JUnit Platform Launcher 1.2.0 and earlier
-if (gradleOlderThan('4.6')) {
+if (gradleNewerThan('3.5') && gradleOlderThan('4.6')) {
   junitPlatform {
     // platformVersion '1.2.0'
     // logManager 'org.apache.logging.log4j.jul.LogManager'
