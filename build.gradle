@@ -18,7 +18,9 @@ buildscript {
     }
   }
   dependencies {
-    if (GradleVersion.current() >= GradleVersion.version('4.7')) {
+    if (GradleVersion.current() >= GradleVersion.version('5.0')) {
+      classpath group: 'gradle.plugin.com.github.spotbugs.snom', name: 'spotbugs-gradle-plugin', version: '4.7.1'
+    } else if (GradleVersion.current() >= GradleVersion.version('4.7')) {
       classpath group: 'gradle.plugin.com.github.spotbugs', name: 'spotbugs-gradle-plugin', version: '1.6.9'
     } else if (GradleVersion.current() >= GradleVersion.version('4.0')) {
       classpath group: 'gradle.plugin.com.github.spotbugs', name: 'spotbugs-gradle-plugin', version: '1.6.5'
@@ -33,7 +35,8 @@ buildscript {
 }
 
 plugins {
-  id 'com.gradle.build-scan' version '1.16'
+  id 'com.gradle.build-scan' version '1.16' // Gradle 4.x or earlier
+//id 'com.gradle.build-scan' version '3.6.3' // Gradle 5.x or later
 //id 'com.jaredsburrows.checkerframework' version '0.2.1'// Gradle 3.3 or earlier
 //id 'com.jaredsburrows.checkerframework' version '0.2.2'// Gradle 3.4/4.0 or later
 //id 'com.github.spotbugs' version '1.6.9' // 1.6.5 for Gradle 4.0-4.6, 1.6.9 for Gradle 4.7+
@@ -74,7 +77,7 @@ buildScan {
   if (System.getenv('CI')) {
     publishAlways()
   }
-//publishAlwaysIf(System.getenv("CI"))
+//publishAlwaysIf(System.getenv('CI'))
   licenseAgreementUrl = 'https://gradle.com/terms-of-service'
   licenseAgree = 'yes'
 }
@@ -130,7 +133,8 @@ if (gradleNewerThan('4.0')) {
     //includeFilter = file("$rootProject.projectDir/config/spotbugs-filter.xml")
   }
 
-  tasks.withType(com.github.spotbugs.SpotBugsTask) {
+  tasks.withType(com.github.spotbugs.SpotBugsTask) { // Gradle 4.x and earlier
+//tasks.withType(com.github.spotbugs.snom.SpotBugsTask) { // Gradle 5.x and later
     reports {
       if (isCi()) {
         xml.enabled = true
@@ -521,16 +525,16 @@ dependencies {
     minecraft "net.minecraftforge:forge:${project.forge_mc_version}-${project.forge_version}"
   }
 
-  testCompile('org.junit.platform:junit-platform-launcher:1.7.+')
+  testCompile('org.junit.platform:junit-platform-launcher:1.7.+') // testImplementation
   testCompile('org.junit.jupiter:junit-jupiter-api:5.7.+') // testImplementation
-  testRuntime('org.junit.jupiter:junit-jupiter-engine:5.7.+') //testRuntimeOnly
+  testRuntime('org.junit.jupiter:junit-jupiter-engine:5.7.+') // testRuntimeOnly
   if (gradleNewerThan('2.13')) {
     testCompileOnly 'junit:junit:4.13.2'
   }
   testRuntime 'org.junit.vintage:junit-vintage-engine:5.7.+' //testRuntimeOnly
-  testCompile('org.mockito:mockito-core:2.+')
+  testCompile('org.mockito:mockito-core:2.+') // testImplementation
   testCompile('org.mockito:mockito-junit-jupiter:2.+') {
-    exclude group: 'org.junit.jupiter', module: 'junit-jupiter-engine'
+    exclude group: 'org.junit.jupiter', module: 'junit-jupiter-engine' // testImplementation
   }
   if (gradleNewerThan('4.6')) {
     annotationProcessor group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.11.0'
@@ -588,7 +592,7 @@ jar {
   }
 }
 
-if (!isFG3())
+if (!isFG3()) {
 task apiJar(type: Jar) {
   onlyIf {
     getBooleanProperty('create_api_jar')
@@ -613,6 +617,7 @@ task apiJar(type: Jar) {
       'Built-On': "${project.forge_mc_version}-${project.forge_version}"
     )
   }
+}
 }
 
 task deobfJar(type: Jar) {
@@ -795,7 +800,7 @@ if (isFG1()) {
 
 if (getBooleanProperty('do_sign_jar') && (!isFG1())) {
   build.dependsOn signJar
-  if (getBooleanProperty('create_api_jar')) {
+  if (getBooleanProperty('create_api_jar') && !isFG3()) {
     build.dependsOn signApiJar
   }
   if (getBooleanProperty('create_deobf_jar')) {
