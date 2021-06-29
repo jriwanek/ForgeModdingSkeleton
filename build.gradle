@@ -2,7 +2,10 @@ buildscript {
   repositories {
     mavenLocal()
     mavenCentral()
-    jcenter()
+    maven {
+      name = 'jcenter'
+      url = 'https://jcenter.bintray.com/'
+	}
     removeIf { it instanceof MavenArtifactRepository && it.url.host == 'files.minecraftforge.net' }
     maven {
       name = 'forge'
@@ -488,7 +491,10 @@ if (isFG3()) {
 repositories {
   mavenLocal()
   mavenCentral()
-  jcenter()
+  maven {
+    name = 'jcenter'
+    url = 'https://jcenter.bintray.com/'
+  }
   removeIf { it instanceof MavenArtifactRepository && it.url.host == 'files.minecraftforge.net' }
   maven {
     name 'MMD'
