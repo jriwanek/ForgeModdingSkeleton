@@ -76,7 +76,7 @@ if (gradleNewerThan('4.0')) {
   apply plugin: 'findbugs'
 }
 
-import net.minecraftforge.gradle.common.task.SignJar
+//import net.minecraftforge.gradle.common.task.SignJar
 
 gradleEnterprise {
   buildScan {
@@ -687,7 +687,7 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 }
 
 def signType
-if (isFG1()) {
+if (isFG1() || isFG5()) {
   signType = Jar
 } else {
   signType = SignJar
@@ -1150,6 +1150,11 @@ boolean isFG2() {
 
 boolean isFG3() {
   return (!isFG1() && !isFG2())
+}
+
+boolean isFG5() {
+   return true
+//  return (!isFG1() && !isFG2())
 }
 
 static boolean gradleOlderThan(final String version) {
