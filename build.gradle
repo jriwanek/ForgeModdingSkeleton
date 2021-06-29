@@ -172,48 +172,24 @@ pmd {
     consoleOutput = false
   }
   ignoreFailures = true
-  sourceSets = [sourceSets.main]
+  sourceSets = [sourceSets.main, sourceSets.test]
   reportsDir = file("$project.buildDir/reports/pmd")
-  if (gradleNewerThan('2.8')) {
+  if (gradleNewerThan('6.8')) {
+    rulesMinimumPriority = 5
+  } else if (gradleNewerThan('2.8')) {
     rulePriority = 5
   }
-  ruleSets = [
-//  'java-android',
-    'java-basic',
-    'java-braces',
-    'java-clone',
-//  'java-codesize',
-//  'java-comments',
-//  'java-controversial',
-//  'java-coupling',
-    'java-design',
-    'java-empty',
-    'java-finalizers',
-    'java-imports',
-//  'java-j2ee',
-//  'java-javabeans',
-    'java-junit',
-//  'java-logging-jakarta-commons',
-    'java-logging-java',
-//    'java-metrics', // Upsets 5.8.1
-    'java-migrating',
-    'java-migrating_to_junit4',
-    'java-naming',
-    'java-optimizations',
-//    'java-quickstart', // 6.x
-    'java-strictexception',
-    'java-strings',
-    'java-sunsecure',
-    'java-typeresolution',
-    'java-unnecessary',
-    'java-unusedcode'
-  ]
+  ruleSets = [ ]
   if (gradleNewerThan('5.6')) {
-    toolVersion = '6.34.0'
     incrementalAnalysis = true
-  } else if (gradleNewerThan('2.4')) {
-    toolVersion = '5.8.1'
+  }
+  if (gradleNewerThan('2.4')) {
+    ruleSetFiles = files('config/pmd/pmd.xml')
+//  ruleSetFiles = files('config/pmd/pmd-5.8.xml')
+    toolVersion = '6.36.0'
+//  toolVersion = '5.8.1'
   } else {
+    ruleSetFiles = files('config/pmd/pmd-5.1.xml')
     toolVersion = '5.1.3'
   }
 }
