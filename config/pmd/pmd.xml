@@ -30,7 +30,7 @@
     <rule ref="category/java/bestpractices.xml/JUnit4TestShouldUseAfterAnnotation" />
     <rule ref="category/java/bestpractices.xml/JUnit4TestShouldUseBeforeAnnotation" />
     <rule ref="category/java/bestpractices.xml/JUnit4TestShouldUseTestAnnotation" />
-    <rule ref="category/java/bestpractices.xml/JUnit5TestShouldBePackagePrivate" />
+    <rule ref="category/java/bestpractices.xml/JUnit5TestShouldBePackagePrivate" /><!-- PMD 6.35.0 and Later -->
     <rule ref="category/java/bestpractices.xml/JUnitAssertionsShouldIncludeMessage" />
     <rule ref="category/java/bestpractices.xml/JUnitTestContainsTooManyAsserts" />
     <rule ref="category/java/bestpractices.xml/JUnitTestsShouldIncludeAssert" />
@@ -138,7 +138,7 @@
     <!--<rule ref="category/java/design.xml/AvoidThrowingRawExceptionTypes" />-->
     <!--<rule ref="category/java/design.xml/AvoidUncheckedExceptionsInSignatures" />-->
     <!--<rule ref="category/java/design.xml/ClassWithOnlyPrivateConstructorsShouldBeFinal" />-->
-    <!--<rule ref="category/java/design.xml/CognitiveComplexity" />-->
+    <!--<rule ref="category/java/design.xml/CognitiveComplexity" />--><!-- PMD 6.35.0 and Later -->
     <!--<rule ref="category/java/design.xml/CollapsibleIfStatements" />-->
     <!--<rule ref="category/java/design.xml/CouplingBetweenObjects" />-->
     <!--<rule ref="category/java/design.xml/CyclomaticComplexity" />-->
@@ -157,7 +157,7 @@
     <!--<rule ref="category/java/design.xml/LogicInversion" />-->
     <!--<rule ref="category/java/design.xml/LoosePackageCoupling" />-->
     <!--<rule ref="category/java/design.xml/ModifiedCyclomaticComplexity" />--><!-- Deprecated -->
-    <!--<rule ref="category/java/design.xml/MutableStaticState" />-->
+    <!--<rule ref="category/java/design.xml/MutableStaticState" />--><!-- PMD 6.35.0 and Later -->
     <!--<rule ref="category/java/design.xml/NcssConstructorCount" />--><!-- Deprecated -->
     <!--<rule ref="category/java/design.xml/NcssCount" />-->
     <!--<rule ref="category/java/design.xml/NcssMethodCount" />--><!-- Deprecated -->
@@ -202,7 +202,7 @@
     <rule ref="category/java/errorprone.xml/AvoidLosingExceptionInformation" />
     <rule ref="category/java/errorprone.xml/AvoidMultipleUnaryOperators" />
     <rule ref="category/java/errorprone.xml/AvoidUsingOctalValues" />
-    <rule ref="category/java/errorprone.xml/BadComparison" />
+    <!--<rule ref="category/java/errorprone.xml/BadComparison" />--> <!-- Deprecated, PMD 6.35.0 and earlier, Now ComparisonWithNaN -->
     <rule ref="category/java/errorprone.xml/BeanMembersShouldSerialize" />
     <rule ref="category/java/errorprone.xml/BrokenNullCheck" />
     <rule ref="category/java/errorprone.xml/CallSuperFirst" />
@@ -215,6 +215,7 @@
     <!--<rule ref="category/java/errorprone.xml/CloneThrowsCloneNotSupportedException" />--><!-- Deprecated -->
     <rule ref="category/java/errorprone.xml/CloseResource" />
     <rule ref="category/java/errorprone.xml/CompareObjectsWithEquals" />
+    <rule ref="category/java/errorprone.xml/ComparisonWithNaN" /><!-- PMD 6.36.0 And later, Used to be BadComparison -->
     <rule ref="category/java/errorprone.xml/ConstructorCallsOverridableMethod" />
     <!--<rule ref="category/java/errorprone.xml/DataflowAnomalyAnalysis" />--><!-- Deprecated -->
     <rule ref="category/java/errorprone.xml/DetachedTestCase" />
@@ -225,7 +226,7 @@
     <rule ref="category/java/errorprone.xml/DoNotThrowExceptionInFinally" />
     <rule ref="category/java/errorprone.xml/DontImportSun" />
     <rule ref="category/java/errorprone.xml/DontUseFloatTypeForLoopIndices" />
-	<rule ref="category/java/errorprone.xml/EmptyCatchBlock" />
+    <rule ref="category/java/errorprone.xml/EmptyCatchBlock" />
     <rule ref="category/java/errorprone.xml/EmptyFinalizer" />
     <rule ref="category/java/errorprone.xml/EmptyFinallyBlock" />
     <rule ref="category/java/errorprone.xml/EmptyIfStmt" />
