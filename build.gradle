@@ -205,11 +205,16 @@ tasks.withType(JavaCompile) {
     //'-Xdiags:verbose',
     //'-Werror'
   ]
-  compileJava.options.compilerArgs += '-proc:none'
+
+  if (gradleNewerThan('4.6')) {
+    compileJava.options.compilerArgs += '-proc:none'
+  }
 }
 
 tasks.withType(Test) {
-  compileTestJava.options.compilerArgs += '-proc:none'
+  if (gradleNewerThan('4.6')) {
+    compileTestJava.options.compilerArgs += '-proc:none'
+  }
 }
 
 javadoc {
