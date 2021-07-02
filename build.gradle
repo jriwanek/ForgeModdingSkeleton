@@ -541,7 +541,8 @@ dependencies {
     exclude group: 'org.junit.jupiter', module: 'junit-jupiter-engine' // testImplementation
   }
   if (gradleNewerThan('4.6')) {
-    annotationProcessor group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.11.0'
+  // 2.3 for Java 6, 2.4-2.12.1 for Java 7
+    annotationProcessor group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.12.1'
   }
 }
 
