@@ -5,7 +5,7 @@ buildscript {
     maven {
       name = 'jcenter'
       url = 'https://jcenter.bintray.com/'
-	}
+    }
     removeIf { it instanceof MavenArtifactRepository && it.url.host == 'files.minecraftforge.net' }
     removeIf { it instanceof MavenArtifactRepository && it.url.host == 'maven.minecraftforge.net' }
     maven {
@@ -78,10 +78,10 @@ if (gradleNewerThan('4.0')) {
 }
 
 buildScan {
-  if (System.getenv('CI')) {
+  if (isOnCi()) {
     publishAlways()
   }
-//publishAlwaysIf(System.getenv('CI'))
+//publishAlwaysIf(isOnCi())
   licenseAgreementUrl = 'https://gradle.com/terms-of-service'
   licenseAgree = 'yes'
 }
@@ -140,7 +140,7 @@ if (gradleNewerThan('4.0')) {
   tasks.withType(com.github.spotbugs.SpotBugsTask) { // Gradle 4.x and earlier
 //tasks.withType(com.github.spotbugs.snom.SpotBugsTask) { // Gradle 5.x and later
     reports {
-      if (isCi()) {
+      if (isOnCi()) {
         xml.enabled = true
         html.enabled = false
       } else {
@@ -261,7 +261,7 @@ eclipse.project {
 
 idea.module {
   downloadJavadoc = true
-  //inheritOutputDirs = true
+  inheritOutputDirs = true
 }
 
 class Secrets {
@@ -426,7 +426,7 @@ minecraft {
         property 'forge.logging.console.level', 'debug'
 
         mods {
-          examplemod {
+          clientRun {
             source sourceSets.main
           }
         }
@@ -450,7 +450,7 @@ minecraft {
         property 'forge.logging.console.level', 'debug'
 
         mods {
-          examplemod {
+          serverRun {
             source sourceSets.main
           }
         }
@@ -472,7 +472,7 @@ minecraft {
         property 'forge.logging.console.level', 'debug'
 
         // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
-        args '--mod', 'examplemod', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+        args '--mod', project.modid, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
 
         mods {
           examplemod {
@@ -497,11 +497,11 @@ repositories {
     url = 'https://jcenter.bintray.com/'
   }
   removeIf { it instanceof MavenArtifactRepository && it.url.host == 'files.minecraftforge.net' }
-    removeIf { it instanceof MavenArtifactRepository && it.url.host == 'maven.minecraftforge.net' }
-    maven {
-      name = 'forge'
-      url = 'https://maven.minecraftforge.net/'
-    }
+  removeIf { it instanceof MavenArtifactRepository && it.url.host == 'maven.minecraftforge.net' }
+  maven {
+    name = 'forge'
+    url = 'https://maven.minecraftforge.net/'
+  }
   maven {
     name 'MMD'
     url 'https://maven.mcmoddev.com/'
@@ -575,7 +575,7 @@ jar {
       }
     }
     if (project.hasProperty('mod_contained_deps')) {
-        attributes 'ContainedDeps': project.mod_contained_deps
+      attributes 'ContainedDeps': project.mod_contained_deps
     }
   }
 }
@@ -954,7 +954,7 @@ curseforge {
         if (getBooleanProperty('curseforge_use_custom_display_name')) {
           displayName = "${project.name} ${project.display_version}"
         }
-        if (project.hasProperty('curseforge_requirements') || project.hasProperty('curseforge_optionals') || project.hasProperty('curseforge_embeddeds') || project.hasProperty('curseforge_tools') || project.hasProperty('curseforge_incompatibles') || project.hasProperty('curseforge_includes')) {
+        if (project.hasProperty('curseforge_requirements') || project.hasProperty('curseforge_optionals') || project.hasProperty('curseforge_embeddeds') || project.hasProperty('curseforge_tools') || project.hasProperty('curseforge_incompatibles')) {
           relations {
             if (project.hasProperty('curseforge_requirements')) {
               final def requirements = "${project.curseforge_requirements}".split(', ')
@@ -1144,7 +1144,7 @@ static boolean gradleNewerThan(final String version) {
   return GradleVersion.current() >= GradleVersion.version(version)
 }
 
-static boolean isCi() {
+static boolean isOnCi() {
   return System.getenv('CI')
 }
 
