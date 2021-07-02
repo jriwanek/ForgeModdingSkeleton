@@ -299,11 +299,11 @@ if (secretFile.exists()) {
 
 minecraft {
   if (isFG3()) {
-    mappings channel: project.mcp_mappings_channel, version: project.mcp_mappings_version
+    mappings channel: project.mappings_channel, version: project.mappings_version
   } else {
     version = project.forge_mc_version + '-' + project.forge_version
     if ((project.forge_mc_version != "1.6.4") && (project.forge_mc_version != "1.7.2")) {
-      mappings = project.mcp_mappings_version
+      mappings = project.mappings_version
     }
 
     if ((project.fg_version != '1.0-SNAPSHOT') && (project.fg_version != '1.1-SNAPSHOT')) {
