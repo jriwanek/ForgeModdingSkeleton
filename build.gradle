@@ -373,10 +373,21 @@ minecraft {
 
   if (project.hasProperty('mc_resolution')) {
     final def res = [
-                     '480p': [640, 480],
-                     '576p': [640, 576],
+                     'qvga': [320, 240],
+                     'vga': [640, 480],
+                     'pal': [768, 576],
+					 'svga': [800, 600],
+					 'xga': [1024, 768],
                      '720p': [1280, 720],
+					 'sxga': [1280, 1024],
+					 'laptop': [1366, 768],
+					 'sxgaplus': [1400, 1050],
+					 'uxga': [1600, 1200],
                      '1080p': [1920, 1080],
+					 'qxga': [2048, 1536],
+					 '2k': [2560, 1440],
+					 'qsxga': [2560, 2048],
+					 '4k': [3840, 2160],
                      'custom': [project.findProperty('mc_custom_resolution_width'), project.findProperty('mc_custom_resolution_height')]]
     final def choice = res?.get(project.mc_resolution)
     if (choice != null) {
