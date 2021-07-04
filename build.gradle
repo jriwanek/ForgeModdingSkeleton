@@ -774,7 +774,7 @@ if (!isFG2()) {
 def signType
 if (isFG1()) {
   signType = Jar
-} else {
+} else if (!isFG3()) {
   def canSignJar = project.hasProperty('keyStore') &&
                    project.hasProperty('keyStorePass') &&
                    project.hasProperty('keyStoreKeyPass') &&
@@ -895,7 +895,7 @@ if (isFG1()) {
   }
 }
 
-if (getBooleanProperty('do_sign_jar') && (!isFG1())) {
+if (getBooleanProperty('do_sign_jar') && (!isFG1()) && (!isFG3())) {
   build.dependsOn signJar
   if (getBooleanProperty('create_api_jar') && !isFG3()) {
     build.dependsOn signApiJar
