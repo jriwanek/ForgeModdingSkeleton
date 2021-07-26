@@ -34,17 +34,17 @@ jobs:
 #      - run:
 #          name: Set up the workspace for ci build
 #          command: |
-#           ./gradlew setupCiWorkspace
+#           ./gradlew setupCiWorkspace -S
 
       - run:
           name: Clean the workspace ready for a fresh build.
           command: |
-           ./gradlew clean
+           ./gradlew clean -S
 
       - run:
           name: Attempt to build the mod.
           command: |
-           ./gradlew build
+           ./gradlew build -S
 
       - store_artifacts:
           path: ./build/libs
@@ -55,4 +55,4 @@ jobs:
           key: v1-dependencies-{{ checksum "build.gradle" }}
 
       # run tests!
-      - run: ./gradlew test
+      - run: ./gradlew test -S
