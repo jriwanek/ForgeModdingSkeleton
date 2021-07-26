@@ -77,7 +77,7 @@ public class ExampleMod {
     private void processIMC(final InterModProcessEvent event) {
         // some example code to receive and process InterModComms from other mods
         LOGGER.info("Got IMC {}", event.getIMCStream().
-                map(imcMap -> imcMap.getMessageSupplier().get()).
+                map(imcMap -> imcMap.messageSupplier().get()).
                 collect(Collectors.toList()));
     }
 
