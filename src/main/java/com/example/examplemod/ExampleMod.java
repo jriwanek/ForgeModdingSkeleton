@@ -93,7 +93,7 @@ public class ExampleMod {
     }
 
     // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing
-	// to the MOD Event bus for receiving Registry Events)
+    // to the MOD Event bus for receiving Registry Events)
     /**
      *
      */
