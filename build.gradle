@@ -790,7 +790,7 @@ if (!isFG2()) {
 }
 
 def signType
-if (isFG1()) {
+if (isFG1() || isFG5()) {
   signType = Jar
 } else {
   def canSignJar = project.hasProperty('keyStore') &&
@@ -1315,6 +1315,16 @@ boolean isFG2() {
 
 boolean isFG3() {
   return (!isFG1() && !isFG2())
+}
+
+boolean isFG4() {
+   return true
+//  return (!isFG1() && !isFG2())
+}
+
+boolean isFG5() {
+   return false
+//  return (!isFG1() && !isFG2())
 }
 
 static boolean gradleOlderThan(final String version) {
