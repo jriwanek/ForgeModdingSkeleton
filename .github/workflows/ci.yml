@@ -11,7 +11,7 @@ jobs:
       - uses: actions/setup-java@v2
         with:
           distribution: 'adopt'
-          java-version: '16'
+          java-version: '8'
           java-package: jdk
           check-latest: true
       - run: chmod a+x gradlew

@@ -5,7 +5,7 @@ addons:
   apt:
     update: true
     packages:
-#      - oracle-java16-installer
+#      - oracle-java8-installer
 git:
   quiet: true
 arch: amd64
@@ -19,7 +19,7 @@ cache:
 notifications:
   email: false
 jdk:
-  - oraclejdk16
+  - oraclejdk8
 before_install: skip
 install: skip
 before_script:
