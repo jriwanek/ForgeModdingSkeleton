@@ -5,7 +5,7 @@ buildscript {
     maven {
       name = 'jcenter'
       url = 'https://jcenter.bintray.com/'
-	}
+    }
     removeIf { it instanceof MavenArtifactRepository && it.url.host == 'files.minecraftforge.net' }
     removeIf { it instanceof MavenArtifactRepository && it.url.host == 'maven.minecraftforge.net' }
     maven {
@@ -81,10 +81,10 @@ import net.minecraftforge.gradle.common.task.SignJar
 
 gradleEnterprise {
   buildScan {
-    if (System.getenv('CI')) {
+    if (isOnCI()) {
       publishAlways()
     }
-//  publishAlwaysIf(System.getenv('CI'))
+//  publishAlwaysIf(isOnCI())
     termsOfServiceUrl = 'https://gradle.com/terms-of-service'
     termsOfServiceAgree = 'yes'
   }
@@ -121,7 +121,7 @@ project.afterEvaluate {
 }
 
 // Only works with JUnit Platform Launcher 1.2.0 and earlier
-if (gradleOlderThan('4.6')) {
+if (gradleNewerThan('3.5') && gradleOlderThan('4.6')) {
   junitPlatform {
     // platformVersion '1.2.0'
     // logManager 'org.apache.logging.log4j.jul.LogManager'
@@ -144,7 +144,7 @@ if (gradleNewerThan('4.0')) {
 //tasks.withType(com.github.spotbugs.SpotBugsTask) { // Gradle 4.x and earlier
   tasks.withType(com.github.spotbugs.snom.SpotBugsTask) { // Gradle 5.x and later
     reports {
-      if (isCi()) {
+      if (isOnCI()) {
         xml.enabled = true
         html.enabled = false
       } else {
@@ -189,14 +189,15 @@ pmd {
   }
   ruleSets = [ ]
   if (gradleNewerThan('5.6')) {
-    ruleSetFiles = files('config/pmd/pmd.xml')
-    toolVersion = '6.36.0'
     incrementalAnalysis = true
-  } else if (gradleNewerThan('2.4')) {
-    ruleSetFiles = files('config/pmd/pmd-5.8.xml')
-    toolVersion = '5.8.1'
+  }
+  if (gradleNewerThan('2.4')) {
+    ruleSetFiles = files('config/pmd/pmd.xml')
+//  ruleSetFiles = files('config/pmd/pmd-5.8.xml')
+    toolVersion = '6.36.0'
+//  toolVersion = '5.8.1'
   } else {
-    ruleSetFiles = files('config/pmd/pmd-5.8.xml')
+    ruleSetFiles = files('config/pmd/pmd-5.1.xml')
     toolVersion = '5.1.3'
   }
 }
@@ -208,11 +209,16 @@ tasks.withType(JavaCompile) {
     //'-Xdiags:verbose',
     //'-Werror'
   ]
-  compileJava.options.compilerArgs += '-proc:none'
+
+  if (gradleNewerThan('4.6')) {
+    compileJava.options.compilerArgs += '-proc:none'
+  }
 }
 
 tasks.withType(Test) {
-  compileTestJava.options.compilerArgs += '-proc:none'
+  if (gradleNewerThan('4.6')) {
+    compileTestJava.options.compilerArgs += '-proc:none'
+  }
 }
 
 javadoc {
@@ -264,7 +270,7 @@ eclipse.project {
 
 idea.module {
   downloadJavadoc = true
-  //inheritOutputDirs = true
+  inheritOutputDirs = true
 }
 
 class Secrets {
@@ -302,11 +308,11 @@ if (secretFile.exists()) {
 
 minecraft {
   if (isFG3()) {
-    mappings channel: project.mcp_mappings_channel, version: project.mcp_mappings_version
+    mappings channel: project.mappings_channel, version: project.mappings_version
   } else {
     version = project.forge_mc_version + '-' + project.forge_version
     if ((project.forge_mc_version != "1.6.4") && (project.forge_mc_version != "1.7.2")) {
-      mappings = project.mcp_mappings_version
+      mappings = project.mappings_version
     }
 
     if ((project.fg_version != '1.0-SNAPSHOT') && (project.fg_version != '1.1-SNAPSHOT')) {
@@ -371,10 +377,21 @@ minecraft {
 
   if (project.hasProperty('mc_resolution')) {
     final def res = [
-                     '480p': [640, 480],
-                     '576p': [640, 576],
+                     'qvga': [320, 240],
+                     'vga': [640, 480],
+                     'pal': [768, 576],
+					 'svga': [800, 600],
+					 'xga': [1024, 768],
                      '720p': [1280, 720],
+					 'sxga': [1280, 1024],
+					 'laptop': [1366, 768],
+					 'sxgaplus': [1400, 1050],
+					 'uxga': [1600, 1200],
                      '1080p': [1920, 1080],
+					 'qxga': [2048, 1536],
+					 '2k': [2560, 1440],
+					 'qsxga': [2560, 2048],
+					 '4k': [3840, 2160],
                      'custom': [project.findProperty('mc_custom_resolution_width'), project.findProperty('mc_custom_resolution_height')]]
     final def choice = res?.get(project.mc_resolution)
     if (choice != null) {
@@ -429,7 +446,7 @@ minecraft {
         property 'forge.logging.console.level', 'debug'
 
         mods {
-          examplemod {
+          clientRun {
             source sourceSets.main
           }
         }
@@ -453,7 +470,7 @@ minecraft {
         property 'forge.logging.console.level', 'debug'
 
         mods {
-          examplemod {
+          serverRun {
             source sourceSets.main
           }
         }
@@ -475,7 +492,7 @@ minecraft {
         property 'forge.logging.console.level', 'debug'
 
         // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
-        args '--mod', 'examplemod', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+        args '--mod', project.modid, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
 
         mods {
           examplemod {
@@ -500,11 +517,11 @@ repositories {
     url = 'https://jcenter.bintray.com/'
   }
   removeIf { it instanceof MavenArtifactRepository && it.url.host == 'files.minecraftforge.net' }
-    removeIf { it instanceof MavenArtifactRepository && it.url.host == 'maven.minecraftforge.net' }
-    maven {
-      name = 'forge'
-      url = 'https://maven.minecraftforge.net/'
-    }
+  removeIf { it instanceof MavenArtifactRepository && it.url.host == 'maven.minecraftforge.net' }
+  maven {
+    name = 'forge'
+    url = 'https://maven.minecraftforge.net/'
+  }
   maven {
     name 'MMD'
     url 'https://maven.mcmoddev.com/'
@@ -528,31 +545,48 @@ dependencies {
     exclude group: 'org.junit.jupiter', module: 'junit-jupiter-engine'
   }
   if (gradleNewerThan('4.6')) {
-    annotationProcessor group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.11.0'
+    // 2.3 for Java 6, 2.4-2.12.1 for Java 7
+    annotationProcessor group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.12.1'
   }
 }
 
 processResources {
+  inputs.property 'version', project.short_version
+  inputs.property 'mcversion', project.forge_mc_version + '-' + project.forge_version
+
+  from (sourceSets.main.resources.srcDirs) {
+    include 'mcmod.info'
+    expand 'version': project.short_version, 'mcversion': project.forge_mc_version + '-' + project.forge_version
+  }
+
+  from (sourceSets.main.resources.srcDirs) {
+    include 'pack.mcmeta'
+    expand 'pack_format': '6', 'description': 'The default look of Example Mod'
+  }
+
+/*
+  from (sourceSets.main.resources.srcDirs) {
+    include 'META-INF/mods.toml'
+    expand 'version': project.short_version, 'mod_name': project.name, 'mod_download': project.pom_url, 'mod_credits': '', 'mod_authors': '', 'mod_description': project.description
+  }
+*/
+
+  from(sourceSets.main.resources.srcDirs) {
+    exclude 'mcmod.info'
+    exclude 'pack.mcmeta'
+//  exclude 'META-INF/mods.toml'
+  }
+
   if (!isFG3()) {
-    inputs.property 'version', project.short_version
-    inputs.property 'mcversion', project.minecraft.version
-
-    from (sourceSets.main.resources.srcDirs) {
-      include 'mcmod.info'
-      expand 'version': project.short_version, 'mcversion': project.minecraft.version
-    }
-
-    from (sourceSets.main.resources.srcDirs) {
-      exclude 'mcmod.info'
-    }
-
     rename '(.+_at.cfg)', 'META-INF/$1'
   }
 }
 
 jar {
-  //from sourceSets.api.output
-  //from sourceSets.main.output
+//description = 'Creates a JAR.'
+//classifier = ''
+//from sourceSets.api.output
+//from sourceSets.main.output
 
   manifest {
     mainAttributes(
@@ -560,12 +594,15 @@ jar {
       'Timestamp': System.currentTimeMillis(),
       'Specification-Title': project.modid,
       'Specification-Vendor': project.vendor,
-      'Specification-Version': '1',
+      'Specification-Version': project.version,
       'Implementation-Title': project.archivesBaseName,
       'Implementation-Version': project.version,
-      'Implementation-Vendor' : project.vendor,
+      'Implementation-Vendor': project.vendor,
       'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
       'Built-On-Java': "${System.getProperty('java.vm.version')} (${System.getProperty('java.vm.vendor')})",
+      'Built-On-Minecraft': project.forge_mc_version,
+      'Built-On-Forge': project.forge_version,
+      'Built-On-Mapping': project.mappings_version,
       'Built-On': "${project.forge_mc_version}-${project.forge_version}"
     )
     if (!isFG3()) {
@@ -578,37 +615,40 @@ jar {
       }
     }
     if (project.hasProperty('mod_contained_deps')) {
-        attributes 'ContainedDeps': project.mod_contained_deps
+      attributes 'ContainedDeps': project.mod_contained_deps
     }
   }
 }
 
 if (!isFG3()) {
-task apiJar(type: Jar) {
-  onlyIf {
-    getBooleanProperty('create_api_jar')
-  }
+  task apiJar(type: Jar) {
+    onlyIf {
+      getBooleanProperty('create_api_jar')
+    }
 
-  description = 'Creates a JAR containing the API Classes.'
-  classifier = 'api'
-  from apiClasses
-  // from sourceSets.api.output
-  manifest {
-    mainAttributes(
-      'Maven-Artifact': "${project.group}:${project.archivesBaseName}:${project.version}:api",
-      'Timestamp': System.currentTimeMillis(),
-      'Specification-Title': project.modid,
-      'Specification-Vendor': project.vendor,
-      'Specification-Version': '1',
-      'Implementation-Title': project.archivesBaseName + '-api',
-      'Implementation-Version': project.version,
-      'Implementation-Vendor' : project.vendor,
-      'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-      'Built-On-Java': "${System.getProperty('java.vm.version')} (${System.getProperty('java.vm.vendor')})",
-      'Built-On': "${project.forge_mc_version}-${project.forge_version}"
-    )
+    description = 'Creates a JAR containing the API Classes.'
+    classifier = 'api'
+    from apiClasses
+//  from sourceSets.api.output
+    manifest {
+      mainAttributes(
+        'Maven-Artifact': "${project.group}:${project.archivesBaseName}:${project.version}:api",
+        'Timestamp': System.currentTimeMillis(),
+        'Specification-Title': project.modid,
+        'Specification-Vendor': project.vendor,
+        'Specification-Version': project.version,
+        'Implementation-Title': project.archivesBaseName + '-api',
+        'Implementation-Version': project.version,
+        'Implementation-Vendor': project.vendor,
+        'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+        'Built-On-Java': "${System.getProperty('java.vm.version')} (${System.getProperty('java.vm.vendor')})",
+        'Built-On-Minecraft': project.forge_mc_version,
+        'Built-On-Forge': project.forge_version,
+        'Built-On-Mapping': project.mappings_version,
+        'Built-On': "${project.forge_mc_version}-${project.forge_version}"
+      )
+    }
   }
-}
 }
 
 task deobfJar(type: Jar) {
@@ -625,48 +665,70 @@ task deobfJar(type: Jar) {
       'Timestamp': System.currentTimeMillis(),
       'Specification-Title': project.modid,
       'Specification-Vendor': project.vendor,
-      'Specification-Version': '1',
+      'Specification-Version': project.version,
       'Implementation-Title': project.archivesBaseName + '-deobf',
       'Implementation-Version': project.version,
-      'Implementation-Vendor' : project.vendor,
+      'Implementation-Vendor': project.vendor,
       'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
       'Built-On-Java': "${System.getProperty('java.vm.version')} (${System.getProperty('java.vm.vendor')})",
+      'Built-On-Minecraft': project.forge_mc_version,
+      'Built-On-Forge': project.forge_version,
+      'Built-On-Mapping': project.mappings_version,
       'Built-On': "${project.forge_mc_version}-${project.forge_version}"
     )
-    if (project.hasProperty('mod_at_file')) {
-      attributes 'FMLAT': project.mod_at_file
+    if (!isFG3()) {
+      if (project.hasProperty('core_plugin')) {
+        attributes 'FMLCorePluginContainsFMLMod': 'true'
+        attributes 'FMLCorePlugin': project.core_plugin
+      }
+      if (project.hasProperty('mod_at_file')) {
+        attributes 'FMLAT': project.mod_at_file
+      }
     }
-    if (project.hasProperty('core_plugin')) {
-      attributes 'FMLCorePlugin': project.core_plugin
+    if (project.hasProperty('mod_contained_deps')) {
+      attributes 'ContainedDeps': project.mod_contained_deps
     }
   }
 }
 
-if (!isFG2()) {
-task sourceJar(type: Jar, dependsOn: classes) {
+task devJar(type: Jar) {
   onlyIf {
-    getBooleanProperty('create_source_jar')
+    getBooleanProperty('create_dev_jar')
   }
 
-  description = 'Creates a JAR containing the source code.'
-  classifier = 'sources'
-  from sourceSets.main.allSource
+  description = 'Creates a JAR containing the non-obfuscated compiled code.'
+  classifier = 'dev'
+  from sourceSets.main.output
   manifest {
     mainAttributes(
-      'Maven-Artifact': "${project.group}:${project.archivesBaseName}:${project.version}:sources",
+      'Maven-Artifact': "${project.group}:${project.archivesBaseName}:${project.version}:dev",
       'Timestamp': System.currentTimeMillis(),
-      'Specification-Title': 'examplemod',
-      'Specification-Vendor': 'mcmoddev',
-      'Specification-Version': '1',
-      'Implementation-Title': project.name + '-sources',
+      'Specification-Title': project.modid,
+      'Specification-Vendor': project.vendor,
+      'Specification-Version': project.version,
+      'Implementation-Title': project.archivesBaseName + '-dev',
       'Implementation-Version': project.version,
-      'Implementation-Vendor' :'mcmoddev',
+      'Implementation-Vendor': project.vendor,
       'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
       'Built-On-Java': "${System.getProperty('java.vm.version')} (${System.getProperty('java.vm.vendor')})",
+      'Built-On-Minecraft': project.forge_mc_version,
+      'Built-On-Forge': project.forge_version,
+      'Built-On-Mapping': project.mappings_version,
       'Built-On': "${project.forge_mc_version}-${project.forge_version}"
     )
+    if (!isFG3()) {
+      if (project.hasProperty('core_plugin')) {
+        attributes 'FMLCorePluginContainsFMLMod': 'true'
+        attributes 'FMLCorePlugin': project.core_plugin
+      }
+      if (project.hasProperty('mod_at_file')) {
+        attributes 'FMLAT': project.mod_at_file
+      }
+    }
+    if (project.hasProperty('mod_contained_deps')) {
+      attributes 'ContainedDeps': project.mod_contained_deps
+    }
   }
-}
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
@@ -677,70 +739,111 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
   description = 'Creates a JAR containing the JavaDocs.'
   classifier = 'javadoc'
   from javadoc.getDestinationDir()
-  manifest.mainAttributes(
-    'Maven-Artifact': "${project.group}:${project.archivesBaseName}:${project.version}:javadoc",
-    'Timestamp': System.currentTimeMillis(),
-    'Specification-Title': project.modid,
-    'Specification-Vendor': project.vendor,
-    'Specification-Version': '1',
-    'Implementation-Title': project.archivesBaseName + '-javadoc',
-    'Implementation-Version': project.version,
-    'Implementation-Vendor' : project.vendor,
-    'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-    'Built-On-Java': "${System.getProperty('java.vm.version')} (${System.getProperty('java.vm.vendor')})",
-    'Built-On': "${project.forge_mc_version}-${project.forge_version}"
-  )
+  manifest {
+    mainAttributes(
+      'Maven-Artifact': "${project.group}:${project.archivesBaseName}:${project.version}:javadoc",
+      'Timestamp': System.currentTimeMillis(),
+      'Specification-Title': project.modid,
+      'Specification-Vendor': project.vendor,
+      'Specification-Version': project.version,
+      'Implementation-Title': project.archivesBaseName + '-javadoc',
+      'Implementation-Version': project.version,
+      'Implementation-Vendor': project.vendor,
+      'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+      'Built-On-Java': "${System.getProperty('java.vm.version')} (${System.getProperty('java.vm.vendor')})",
+      'Built-On-Minecraft': project.forge_mc_version,
+      'Built-On-Forge': project.forge_version,
+      'Built-On-Mapping': project.mappings_version,
+      'Built-On': "${project.forge_mc_version}-${project.forge_version}"
+    )
+  }
+}
+
+if (!isFG2()) {
+  task sourceJar(type: Jar, dependsOn: classes) {
+    onlyIf {
+      getBooleanProperty('create_source_jar')
+    }
+
+    description = 'Creates a JAR containing the source code.'
+    classifier = 'sources'
+    from sourceSets.main.allSource
+    manifest {
+      mainAttributes(
+        'Maven-Artifact': "${project.group}:${project.archivesBaseName}:${project.version}:sources",
+        'Timestamp': System.currentTimeMillis(),
+        'Specification-Title': project.modid,
+        'Specification-Vendor': project.vendor,
+        'Specification-Version': project.version,
+        'Implementation-Title': project.archivesBaseName + '-sources',
+        'Implementation-Version': project.version,
+        'Implementation-Vendor': project.vendor,
+        'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+        'Built-On-Java': "${System.getProperty('java.vm.version')} (${System.getProperty('java.vm.vendor')})",
+        'Built-On-Minecraft': project.forge_mc_version,
+        'Built-On-Forge': project.forge_version,
+        'Built-On-Mapping': project.mappings_version,
+        'Built-On': "${project.forge_mc_version}-${project.forge_version}"
+      )
+    }
+  }
 }
 
 def signType
-if (isFG1()) {
+if (isFG1() || isFG5()) {
   signType = Jar
 } else {
+  def canSignJar = project.hasProperty('keyStore') &&
+                   project.hasProperty('keyStorePass') &&
+                   project.hasProperty('keyStoreKeyPass') &&
+                   project.hasProperty('keyStoreAlias')
   signType = SignJar
 
   task signJar(type: SignJar, dependsOn: jar) {
     onlyIf {
       getBooleanProperty('do_sign_jar') &&
-      project.hasProperty('keyStore')
+      canSignJar
     }
 
-    description = 'Sign the Main JAR'
-    inputFile = jar.archivePath
-    outputFile = jar.archivePath
+    description = 'Sign the mod jar'
 
     keyStore = project.findProperty('keyStore')
     alias = project.findProperty('keyStoreAlias')
     storePass = project.findProperty('keyStorePass')
     keyPass = project.findProperty('keyStoreKeyPass')
+
+    inputFile = jar.archivePath
+    outputFile = jar.archivePath
   }
 
   if (!isFG3()) {
-  task signApiJar(type: SignJar) {
-    onlyIf {
-      getBooleanProperty('create_api_jar') &&
-      getBooleanProperty('do_sign_jar') &&
-      project.hasProperty('keyStore')
+    task signApiJar(type: SignJar) {
+      onlyIf {
+        getBooleanProperty('create_api_jar') &&
+        getBooleanProperty('do_sign_jar') &&
+        canSignJar
+      }
+
+      description = 'Sign the API jar'
+      keyStore = project.findProperty('keyStore')
+      alias = project.findProperty('keyStoreAlias')
+      storePass = project.findProperty('keyStorePass')
+      keyPass = project.findProperty('keyStoreKeyPass')
+
+      inputFile = apiJar.archivePath
+      outputFile = apiJar.archivePath
     }
-
-    description = 'Sign the API JAR'
-    keyStore = project.findProperty('keyStore')
-    alias = project.findProperty('keyStoreAlias')
-    storePass = project.findProperty('keyStorePass')
-    keyPass = project.findProperty('keyStoreKeyPass')
-
-    inputFile = apiJar.archivePath
-    outputFile = apiJar.archivePath
-  }
   }
 
   task signDeobfJar(type: SignJar) {
     onlyIf {
       getBooleanProperty('create_deobf_jar') &&
       getBooleanProperty('do_sign_jar') &&
-      project.hasProperty('keyStore')
+      canSignJar
     }
 
-    description = 'Sign the deobf JAR'
+    description = 'Sign the deobf jar'
+
     keyStore = project.findProperty('keyStore')
     alias = project.findProperty('keyStoreAlias')
     storePass = project.findProperty('keyStorePass')
@@ -750,14 +853,51 @@ if (isFG1()) {
     outputFile = deobfJar.archivePath
   }
 
+  task signDevJar(type: SignJar) {
+    onlyIf {
+      getBooleanProperty('create_dev_jar') &&
+      getBooleanProperty('do_sign_jar') &&
+      canSignJar
+    }
+
+    description = 'Sign the dev jar'
+
+    keyStore = project.findProperty('keyStore')
+    alias = project.findProperty('keyStoreAlias')
+    storePass = project.findProperty('keyStorePass')
+    keyPass = project.findProperty('keyStoreKeyPass')
+
+    inputFile = devJar.archivePath
+    outputFile = devJar.archivePath
+  }
+
+  task signJavadocJar(type: SignJar) {
+    onlyIf {
+      getBooleanProperty('create_javadoc_jar') &&
+      getBooleanProperty('do_sign_jar') &&
+      canSignJar
+    }
+
+    description = 'Sign the javadoc jar'
+
+    keyStore = project.findProperty('keyStore')
+    alias = project.findProperty('keyStoreAlias')
+    storePass = project.findProperty('keyStorePass')
+    keyPass = project.findProperty('keyStoreKeyPass')
+
+    inputFile = javadocJar.archivePath
+    outputFile = javadocJar.archivePath
+  }
+
   task signSourceJar(type: SignJar) {
     onlyIf {
       getBooleanProperty('create_source_jar') &&
       getBooleanProperty('do_sign_jar') &&
-      project.hasProperty('keyStore')
+      canSignJar
     }
 
-    description = 'Sign the Sources JAR'
+    description = 'Sign the sources jar'
+
     keyStore = project.findProperty('keyStore')
     alias = project.findProperty('keyStoreAlias')
     storePass = project.findProperty('keyStorePass')
@@ -771,22 +911,6 @@ if (isFG1()) {
 //    outputFile = sourcesJar.archivePath
 //  }
   }
-
-  task signJavadocJar(type: SignJar) {
-    onlyIf {
-      getBooleanProperty('create_javadoc_jar') &&
-      getBooleanProperty('do_sign_jar') &&
-      project.hasProperty('keyStore')
-    }
-
-    keyStore = project.findProperty('keyStore')
-    alias = project.findProperty('keyStoreAlias')
-    storePass = project.findProperty('keyStorePass')
-    keyPass = project.findProperty('keyStoreKeyPass')
-
-    inputFile = javadocJar.archivePath
-    outputFile = javadocJar.archivePath
-  }
 }
 
 if (getBooleanProperty('do_sign_jar') && (!isFG1())) {
@@ -797,15 +921,18 @@ if (getBooleanProperty('do_sign_jar') && (!isFG1())) {
   if (getBooleanProperty('create_deobf_jar')) {
     build.dependsOn signDeobfJar
   }
+  if (getBooleanProperty('create_dev_jar')) {
+    build.dependsOn signDevJar
+  }
+  if (getBooleanProperty('create_javadoc_jar')) {
+    build.dependsOn signJavadocJar
+  }
   if (getBooleanProperty('create_source_jar')) {
 //  if (!isFG3()) {
       build.dependsOn signSourceJar
 //  } else {
 //    build.dependsOn signSourcesJar
 //  }
-  }
-  if (getBooleanProperty('create_javadoc_jar')) {
-    build.dependsOn signJavadocJar
   }
 }
 
@@ -825,15 +952,18 @@ artifacts {
   if (getBooleanProperty('create_deobf_jar')) {
     archives deobfJar
   }
+  if (getBooleanProperty('create_dev_jar')) {
+    archives devJar
+  }
+  if (getBooleanProperty('create_javadoc_jar')) {
+    archives javadocJar
+  }
   if (getBooleanProperty('create_source_jar')) {
 //  if (!isFG3()) {
       archives sourceJar
 //  } else {
 //    archives sourcesJar
 //  }
-  }
-  if (getBooleanProperty('create_javadoc_jar')) {
-    archives javadocJar
   }
 }
 
@@ -844,6 +974,9 @@ artifacts {
 //  builtBy 'reobfJar'
 //}
 
+def maven_username = secret.username
+def maven_password = secret.password
+def maven_url = secret.url
 publishing {
   publications {
     mavenJava(MavenPublication) {
@@ -855,17 +988,6 @@ publishing {
       artifactId project.archivesBaseName
       version project.version
       from components.java
-      if (getBooleanProperty('create_source_jar')) {
-//      if (!isFG3()) {
-          artifact sourceJar {
-            classifier 'sources'
-          }
-//      } else {
-//        artifact sourcesJar {
-//          classifier 'sources'
-//        }
-//      }
-      }
       if (getBooleanProperty('create_api_jar') && !isFG3()) {
         artifact apiJar {
           classifier 'api'
@@ -876,10 +998,26 @@ publishing {
           classifier 'deobf'
         }
       }
+      if (getBooleanProperty('create_dev_jar')) {
+        artifact devJar {
+          classifier 'dev'
+        }
+      }
       if (getBooleanProperty('create_javadoc_jar')) {
         artifact javadocJar {
           classifier 'javadoc'
         }
+      }
+      if (getBooleanProperty('create_source_jar')) {
+//      if (!isFG3()) {
+          artifact sourceJar {
+            classifier 'sources'
+          }
+//      } else {
+//        artifact sourcesJar {
+//          classifier 'sources'
+//        }
+//      }
       }
       if (getBooleanProperty('pom_information') && gradleNewerThan('4.8')) {
         pom {
@@ -931,14 +1069,14 @@ publishing {
   }
   repositories {
     maven {
-      if ((secret.username != '') && (secret.password != '')) {
+      if ((maven_username != '') && (maven_password != '')) {
         credentials {
-          username secret.username
-          password secret.password
+          username maven_username
+          password maven_password
         }
       }
-      if (secret.url != '') {
-        url secret.url
+      if (maven_url != '') {
+        url maven_url
       } else {
         url "file:///${project.buildDir}/repo"
         //TODO: From Forge MDK
@@ -948,11 +1086,14 @@ publishing {
   }
 }
 
+def curseforge_api_key = secret.curseforgeAPIKey
 curseforge {
-  if (project.hasProperty('curseforge_project_id') && getBooleanProperty('curseforge_do_upload')) {
-    apiKey = secret.curseforgeAPIKey
+  if (project.hasProperty('curseforge_project_id') &&
+      project.hasProperty('curseforge_api_key') &&
+      getBooleanProperty('curseforge_do_upload')) {
+    apiKey = findProperty('curseforge_api_key')
     project {
-      id = project.curseforge_project_id
+      id = findProperty('curseforge_project_id')
       if (project.hasProperty('curseforge_changelog_filename')) {
         changelog = file(project.curseforge_changelog_filename)
       } else {
@@ -960,8 +1101,13 @@ curseforge {
       }
       if (project.hasProperty('curseforge_changelog_type')) {
         changelogType = project.curseforge_changelog_type
+      } else {
+        changelogType = 'markdown'
       }
-      if ((project.hasProperty('curseforge_release_type')) && ((project.curseforge_release_type == 'alpha') || (project.curseforge_release_type == 'beta') || (project.curseforge_release_type == 'release'))) {
+      if ((project.hasProperty('curseforge_release_type')) &&
+         ((project.curseforge_release_type == 'alpha') ||
+          (project.curseforge_release_type == 'beta') ||
+          (project.curseforge_release_type == 'release'))) {
         releaseType = project.curseforge_release_type
       } else {
         releaseType = 'alpha'
@@ -976,7 +1122,11 @@ curseforge {
         if (getBooleanProperty('curseforge_use_custom_display_name')) {
           displayName = "${project.name} ${project.display_version}"
         }
-        if (project.hasProperty('curseforge_requirements') || project.hasProperty('curseforge_optionals') || project.hasProperty('curseforge_embeddeds') || project.hasProperty('curseforge_tools') || project.hasProperty('curseforge_incompatibles') || project.hasProperty('curseforge_includes')) {
+        if (project.hasProperty('curseforge_requirements') ||
+            project.hasProperty('curseforge_optionals') ||
+            project.hasProperty('curseforge_embeddeds') ||
+            project.hasProperty('curseforge_tools') ||
+            project.hasProperty('curseforge_incompatibles')) {
           relations {
             if (project.hasProperty('curseforge_requirements')) {
               final def requirements = "${project.curseforge_requirements}".split(', ')
@@ -1018,6 +1168,27 @@ curseforge {
           }
         }
       }
+      if (getBooleanProperty('create_deobf_jar')) {
+        addArtifact(deobfJar) {
+          if (getBooleanProperty('curseforge_use_custom_display_name')) {
+            displayName = "${project.name} ${project.display_version} (deobf)"
+          }
+        }
+      }
+      if (getBooleanProperty('create_dev_jar')) {
+        addArtifact(devJar) {
+          if (getBooleanProperty('curseforge_use_custom_display_name')) {
+            displayName = "${project.name} ${project.display_version} (dev)"
+          }
+        }
+      }
+      if (getBooleanProperty('create_javadoc_jar')) {
+        addArtifact(javadocJar) {
+          if (getBooleanProperty('curseforge_use_custom_display_name')) {
+            displayName = "${project.name} ${project.display_version} Javadoc"
+          }
+        }
+      }
       if (getBooleanProperty('create_source_jar')) {
 //      if (!isFG3()) {
           addArtifact(sourceJar) {
@@ -1033,20 +1204,6 @@ curseforge {
 //        }
 //      }
       }
-      if (getBooleanProperty('create_deobf_jar')) {
-        addArtifact(deobfJar) {
-          if (getBooleanProperty('curseforge_use_custom_display_name')) {
-            displayName = "${project.name} ${project.display_version} Development"
-          }
-        }
-      }
-      if (getBooleanProperty('create_javadoc_jar')) {
-        addArtifact(javadocJar) {
-          if (getBooleanProperty('curseforge_use_custom_display_name')) {
-            displayName = "${project.name} ${project.display_version} Javadoc"
-          }
-        }
-      }
     }
     options {
       debug = getBooleanProperty('curseforge_debug')
@@ -1055,6 +1212,8 @@ curseforge {
       javaIntegration = true
       forgeGradleIntegration = true
     }
+  } else {
+    project.logger.lifecycle('Skipping CurseForge module. No auth info provided.')
   }
 }
 
@@ -1158,6 +1317,16 @@ boolean isFG3() {
   return (!isFG1() && !isFG2())
 }
 
+boolean isFG4() {
+   return true
+//  return (!isFG1() && !isFG2())
+}
+
+boolean isFG5() {
+   return false
+//  return (!isFG1() && !isFG2())
+}
+
 static boolean gradleOlderThan(final String version) {
   return GradleVersion.current() < GradleVersion.version(version)
 }
@@ -1166,7 +1335,7 @@ static boolean gradleNewerThan(final String version) {
   return GradleVersion.current() >= GradleVersion.version(version)
 }
 
-static boolean isCi() {
+static boolean isOnCI() {
   return System.getenv('CI')
 }
 
@@ -1198,3 +1367,43 @@ checkerFramework {
   ]
 }
 */
+
+if (gradleNewerThan('3.3')) {
+  task writeServerProperties(type: WriteProperties) {
+    description = 'Configures the server with default properties. Eg. Disables online mode.'
+
+    outputFile = file('run/server.properties')
+
+    property('allow-flight', 'true')
+    property('difficulty', 'easy') // peaceful, easy, normal, hard
+    property('enable-command-block', 'true')
+    property('gamemode', 'survival') // survival, creative, adventure, spectator
+
+    property('level-name', project.modid)
+    property('level-seed', project.modid)
+    property('level-type', 'default') // default, flat, largeBiomes, amplified
+
+    property('motd', "Testing server for ${project.name}")
+    property('online-mode', 'false')
+
+    property('pvp', 'true')
+
+    property('server-ip', '')
+    property('server-port', '25565')
+
+    property('snooper-enabled', 'false')
+    property('spawn-protection', '0')
+  }
+
+  task acceptEula(type: WriteProperties) {
+    description = 'Automatically creates and agrees to the Mojang account EULA.'
+
+    outputFile = file('run/eula.txt')
+
+    property 'eula', true
+
+    doLast {
+      project.logger.warn("You have agreed to Mojang's EULA! https://account.mojang.com/documents/minecraft_eula");
+    }
+  }
+}
