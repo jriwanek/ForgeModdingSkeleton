@@ -8,9 +8,12 @@ jobs:
     name: Build
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-java@v1
+      - uses: actions/setup-java@v2
         with:
-          java-version: 8
+          distribution: 'adopt'
+          java-version: '8'
+          java-package: jdk
+          check-latest: true
       - run: chmod a+x gradlew
       - run: ./gradlew --version --no-daemon -S
       - run: ./gradlew clean build -S
