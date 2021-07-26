@@ -558,11 +558,12 @@ processResources {
   inputs.property 'version', project.short_version
   inputs.property 'mcversion', project.forge_mc_version + '-' + project.forge_version
 
+/*
   from (sourceSets.main.resources.srcDirs) {
     include 'mcmod.info'
     expand 'version': project.short_version, 'mcversion': project.forge_mc_version + '-' + project.forge_version
   }
-
+*/
   from (sourceSets.main.resources.srcDirs) {
     include 'pack.mcmeta'
     expand 'pack_format': '7', 'description': 'The default look of Example Mod'
@@ -576,7 +577,7 @@ processResources {
 */
 
   from(sourceSets.main.resources.srcDirs) {
-    exclude 'mcmod.info'
+//  exclude 'mcmod.info'
     exclude 'pack.mcmeta'
 //  exclude 'META-INF/mods.toml'
   }
