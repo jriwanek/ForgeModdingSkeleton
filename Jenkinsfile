@@ -33,7 +33,7 @@ pipeline {
         stage('build') {
             steps {
                 withGradle {
-                    sh './gradlew build -S'
+                    sh './gradlew clean build -S'
                 }
             }
         }

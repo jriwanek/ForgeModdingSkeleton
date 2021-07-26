@@ -78,10 +78,10 @@ if (gradleNewerThan('4.0')) {
 }
 
 buildScan {
-  if (isOnCi()) {
+  if (isOnCI()) {
     publishAlways()
   }
-//publishAlwaysIf(isOnCi())
+//publishAlwaysIf(isOnCI())
   licenseAgreementUrl = 'https://gradle.com/terms-of-service'
   licenseAgree = 'yes'
 }
@@ -140,7 +140,7 @@ if (gradleNewerThan('4.0')) {
   tasks.withType(com.github.spotbugs.SpotBugsTask) { // Gradle 4.x and earlier
 //tasks.withType(com.github.spotbugs.snom.SpotBugsTask) { // Gradle 5.x and later
     reports {
-      if (isOnCi()) {
+      if (isOnCI()) {
         xml.enabled = true
         html.enabled = false
       } else {
@@ -537,11 +537,11 @@ dependencies {
   }
   testRuntime 'org.junit.vintage:junit-vintage-engine:5.7.+' //testRuntimeOnly
   testCompile('org.mockito:mockito-core:2.+') // testImplementation
-  testCompile('org.mockito:mockito-junit-jupiter:2.+') {
-    exclude group: 'org.junit.jupiter', module: 'junit-jupiter-engine' // testImplementation
+  testCompile('org.mockito:mockito-junit-jupiter:2.+') { // testImplementation
+    exclude group: 'org.junit.jupiter', module: 'junit-jupiter-engine'
   }
   if (gradleNewerThan('4.6')) {
-  // 2.3 for Java 6, 2.4-2.12.1 for Java 7
+    // 2.3 for Java 6, 2.4-2.12.1 for Java 7
     annotationProcessor group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.12.1'
   }
 }
@@ -786,7 +786,7 @@ if (!isFG2()) {
 }
 
 def signType
-if (isFG1()) {
+if (isFG1() || isFG5()) {
   signType = Jar
 } else if (!isFG3()) {
   def canSignJar = project.hasProperty('keyStore') &&
@@ -1083,8 +1083,8 @@ curseforge {
       }
       if ((project.hasProperty('curseforge_release_type')) &&
          ((project.curseforge_release_type == 'alpha') ||
-         (project.curseforge_release_type == 'beta') ||
-         (project.curseforge_release_type == 'release'))) {
+          (project.curseforge_release_type == 'beta') ||
+          (project.curseforge_release_type == 'release'))) {
         releaseType = project.curseforge_release_type
       } else {
         releaseType = 'alpha'
@@ -1294,6 +1294,16 @@ boolean isFG3() {
   return (!isFG1() && !isFG2())
 }
 
+boolean isFG4() {
+   return true
+//  return (!isFG1() && !isFG2())
+}
+
+boolean isFG5() {
+   return false
+//  return (!isFG1() && !isFG2())
+}
+
 static boolean gradleOlderThan(final String version) {
   return GradleVersion.current() < GradleVersion.version(version)
 }
@@ -1302,7 +1312,7 @@ static boolean gradleNewerThan(final String version) {
   return GradleVersion.current() >= GradleVersion.version(version)
 }
 
-static boolean isOnCi() {
+static boolean isOnCI() {
   return System.getenv('CI')
 }
 
