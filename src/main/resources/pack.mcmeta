@@ -1,6 +1,6 @@
 {
-  "pack":{
-    "pack_format": 1,
-    "description": "The default look of Example Mod"
+  "pack": {
+    "pack_format": ${pack_format},
+    "description": "${description}"
   }
 }

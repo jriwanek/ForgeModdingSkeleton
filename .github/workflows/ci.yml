@@ -15,6 +15,6 @@ jobs:
           java-package: jdk
           check-latest: true
       - run: chmod a+x gradlew
-      - run: ./gradlew --version --no-daemon
-      - run: ./gradlew setupCIWorkspace
-      - run: ./gradlew clean build
+      - run: ./gradlew --version --no-daemon -S
+      - run: ./gradlew clean setupCIWorkspace -S
+      - run: ./gradlew clean build -S

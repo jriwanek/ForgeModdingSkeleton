@@ -25,5 +25,5 @@ install: skip
 before_script:
   - chmod a+x gradlew
 script:
- - ./gradlew setupCIWorkspace -S
+ - ./gradlew clean setupCIWorkspace -S
  - ./gradlew clean build -S
