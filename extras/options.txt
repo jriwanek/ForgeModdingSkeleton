@@ -1,0 +1,10 @@
+difficulty:1
+lastServer:127.0.0.1:25565
+snooperEnabled:false
+fullscreen:false
+advancedItemTooltips:true
+realmsNotifications:false
+enableWeakAttacks:false
+autoJump:true
+tutorialStep:none
+soundCategory_music:0.0
