@@ -85,6 +85,7 @@ public class ExampleMod {
     // You can use SubscribeEvent and let the Event Bus discover methods to call
     /**
      *
+     * @param event
      */
     @SubscribeEvent
     public void onServerStarting(final FMLServerStartingEvent event) {
@@ -99,10 +100,11 @@ public class ExampleMod {
      */
     @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistryEvents {
+       /**
+        *
+        * @param blockRegistryEvent
+        */
         @SubscribeEvent
-        /**
-         *
-         */
         public static void onBlocksRegistry(final RegistryEvent.Register<Block> blockRegistryEvent) {
             // register a new block here
             LOGGER.info("HELLO from Register Block");
