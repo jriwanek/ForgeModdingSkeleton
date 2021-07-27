@@ -558,6 +558,7 @@ processResources {
   inputs.property 'version', project.short_version
   inputs.property 'mcversion', project.forge_mc_version + '-' + project.forge_version
 
+/*
   from (sourceSets.main.resources.srcDirs) {
     include 'mcmod.info'
     expand 'version': project.short_version, 'mcversion': project.forge_mc_version + '-' + project.forge_version
@@ -568,18 +569,17 @@ processResources {
     expand 'pack_format': '6', 'description': 'The default look of Example Mod'
   }
 
-/*
   from (sourceSets.main.resources.srcDirs) {
     include 'META-INF/mods.toml'
     expand 'version': project.short_version, 'mod_name': project.name, 'mod_download': project.pom_url, 'mod_credits': '', 'mod_authors': '', 'mod_description': project.description
   }
-*/
 
   from(sourceSets.main.resources.srcDirs) {
     exclude 'mcmod.info'
     exclude 'pack.mcmeta'
 //  exclude 'META-INF/mods.toml'
   }
+*/
 
   if (!isFG3()) {
     rename '(.+_at.cfg)', 'META-INF/$1'
