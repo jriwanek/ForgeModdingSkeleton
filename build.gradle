@@ -792,7 +792,7 @@ if (!isFG2()) {
 }
 
 def signType
-if (isFG1() || isFG5()) {
+if (isFG1()) {
   signType = Jar
 } else {
   def canSignJar = project.hasProperty('keyStore') &&
