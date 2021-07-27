@@ -563,24 +563,23 @@ processResources {
     include 'mcmod.info'
     expand 'version': project.short_version, 'mcversion': project.forge_mc_version + '-' + project.forge_version
   }
-*/
+
   from (sourceSets.main.resources.srcDirs) {
     include 'pack.mcmeta'
     expand 'pack_format': '7', 'description': 'The default look of Example Mod'
   }
 
-/*
   from (sourceSets.main.resources.srcDirs) {
     include 'META-INF/mods.toml'
     expand 'version': project.short_version, 'mod_name': project.name, 'mod_download': project.pom_url, 'mod_credits': '', 'mod_authors': '', 'mod_description': project.description
   }
-*/
 
   from(sourceSets.main.resources.srcDirs) {
-//  exclude 'mcmod.info'
+    exclude 'mcmod.info'
     exclude 'pack.mcmeta'
 //  exclude 'META-INF/mods.toml'
   }
+*/
 
   if (!isFG3()) {
     rename '(.+_at.cfg)', 'META-INF/$1'
