@@ -105,7 +105,7 @@ public class ExampleMod {
         *
         * @param blockRegistryEvent
         */
-    	@SubscribeEvent
+        @SubscribeEvent
         public static void onBlocksRegistry(final RegistryEvent.Register<Block> blockRegistryEvent) {
             // register a new block here
             LOGGER.info("HELLO from Register Block");
