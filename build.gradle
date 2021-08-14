@@ -77,7 +77,8 @@ if (gradleNewerThan('4.0')) {
   apply plugin: 'findbugs'
 }
 
-import net.minecraftforge.gradle.common.tasks.SignJar
+//import net.minecraftforge.gradle.common.task.SignJar // FG3.x & FG4.x
+import net.minecraftforge.gradle.common.tasks.SignJar // FG5.x
 
 gradleEnterprise {
   buildScan {

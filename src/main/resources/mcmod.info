@@ -1,14 +1,14 @@
 [
  {
-   "modid": "examplemod",
-   "name": "Example Mod",
-   "description": "An example mod to show off various features",
-   "version": "${version}",
-   "mcversion": "${mcversion}",
+   "modid": "${mod_id}",
+   "name": "${mod_name}",
+   "description": "{mod_description}",
+   "version": "${mod_version}",
+   "mcversion": "${version}",
    "url": "https://github.com/MinecraftModDevelopmentMods/ExampleMod",
    "updateUrl": "",
    "authorList": ["jriwanek"],
-   "credits": "All the FMS Contributors",
+   "credits": "${mod_credits}",
    "logoFile": "",
    "screenshots": [],
    "dependencies": []
